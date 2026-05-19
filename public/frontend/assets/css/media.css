@@ -1,0 +1,168 @@
+@media (max-width:2000px){
+  
+}
+
+@media (max-width:1400px){
+
+}
+
+
+@media (max-width:1300px){
+
+}
+
+@media (max-width:1200px){
+
+}
+
+@media (max-width:991px){
+.log-box {
+    width: 100%;
+}
+.single-log-box {
+    gap: 10px;
+    flex-direction: column;
+}
+.single-log-text {
+    text-align: center;
+}
+.single-inspection-form {
+    flex-direction: column;
+}
+.inspection-text {
+    text-align: center;
+}
+.half-checkbox-group .form-check {
+    width: 100%;
+}
+.center-field{
+    gap: 0;
+}
+.center-field .form-check{
+  width: 100%;
+}
+.center-field label.form-check-label {
+    text-align: left;
+}
+.text-center label{
+  text-align: left;
+}
+}
+
+@media screen and (min-width: 768px) and (max-width: 768px) {
+  .log-btn-wrap .col-md-4{
+    width: 100%;
+  }
+  .log-btn-wrap .col-md-6{
+    width: 100%;
+  }
+  .half-checkbox-group .form-check {
+    width: 100%;
+}
+}
+
+@media (max-width:768px){
+.inspection-form-wrap {
+    flex-direction: column;
+    width: 100%;
+}
+.log-box {
+    flex-wrap: wrap;
+}
+.single-log-box {
+    width: 100%;
+    border-right: 0;
+}
+.no-border {
+    margin-top: 40px;
+}
+.center-field {
+    flex-wrap: wrap;
+}
+.stepper {
+    max-width: 100%;
+}
+}
+
+@media (max-width:640px){
+.form-checkbox-group>label {
+    font-size: 16px;
+}
+.form-group>label {
+    font-size: 16px;
+}
+.step {
+    line-height: 1;
+}
+.second-header .header-back a span{
+    display: none;
+}
+/*.second-header .header-back a {
+    font-size: 18px;
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    background-color: #fff;
+    line-height: 40px;
+    border-radius: 50%;
+}*/
+.header-wrap h1 {
+    font-size: 22px;
+}
+.header-img-box {
+    gap: 10px;
+}
+.header-wrap img {
+    width: 50px;
+}
+.system-form-wrap {
+    padding: 40px 0;
+}
+}
+
+@media (max-width:480px){
+.inspection-text {
+        flex: 1;
+    }
+.log-btn-home-wrap {
+    padding: 30px 0;
+}
+.single-log-box {
+    gap: 5px;
+    flex-direction: row;
+}
+.single-log-box>img {
+  width: 60px;
+}
+.single-inspection-form {
+        flex-direction: row;
+    }
+.log-box {
+    padding: 60px 20px;
+}
+.form-box {
+    padding: 60px 20px;
+}
+.step {
+    font-size: 18px;
+}
+.btn {
+    padding: 5px 15px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+@media (max-width:360px){
+.log-box h2 {
+    font-size: 24px;
+}
+    .single-log-box>img {
+        width: 45px;
+    }
+        .btn {
+        font-size: 12px;
+    }
+    .single-inspection-form img {
+    width: 50px;
+}
+}
