@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-    
+
     <head>
         @include('components.frontend.head')
 
@@ -53,17 +53,17 @@
                         <label>Type of Inspection</label>
                         <div class="center-field">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="home_inspection" value="Home Inspector" checked>
+                                <input class="form-check-input" type="checkbox" id="home_inspection" name="home_inspection" value="Home Inspector" checked>
                                 <label class="form-check-label" for="home_inspection">Home Inspection</label>
                             </div>
 
                             <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="check1" name="option1" value="Realtor">
-                            <label class="form-check-label" for="check1">Realtor</label>
+                            <input type="checkbox" class="form-check-input" id="realtor" name="realtor" value="Realtor">
+                            <label class="form-check-label" for="realtor">Realtor</label>
                             </div>
                             <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="check2" name="option2" value="Routine Maintenance">
-                            <label class="form-check-label" for="check2">Routine Maintenance</label>
+                            <input type="checkbox" class="form-check-input" id="routine" name="routine" value="Routine Maintenance">
+                            <label class="form-check-label" for="routine">Routine Maintenance</label>
                             </div>
                         </div>
                         </div>
@@ -73,6 +73,7 @@
                         <div class="input-group">
                             <input type="text"
                                 id="date_of_pickup"
+                                name="date_of_pickup"
                                 class="form-control"
                                 placeholder="MM/DD/YYYY"
                                 required>
@@ -84,32 +85,32 @@
 
                         <div class="form-group col-md-4">
                         <label>Time</label>
-                        <input type="text" class="form-control">
+                        <input type="text" id="time" name="time" class="form-control">
                         </div>
 
                         <div class="form-group col-md-4">
                         <label>Weather</label>
-                        <input type="text" class="form-control">
+                        <input type="text" id="weather" name="weather" class="form-control">
                         </div>
 
                         <div class="form-group col-md-12">
                         <label>Inspector Name & Company</label>
-                        <input type="text" class="form-control" value="">
+                        <input type="text" id="inspector_name_company" name="inspector_name_company" class="form-control" value="">
                         </div>
 
                         <div class="form-group col-md-12">
                         <label>Site Address</label>
-                        <textarea class="form-control"></textarea>
+                        <textarea class="form-control" id="site_address" name="site_address"></textarea>
                         </div>
 
                         <div class="form-group col-md-6">
                         <label>Tax Map Number</label>
-                        <input type="text" class="form-control">
+                        <input type="text" id="tax_map_number" name="tax_map_number" class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                         <label>Type of System (DOH code if available)</label>
-                        <input type="text" class="form-control">
+                        <input type="text" id="type_of_system" name="type_of_system" class="form-control">
                         </div>
                     </div>
                     </div>
@@ -126,82 +127,82 @@
                         <label>Property in use:</label>
                         <div class="form-checkbox-group half-checkbox-group">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_yes">
+                            <input class="form-check-input" type="checkbox" id="use_yes" name="use_yes">
                             <label class="form-check-label" for="use_yes">Yes</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_no">
+                            <input class="form-check-input" type="checkbox" id="use_no" name="use_no">
                             <label class="form-check-label" for="use_no">No</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_fulltime">
+                            <input class="form-check-input" type="checkbox" id="use_fulltime" name="use_fulltime">
                             <label class="form-check-label" for="use_fulltime">Full time</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_vacation">
+                            <input class="form-check-input" type="checkbox" id="use_vacation" name="use_vacation">
                             <label class="form-check-label" for="use_vacation">Vacation Rental</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_vacant">
+                            <input class="form-check-input" type="checkbox" id="use_vacant" name="use_vacant">
                             <label class="form-check-label" for="use_vacant">Vacant</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_other">
+                            <input class="form-check-input" type="checkbox" id="use_other" name="use_other">
                             <label class="form-check-label" for="use_other">Other</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="use_unknown">
+                            <input class="form-check-input" type="checkbox" id="use_unknown" name="use_unknown">
                             <label class="form-check-label" for="use_unknown">Unknown</label>
                             </div>
-                        </div>                        
+                        </div>
                         </div>
 
                         <div class="form-group col-md-12">
                         <label>General Site Conditions:</label>
                             <div class="form-checkbox-group half-checkbox-group">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="grass">
+                            <input class="form-check-input" type="checkbox" id="grass" name="grass">
                             <label class="form-check-label" for="grass">Grass cover/vegetation condition</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="cinder">
+                            <input class="form-check-input" type="checkbox" id="cinder" name="cinder">
                             <label class="form-check-label" for="cinder">Cinder/rocks</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="ponding">
+                            <input class="form-check-input" type="checkbox" id="ponding" name="ponding">
                             <label class="form-check-label" for="ponding">Surface Ponding</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="system_area">
+                            <input class="form-check-input" type="checkbox" id="system_area" name="system_area">
                             <label class="form-check-label" for="system_area">System area</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="other_area">
+                            <input class="form-check-input" type="checkbox" id="other_area" name="other_area">
                             <label class="form-check-label" for="other_area">Other areas</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="barriers">
+                            <input class="form-check-input" type="checkbox" id="barriers" name="barriers">
                             <label class="form-check-label" for="barriers">Protective Barriers Present</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="effective">
+                            <input class="form-check-input" type="checkbox" id="effective" name="effective">
                             <label class="form-check-label" for="effective">Effective</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="not_effective">
+                            <input class="form-check-input" type="checkbox" id="not_effective" name="not_effective">
                             <label class="form-check-label" for="not_effective">Not effective</label>
                             </div>
                         </div>
@@ -211,17 +212,17 @@
                         <label>Surface runoff/gutters directed away from system :</label>
                         <div class="form-checkbox-group">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="runoff_yes">
+                            <input class="form-check-input" type="checkbox" id="runoff_yes" name="runoff_yes">
                             <label class="form-check-label" for="runoff_yes">Yes</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="runoff_no">
+                            <input class="form-check-input" type="checkbox" id="runoff_no" name="runoff_no">
                             <label class="form-check-label" for="runoff_no">No</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="runoff_na">
+                            <input class="form-check-input" type="checkbox" id="runoff_na" name="runoff_na">
                             <label class="form-check-label" for="runoff_na">N/A</label>
                             </div>
                         </div>
@@ -231,57 +232,57 @@
                         <label>Malfunction at time of inspection:</label>
                             <div class="form-checkbox-group half-checkbox-group">
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="mal_yes">
+                            <input class="form-check-input" type="checkbox" id="mal_yes" name="mal_yes">
                             <label class="form-check-label" for="mal_yes">Yes</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="mal_no">
+                            <input class="form-check-input" type="checkbox" id="mal_no" name="mal_no">
                             <label class="form-check-label" for="mal_no">No</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="surface_plumbing">
+                            <input class="form-check-input" type="checkbox" id="surface_plumbing" name="surface_plumbing">
                             <label class="form-check-label" for="surface_plumbing">Surface discharge via plumbing</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="grey">
+                            <input class="form-check-input" type="checkbox" id="grey" name="grey">
                             <label class="form-check-label" for="grey">Grey water</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="black">
+                            <input class="form-check-input" type="checkbox" id="black" name="black">
                             <label class="form-check-label" for="black">Black water</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="unknown">
+                            <input class="form-check-input" type="checkbox" id="unknown" name="unknown">
                             <label class="form-check-label" for="unknown">Unknown</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="tank_area">
+                            <input class="form-check-input" type="checkbox" id="tank_area" name="tank_area">
                             <label class="form-check-label" for="tank_area">Surface discharge in area of tank</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="tile_field">
+                            <input class="form-check-input" type="checkbox" id="tile_field" name="tile_field">
                             <label class="form-check-label" for="tile_field">Surface discharge within tile field area</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="edge_field">
+                            <input class="form-check-input" type="checkbox" id="edge_field" name="edge_field">
                             <label class="form-check-label" for="edge_field">Surface discharge at edge of tile field</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="bleed_out">
+                            <input class="form-check-input" type="checkbox" id="bleed_out" name="bleed_out">
                             <label class="form-check-label" for="bleed_out">Surface discharge bleed-out away from system</label>
                             </div>
 
                             <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="past_failure">
+                            <input class="form-check-input" type="checkbox" id="past_failure" name="past_failure">
                             <label class="form-check-label" for="past_failure">Evidence of past failure / Note evidence</label>
                             </div>
                         </div>
@@ -304,11 +305,11 @@
                             <div class="form-checkbox-group">
                             <label>Accessible:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="accessible_yes">
+                                <input class="form-check-input" type="checkbox" id="accessible_yes" name="accessible_yes">
                                 <label class="form-check-label" for="accessible_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="accessible_no">
+                                <input class="form-check-input" type="checkbox" id="accessible_no" name="accessible_no">
                                 <label class="form-check-label" for="accessible_no">No</label>
                             </div>
                             </div>
@@ -318,11 +319,11 @@
                             <div class="form-checkbox-group">
                             <label>Lid(s) need repair:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lid_yes">
+                                <input class="form-check-input" type="checkbox" id="lid_yes" name="lid_yes">
                                 <label class="form-check-label" for="lid_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="lid_no">
+                                <input class="form-check-input" type="checkbox" id="lid_no" name="lid_no">
                                 <label class="form-check-label" for="lid_no">No</label>
                             </div>
                             </div>
@@ -332,15 +333,15 @@
                             <div class="form-checkbox-group">
                             <label>Liquid operating level:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="level_outlet">
+                                <input class="form-check-input" type="checkbox" id="level_outlet" name="level_outlet">
                                 <label class="form-check-label" for="level_outlet">At outlet invert</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="level_above">
+                                <input class="form-check-input" type="checkbox" id="level_above" name="level_above">
                                 <label class="form-check-label" for="level_above">Above outlet invert</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="level_below">
+                                <input class="form-check-input" type="checkbox" id="level_below" name="level_below">
                                 <label class="form-check-label" for="level_below">Below outlet invert</label>
                             </div>
                             </div>
@@ -348,23 +349,23 @@
 
                         <div class="form-group col-md-6">
                             <label>Scum layer thickness (in.):</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="scum_layer_thickness" name="scum_layer_thickness" class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label>Sludge layer thickness (in.):</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="sludge_layer_thickness" name="sludge_layer_thickness" class="form-control">
                         </div>
 
                         <div class="form-group col-md-12">
                             <div class="form-checkbox-group">
                             <label>Tank pumping recommended (sludge plus scum occupy 25% or more of tank volume):</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pump_yes">
+                                <input class="form-check-input" type="checkbox" id="pump_yes" name="pump_yes">
                                 <label class="form-check-label" for="pump_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pump_no">
+                                <input class="form-check-input" type="checkbox" id="pump_no" name="pump_no">
                                 <label class="form-check-label" for="pump_no">No</label>
                             </div>
                             </div>
@@ -374,15 +375,15 @@
                             <div class="form-checkbox-group">
                             <label>Tank pumped of all liquids and solids:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pumped_yes">
+                                <input class="form-check-input" type="checkbox" id="pumped_yes" name="pumped_yes">
                                 <label class="form-check-label" for="pumped_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pumped_no">
+                                <input class="form-check-input" type="checkbox" id="pumped_no" name="pumped_no">
                                 <label class="form-check-label" for="pumped_no">No</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pumped_na">
+                                <input class="form-check-input" type="checkbox" id="pumped_na" name="pumped_na">
                                 <label class="form-check-label" for="pumped_na">N/A</label>
                             </div>
                             </div>
@@ -391,7 +392,7 @@
                         <div class="form-group col-md-6">
                             <div class="form-checkbox-group">
                             <label>Approx. volume pumped (gals):</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="approx_volume_pumped" name="approx_volume_pumped" class="form-control">
                             </div>
                         </div>
 
@@ -399,27 +400,27 @@
                             <div class="form-checkbox-group">
                             <label>Water stream into tank from house:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="house_yes">
+                                <input class="form-check-input" type="checkbox" id="house_yes" name="house_yes">
                                 <label class="form-check-label" for="house_yes">Yes</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="house_trickle">
+                                <input class="form-check-input" type="checkbox" id="house_trickle" name="house_trickle">
                                 <label class="form-check-label" for="house_trickle">Trickle</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="house_steady">
+                                <input class="form-check-input" type="checkbox" id="house_steady" name="house_steady">
                                 <label class="form-check-label" for="house_steady">Steady flow</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="house_no">
+                                <input class="form-check-input" type="checkbox" id="house_no" name="house_no">
                                 <label class="form-check-label" for="house_no">No</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="house_na">
+                                <input class="form-check-input" type="checkbox" id="house_na" name="house_na">
                                 <label class="form-check-label" for="house_na">N/A</label>
                             </div>
                             </div>
@@ -429,23 +430,23 @@
                             <div class="form-checkbox-group">
                             <label>Water stream into tank from drain field:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="drain_yes">
+                                <input class="form-check-input" type="checkbox" id="drain_yes" name="drain_yes">
                                 <label class="form-check-label" for="drain_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="drain_trickle">
+                                <input class="form-check-input" type="checkbox" id="drain_trickle" name="drain_trickle">
                                 <label class="form-check-label" for="drain_trickle">Trickle</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="drain_steady">
+                                <input class="form-check-input" type="checkbox" id="drain_steady" name="drain_steady">
                                 <label class="form-check-label" for="drain_steady">Steady flow</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="drain_no">
+                                <input class="form-check-input" type="checkbox" id="drain_no" name="drain_no">
                                 <label class="form-check-label" for="drain_no">No</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="drain_na">
+                                <input class="form-check-input" type="checkbox" id="drain_na" name="drain_na">
                                 <label class="form-check-label" for="drain_na">N/A</label>
                             </div>
                             </div>
@@ -455,11 +456,11 @@
                             <div class="form-checkbox-group">
                             <label>Inlet tee needs repair:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlet_yes">
+                                <input class="form-check-input" type="checkbox" id="inlet_yes" name="inlet_yes">
                                 <label class="form-check-label" for="inlet_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="inlet_nd">
+                                <input class="form-check-input" type="checkbox" id="inlet_nd" name="inlet_nd">
                                 <label class="form-check-label" for="inlet_nd">N/D</label>
                             </div>
                             </div>
@@ -469,11 +470,11 @@
                             <div class="form-checkbox-group">
                             <label>Outlet tee needs repair:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="outlet_yes">
+                                <input class="form-check-input" type="checkbox" id="outlet_yes" name="outlet_yes">
                                 <label class="form-check-label" for="outlet_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="outlet_nd">
+                                <input class="form-check-input" type="checkbox" id="outlet_nd" name="outlet_nd">
                                 <label class="form-check-label" for="outlet_nd">N/D</label>
                             </div>
                             </div>
@@ -481,27 +482,27 @@
 
                         <div class="form-group col-md-6">
                             <label>Tank composition:</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="tank_composition" name="tank_composition" class="form-control">
                         </div>
 
                         <div class="form-group col-md-6">
                             <label>Approx. size of tank (gals):</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="approx_tank_size" name="approx_tank_size" class="form-control">
                         </div>
 
                         <div class="form-group col-md-12">
                             <div class="form-checkbox-group">
                             <label>Service recommended:</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="service_yes">
+                                <input class="form-check-input" type="checkbox" id="service_yes" name="service_yes">
                                 <label class="form-check-label" for="service_yes">Yes</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="service_no">
+                                <input class="form-check-input" type="checkbox" id="service_no" name="service_no">
                                 <label class="form-check-label" for="service_no">No</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="service_nd">
+                                <input class="form-check-input" type="checkbox" id="service_nd" name="service_nd">
                                 <label class="form-check-label" for="service_nd">N/D</label>
                             </div>
                             </div>
@@ -510,13 +511,13 @@
                         <!-- Comments -->
                         <div class="form-group col-md-12">
                             <label>Comments:</label>
-                            <textarea class="form-control"></textarea>
+                            <textarea class="form-control" id="comments" name="comments"></textarea>
                         </div>
 
                         <!-- Signature -->
                         <div class="form-group col-md-12">
                             <label>Inspector Signature:</label>
-                            <input type="text" class="form-control">
+                            <input type="text" id="inspector_signature" name="inspector_signature" class="form-control">
                         </div>
 
                         <!-- Disclaimer -->
@@ -532,7 +533,7 @@
                     <div class="graph-box">
                         <div class="form-group col-md-12">
                         <label>Notes : </label>
-                        <textarea class="form-control"></textarea>
+                        <textarea class="form-control" id="notes" name="notes"></textarea>
                         </div>
                     </div>
                     </div>
@@ -606,25 +607,25 @@
             allowInput: true,
             disableMobile: true
         });
-        
+
         document.getElementById('calendar-icon').addEventListener('click', function () {
             document.getElementById('date_of_pickup')._flatpickr.open();
         });
     </script>
-    
+
     <script>
         flatpickr("#date_of_discharge", {
             dateFormat: "m/d/Y",
             allowInput: true,
             disableMobile: true
         });
-        
+
         document.getElementById('calendar-icon').addEventListener('click', function () {
             document.getElementById('date_of_discharge')._flatpickr.open();
         });
     </script>
 
-    
+
 </body>
 
 </html>
