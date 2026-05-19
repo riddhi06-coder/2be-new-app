@@ -370,17 +370,17 @@
                                 </div>
 
                             </div>
-                    </div>
+                            </div>
 
 
-                    <div class="text-center mt-3">
-                        <button type="button" class="btn btn-secondary" id="prevBtn">Previous</button>
-                        <button type="button" class="btn btn-primary" id="saveBtn">Save Draft</button>
-                        <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
-                        <button type="submit" class="btn btn-success d-none" id="submitBtn">Submit</button>
-                    </div>
+                            <div class="text-center mt-3">
+                                <button type="button" class="btn btn-secondary" id="prevBtn">Previous</button>
+                                <button type="button" class="btn btn-primary" id="saveBtn">Save Draft</button>
+                                <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+                                <button type="submit" class="btn btn-success d-none" id="submitBtn">Submit</button>
+                            </div>
 
-                    </form>
+                        </form>
 
 
                 </div>
