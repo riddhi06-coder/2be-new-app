@@ -28,6 +28,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="systems-form-box">
+                        
                         <div class="stepper text-center mb-4">
                             <div class="steps">
                                 <span class="step active">Basic Information</span>
@@ -38,7 +39,6 @@
                                 <div class="progress-bar" id="progressBar"></div>
                             </div>
                         </div>
-
 
 
                         <form>
@@ -381,8 +381,6 @@
                             </div>
 
                         </form>
-
-
                 </div>
             </div>
         </div>
