@@ -41,7 +41,8 @@
                         </div>
 
 
-                        <form id="cesspoolForm">
+                        <form id="cesspoolForm" action="{{ route('cesspool.store') }}" method="POST">
+                            @csrf
 
                             <!-- Basic Info -->
                             <div class="form-step form-box active">
@@ -67,7 +68,7 @@
                                                 <label class="form-check-label" for="routine">Routine Maintenance</label>
                                             </div>
                                         </div>
-                                        <div class="field-error text-danger" id="err_inspection" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_inspection" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Date of Inspection <span class="text-danger">*</span></label>
@@ -82,27 +83,27 @@
                                                 <i class="fa-solid fa-calendar-days"></i>
                                             </span>
                                         </div>
-                                        <div class="field-error text-danger" id="err_date_of_pickup" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_date_of_pickup" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Inspector Name & Company <span class="text-danger">*</span></label>
                                         <input type="text" id="inspector_name_company" name="inspector_name_company" class="form-control">
-                                        <div class="field-error text-danger" id="err_inspector_name_company" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_inspector_name_company" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Site Address <span class="text-danger">*</span></label>
                                         <input type="text" id="site_address" name="site_address" class="form-control">
-                                        <div class="field-error text-danger" id="err_site_address" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_site_address" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Tax Map Number <span class="text-danger">*</span></label>
                                         <input type="text" id="tax_map_number" name="tax_map_number" class="form-control">
-                                        <div class="field-error text-danger" id="err_tax_map_number" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_tax_map_number" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label>Type of System (DOH code if available) <span class="text-danger">*</span></label>
                                         <input type="text" id="type_of_system" name="type_of_system" class="form-control">
-                                        <div class="field-error text-danger" id="err_type_of_system" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_type_of_system" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                 </div>
 
@@ -132,7 +133,7 @@
                                                         <label class="form-check-label" for="usee_no">No</label>
                                                     </div>
                                                 </div>
-                                                <div class="field-error text-danger" id="err_property_use" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                                <div class="field-error text-danger" id="err_property_use" style="display:none;font-size:15px;margin-top:4px;"></div>
                                             </div>
                                         </div>
 
@@ -169,7 +170,7 @@
                                                     <label class="form-check-label" for="not_effective">Not effective</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_site_conditions" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_site_conditions" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
 
@@ -189,7 +190,7 @@
                                                     <label class="form-check-label" for="runoff_na">N/A</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_runoff" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_runoff" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <div class="form-checkbox-group">
@@ -203,7 +204,7 @@
                                                     <label class="form-check-label" for="mal_no">No</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_malfunction" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_malfunction" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
                                         <div class="form-group col-md-12">
                                             <div class="form-checkbox-group">
@@ -239,7 +240,7 @@
                                                     <label class="form-check-label" for="past_failure">Evidence of past failure</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_surface_discharge" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_surface_discharge" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +269,7 @@
                                                     <label class="form-check-label" for="access_no">No</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_access_lids" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_access_lids" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -283,13 +284,13 @@
                                                     <label class="form-check-label" for="accesslid_no">No</label>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_accesslid" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_accesslid" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-12">
                                             <label>Cesspool Water Level Depth: <span class="text-danger">*</span></label>
                                             <input type="text" id="cesspool_water_level_depth" name="cesspool_water_level_depth" class="form-control">
-                                            <div class="field-error text-danger" id="err_cesspool_water_level_depth" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_cesspool_water_level_depth" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -306,43 +307,43 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="field-error text-danger" id="err_pumping" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_pumping" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>Cesspool pumped of all liquids and solids: <span class="text-danger">*</span></label>
                                             <input type="text" id="cesspool_pumped" name="cesspool_pumped" class="form-control">
-                                            <div class="field-error text-danger" id="err_cesspool_pumped" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_cesspool_pumped" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>Water stream flowing into cesspool from house: <span class="text-danger">*</span></label>
                                             <input type="text" id="water_stream_from_house" name="water_stream_from_house" class="form-control">
-                                            <div class="field-error text-danger" id="err_water_stream_from_house" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_water_stream_from_house" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>Inlet pipe needs repair: <span class="text-danger">*</span></label>
                                             <input type="text" id="inlet_pipe_needs_repair" name="inlet_pipe_needs_repair" class="form-control">
-                                            <div class="field-error text-danger" id="err_inlet_pipe_needs_repair" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_inlet_pipe_needs_repair" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>Cesspool composition: <span class="text-danger">*</span></label>
                                             <input type="text" id="cesspool_composition" name="cesspool_composition" class="form-control">
-                                            <div class="field-error text-danger" id="err_cesspool_composition" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_cesspool_composition" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>Service recommended: <span class="text-danger">*</span></label>
                                             <input type="text" id="service_recommended" name="service_recommended" class="form-control">
-                                            <div class="field-error text-danger" id="err_service_recommended" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_service_recommended" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label><strong>Comments:</strong> <span class="text-danger">*</span></label>
                                             <textarea class="form-control" id="comments" name="comments"></textarea>
-                                            <div class="field-error text-danger" id="err_comments" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                            <div class="field-error text-danger" id="err_comments" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
                                         <!-- Disclaimer -->
@@ -359,20 +360,20 @@
                                 <div class="form-group col-md-12">
                                     <label>Notes : <span class="text-danger">*</span></label>
                                     <textarea class="form-control" id="notes" name="notes"></textarea>
-                                    <div class="field-error text-danger" id="err_notes" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                    <div class="field-error text-danger" id="err_notes" style="display:none;font-size:15px;margin-top:4px;"></div>
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label>Inspector Signature: <span class="text-danger">*</span></label>
                                         <input type="text" id="inspector_signature" name="inspector_signature" class="form-control">
-                                        <div class="field-error text-danger" id="err_inspector_signature" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_inspector_signature" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label><strong>Print Name:</strong> <span class="text-danger">*</span></label>
                                         <textarea class="form-control" id="print_name" name="print_name"></textarea>
-                                        <div class="field-error text-danger" id="err_print_name" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                        <div class="field-error text-danger" id="err_print_name" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
                                 </div>
 
@@ -388,7 +389,7 @@
                                             <i class="fa-solid fa-calendar-days"></i>
                                         </span>
                                     </div>
-                                    <div class="field-error text-danger" id="err_date" style="display:none;font-size:13px;margin-top:4px;"></div>
+                                    <div class="field-error text-danger" id="err_date" style="display:none;font-size:15px;margin-top:4px;"></div>
                                 </div>
 
                             </div>
