@@ -56,7 +56,7 @@
                                         <label class="label-full">Type of Inspection <span class="text-danger">*</span></label>
                                         <div class="center-field">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="home_inspection" name="home_inspection" value="Home Inspector" checked>
+                                                <input class="form-check-input" type="checkbox" id="home_inspection" name="home_inspection" value="Home Inspector">
                                                 <label class="form-check-label" for="home_inspection">Home Inspection</label>
                                             </div>
                                             <div class="form-check">
@@ -405,7 +405,6 @@
 
                         </form>
 
-
                 </div>
             </div>
         </div>
@@ -417,6 +416,8 @@
     @include('components.frontend.footer')
 
     @include('components.frontend.main-js')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -723,13 +724,50 @@
     </script>
 
     <script>
-        flatpickr("#date_of_discharge", {
-            dateFormat: "m/d/Y",
-            allowInput: true
-        });
+        document.getElementById('saveBtn').addEventListener('click', function () {
+            if (!validateStep(currentStep)) return;
 
-        document.getElementById('calendar-icon').addEventListener('click', function() {
-            document.getElementById('date_of_discharge')._flatpickr.open();
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(document.getElementById('cesspoolForm'));
+            formData.append('is_draft', '1');
+
+            fetch('{{ route("cesspool.draft") }}', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                btn.disabled = false;
+                btn.textContent = 'Save Draft';
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Draft Saved!',
+                        text: data.message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed!',
+                        text: data.message || 'Could not save draft. Please try again.'
+                    });
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = 'Save Draft';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.'
+                });
+            });
         });
     </script>
 

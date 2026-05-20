@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -15,40 +17,221 @@ use App\Models\CesspoolSystemDetails;
 class CesspoolController extends Controller
 {
 
-    // === Cesspool Form
-    public function cesspool_systems(Request $request)
+    // ── GET: show form, purge expired drafts ─────────────────────────────────
+    public function cesspool_systems()
     {
+        CesspoolSystemDetails::where('is_draft', true)
+            ->where('expires_at', '<', Carbon::now())
+            ->delete();
+
         return view('frontend.cesspool_systems');
     }
 
-    // === Store Cesspool Form
+    // ── POST: final submit ───────────────────────────────────────────────────
     public function store_cesspool(Request $request)
     {
         Log::info('Cesspool form submission started', [
-            'ip' => $request->ip(),
+            'ip'      => $request->ip(),
             'payload' => $request->except(['_token']),
         ]);
 
-        $rules = [
-            'date_of_pickup'          => 'required|date_format:m/d/Y',
-            'inspector_name_company'  => 'required|string|max:255|regex:/^[^0-9]+$/',
-            'site_address'            => 'required|string|max:500',
-            'tax_map_number'          => 'required|string|max:100',
-            'type_of_system'          => 'required|string|max:255',
-            'cesspool_water_level_depth' => 'required|string|max:255',
-            'cesspool_pumped'         => 'required|string|max:255',
-            'water_stream_from_house' => 'required|string|max:255',
-            'inlet_pipe_needs_repair' => 'required|string|max:255',
-            'cesspool_composition'    => 'required|string|max:255',
-            'service_recommended'     => 'required|string|max:255',
-            'comments'                => 'required|string',
-            'notes'                   => 'required|string',
-            'inspector_signature'     => 'required|string|max:255|regex:/^[^0-9]+$/',
-            'print_name'              => 'required|string|max:255|regex:/^[^0-9]+$/',
-            'date'                    => 'required|date_format:m/d/Y',
-        ];
+        $validator = Validator::make($request->all(), $this->validationRules(), $this->validationMessages());
 
-        $messages = [
+        if ($validator->fails()) {
+            Log::warning('Cesspool form validation failed', [
+                'ip'     => $request->ip(),
+                'errors' => $validator->errors()->toArray(),
+            ]);
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            // Remove any existing draft for this session
+            $sessionKey = $request->session()->get('cesspool_draft_key');
+            if ($sessionKey) {
+                CesspoolSystemDetails::where('session_key', $sessionKey)->delete();
+                $request->session()->forget('cesspool_draft_key');
+            }
+
+            $data = $this->buildFormData($request);
+            $data += [
+                'is_draft'    => false,
+                'session_key' => null,
+                'expires_at'  => null,
+                'inserted_at' => Carbon::now(),
+            ];
+
+            $entry = CesspoolSystemDetails::create($data);
+
+            Log::info('Cesspool form saved successfully', ['id' => $entry->id, 'ip' => $request->ip()]);
+
+            return redirect()->route('frontend.thank_you')
+                ->with('message', 'Cesspool inspection submitted successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Cesspool form save failed', ['ip' => $request->ip(), 'error' => $e->getMessage()]);
+            return redirect()->back()
+                ->with('error', 'Something went wrong. Please try again.')
+                ->withInput();
+        }
+    }
+
+    // ── POST: AJAX save draft ────────────────────────────────────────────────
+    public function save_draft(Request $request)
+    {
+        try {
+            // Purge expired drafts
+            CesspoolSystemDetails::where('is_draft', true)
+                ->where('expires_at', '<', Carbon::now())
+                ->delete();
+
+            // Delete previous draft from this session
+            $sessionKey = $request->session()->get('cesspool_draft_key');
+            if ($sessionKey) {
+                CesspoolSystemDetails::where('session_key', $sessionKey)->delete();
+            }
+
+            $newKey = Str::uuid()->toString();
+            $data   = $this->buildFormData($request);
+            $data  += [
+                'is_draft'    => true,
+                'session_key' => $newKey,
+                'expires_at'  => Carbon::now()->addHour(),
+                'inserted_at' => Carbon::now(),
+            ];
+
+            CesspoolSystemDetails::create($data);
+            $request->session()->put('cesspool_draft_key', $newKey);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Your draft has been saved. It will be available for 1 hour.',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Cesspool draft save failed', ['ip' => $request->ip(), 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Failed to save draft. Please try again.'], 500);
+        }
+    }
+
+    // ── Shared: map request → DB data ────────────────────────────────────────
+    private function buildFormData(Request $request): array
+    {
+        $ua          = $request->userAgent() ?? '';
+        $browserInfo = $this->parseBrowserInfo($ua);
+        $location    = $this->getLocation($request->ip());
+
+        // Inspection type — comma-separated readable labels
+        $inspectionTypes = [];
+        if ($request->has('home_inspection')) $inspectionTypes[] = 'Home Inspector';
+        if ($request->has('realtor'))         $inspectionTypes[] = 'Realtor';
+        if ($request->has('routine'))         $inspectionTypes[] = 'Routine Maintenance';
+
+        // Site conditions — comma-separated readable labels
+        $siteConditions = [];
+        if ($request->has('grass'))         $siteConditions[] = 'Grass cover/vegetation condition';
+        if ($request->has('system_area'))   $siteConditions[] = 'System area';
+        if ($request->has('other_area'))    $siteConditions[] = 'Other areas';
+        if ($request->has('ponding'))       $siteConditions[] = 'Surface Ponding';
+        if ($request->has('barriers'))      $siteConditions[] = 'Protective Barriers Present';
+        if ($request->has('effective'))     $siteConditions[] = 'Effective';
+        if ($request->has('not_effective')) $siteConditions[] = 'Not effective';
+
+        // Surface discharge — comma-separated readable labels
+        $discharge = [];
+        if ($request->has('grey'))          $discharge[] = 'Grey water';
+        if ($request->has('black'))         $discharge[] = 'Black water';
+        if ($request->has('unknown'))       $discharge[] = 'Unknown';
+        if ($request->has('cesspool_area')) $discharge[] = 'Surface discharge in area of cesspool';
+        if ($request->has('cesspool_edge')) $discharge[] = 'Surface discharge at edge of cesspool area';
+        if ($request->has('bleed_out'))     $discharge[] = 'Surface discharge - bleed-out away';
+        if ($request->has('past_failure'))  $discharge[] = 'Evidence of past failure';
+
+        // Yes/No helper
+        $yesNo = fn($y, $n) => $request->has($y) ? 'Yes' : ($request->has($n) ? 'No' : null);
+
+        // Yes/No/N/A helper
+        $yesNoNa = fn($y, $n, $na) => $request->has($y) ? 'Yes'
+            : ($request->has($n) ? 'No' : ($request->has($na) ? 'N/A' : null));
+
+        // Safe date parse
+        $parseDate = function (?string $val): ?string {
+            if (!$val) return null;
+            try { return date('Y-m-d', strtotime($val)); } catch (\Exception $e) { return null; }
+        };
+
+        return [
+            // Client info
+            'ip_address'       => $request->ip(),
+            'user_agent'       => $ua,
+            'browser'          => $browserInfo['browser'],
+            'browser_version'  => $browserInfo['version'],
+            'device_type'      => $browserInfo['device'],
+            'operating_system' => $browserInfo['os'],
+            'location_country' => $location['country'],
+            'location_city'    => $location['city'],
+            'location_region'  => $location['region'],
+            'location_timezone'=> $location['timezone'],
+
+            // Step 1
+            'inspection_type'        => implode(', ', $inspectionTypes) ?: null,
+            'date_of_pickup'         => $parseDate($request->date_of_pickup),
+            'inspector_name_company' => $request->inspector_name_company,
+            'site_address'           => $request->site_address,
+            'tax_map_number'         => $request->tax_map_number,
+            'type_of_system'         => $request->type_of_system,
+
+            // Step 2
+            'property_in_use'  => $yesNo('usee_yes', 'usee_no'),
+            'site_conditions'  => implode(', ', $siteConditions) ?: null,
+            'surface_runoff'   => $yesNoNa('runoff_yes', 'runoff_no', 'runoff_na'),
+            'malfunction'      => $yesNo('mal_yes', 'mal_no'),
+            'surface_discharge'=> implode(', ', $discharge) ?: null,
+
+            // Step 3
+            'accessible_lids'            => $yesNo('access_yes', 'access_no'),
+            'access_lid_repair'          => $yesNo('accesslid_yes', 'accesslid_no'),
+            'cesspool_water_level_depth' => $request->cesspool_water_level_depth,
+            'pumping_recommended'        => $yesNo('pumping_yes', 'pumping_no'),
+            'cesspool_pumped'            => $request->cesspool_pumped,
+            'water_stream_from_house'    => $request->water_stream_from_house,
+            'inlet_pipe_needs_repair'    => $request->inlet_pipe_needs_repair,
+            'cesspool_composition'       => $request->cesspool_composition,
+            'service_recommended'        => $request->service_recommended,
+            'comments'                   => $request->comments,
+            'notes'                      => $request->notes,
+            'inspector_signature'        => $request->inspector_signature,
+            'print_name'                 => $request->print_name,
+            'date'                       => $parseDate($request->date),
+        ];
+    }
+
+    // ── Validation ───────────────────────────────────────────────────────────
+    private function validationRules(): array
+    {
+        return [
+            'date_of_pickup'             => 'required|date_format:m/d/Y',
+            'inspector_name_company'     => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'site_address'               => 'required|string|max:500',
+            'tax_map_number'             => 'required|string|max:100',
+            'type_of_system'             => 'required|string|max:255',
+            'cesspool_water_level_depth' => 'required|string|max:255',
+            'cesspool_pumped'            => 'required|string|max:255',
+            'water_stream_from_house'    => 'required|string|max:255',
+            'inlet_pipe_needs_repair'    => 'required|string|max:255',
+            'cesspool_composition'       => 'required|string|max:255',
+            'service_recommended'        => 'required|string|max:255',
+            'comments'                   => 'required|string',
+            'notes'                      => 'required|string',
+            'inspector_signature'        => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'print_name'                 => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'date'                       => 'required|date_format:m/d/Y',
+        ];
+    }
+
+    private function validationMessages(): array
+    {
+        return [
             'date_of_pickup.required'            => 'Date of Inspection is required.',
             'date_of_pickup.date_format'         => 'Date must be in MM/DD/YYYY format.',
             'inspector_name_company.required'    => 'Inspector Name & Company is required.',
@@ -71,92 +254,85 @@ class CesspoolController extends Controller
             'date.required'                     => 'Date is required.',
             'date.date_format'                  => 'Date must be in MM/DD/YYYY format.',
         ];
+    }
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+    // ── Browser / OS / Device parser ─────────────────────────────────────────
+    private function parseBrowserInfo(string $userAgent): array
+    {
+        $browser = 'Unknown';
+        $version = 'Unknown';
+        $os      = 'Unknown';
+        $device  = 'Desktop';
 
-        if ($validator->fails()) {
-            Log::warning('Cesspool form validation failed', [
-                'ip'     => $request->ip(),
-                'errors' => $validator->errors()->toArray(),
-            ]);
+        $osPatterns = [
+            'Windows 11' => '/Windows NT 10\.0.*rv:(10[89]|[1-9]\d{2,})/i',
+            'Windows 10' => '/Windows NT 10\.0/i',
+            'Windows 8'  => '/Windows NT 6\.[23]/i',
+            'Windows 7'  => '/Windows NT 6\.1/i',
+            'macOS'      => '/Mac OS X/i',
+            'iOS'        => '/iPhone OS|CPU OS/i',
+            'Android'    => '/Android/i',
+            'Linux'      => '/Linux/i',
+        ];
 
-            return redirect()->back()->withErrors($validator)->withInput();
+        foreach ($osPatterns as $name => $pattern) {
+            if (preg_match($pattern, $userAgent)) { $os = $name; break; }
+        }
+
+        if (preg_match('/iPad|Tablet/i', $userAgent)) {
+            $device = 'Tablet';
+        } elseif (preg_match('/Mobile|Android|iPhone/i', $userAgent)) {
+            $device = 'Mobile';
+        }
+
+        // Order matters — Edge before Chrome, Opera before Chrome
+        $browserPatterns = [
+            'Edge'    => '/Edg\/([0-9.]+)/i',
+            'Opera'   => '/OPR\/([0-9.]+)/i',
+            'Chrome'  => '/Chrome\/([0-9.]+)/i',
+            'Firefox' => '/Firefox\/([0-9.]+)/i',
+            'Safari'  => '/Version\/([0-9.]+).*Safari/i',
+            'IE'      => '/(?:MSIE ([0-9.]+)|Trident.*rv:([0-9.]+))/i',
+        ];
+
+        foreach ($browserPatterns as $name => $pattern) {
+            if (preg_match($pattern, $userAgent, $m)) {
+                $browser = $name;
+                $version = $m[1] ?? ($m[2] ?? 'Unknown');
+                break;
+            }
+        }
+
+        return compact('browser', 'version', 'os', 'device');
+    }
+
+    // ── IP Geolocation (ip-api.com, free tier, no key needed) ────────────────
+    private function getLocation(string $ip): array
+    {
+        $location = ['country' => null, 'city' => null, 'region' => null, 'timezone' => null];
+
+        if (in_array($ip, ['127.0.0.1', '::1', 'localhost'])) {
+            $location['country'] = 'Local (Development)';
+            return $location;
         }
 
         try {
-            $entry = CesspoolSystemDetails::create([
-                'ip_address' => $request->ip(),
+            $response = Http::timeout(3)
+                ->get("http://ip-api.com/json/{$ip}?fields=status,country,regionName,city,timezone");
 
-                // Step 1
-                'home_inspection'            => $request->has('home_inspection') ? 1 : 0,
-                'realtor'                    => $request->has('realtor') ? 1 : 0,
-                'routine'                    => $request->has('routine') ? 1 : 0,
-                'date_of_pickup'             => date('Y-m-d', strtotime($request->date_of_pickup)),
-                'inspector_name_company'     => $request->inspector_name_company,
-                'site_address'               => $request->site_address,
-                'tax_map_number'             => $request->tax_map_number,
-                'type_of_system'             => $request->type_of_system,
-
-                // Step 2
-                'property_in_use_yes'        => $request->has('usee_yes') ? 1 : 0,
-                'property_in_use_no'         => $request->has('usee_no') ? 1 : 0,
-                'site_condition_grass'       => $request->has('grass') ? 1 : 0,
-                'site_condition_system_area' => $request->has('system_area') ? 1 : 0,
-                'site_condition_other_area'  => $request->has('other_area') ? 1 : 0,
-                'site_condition_ponding'     => $request->has('ponding') ? 1 : 0,
-                'site_condition_barriers'    => $request->has('barriers') ? 1 : 0,
-                'site_condition_effective'   => $request->has('effective') ? 1 : 0,
-                'site_condition_not_effective' => $request->has('not_effective') ? 1 : 0,
-                'runoff_yes'                 => $request->has('runoff_yes') ? 1 : 0,
-                'runoff_no'                  => $request->has('runoff_no') ? 1 : 0,
-                'runoff_na'                  => $request->has('runoff_na') ? 1 : 0,
-                'malfunction_yes'            => $request->has('mal_yes') ? 1 : 0,
-                'malfunction_no'             => $request->has('mal_no') ? 1 : 0,
-                'discharge_grey'             => $request->has('grey') ? 1 : 0,
-                'discharge_black'            => $request->has('black') ? 1 : 0,
-                'discharge_unknown'          => $request->has('unknown') ? 1 : 0,
-                'discharge_cesspool_area'    => $request->has('cesspool_area') ? 1 : 0,
-                'discharge_cesspool_edge'    => $request->has('cesspool_edge') ? 1 : 0,
-                'discharge_bleed_out'        => $request->has('bleed_out') ? 1 : 0,
-                'discharge_past_failure'     => $request->has('past_failure') ? 1 : 0,
-
-                // Step 3
-                'access_lids_yes'            => $request->has('access_yes') ? 1 : 0,
-                'access_lids_no'             => $request->has('access_no') ? 1 : 0,
-                'access_lid_repair_yes'      => $request->has('accesslid_yes') ? 1 : 0,
-                'access_lid_repair_no'       => $request->has('accesslid_no') ? 1 : 0,
-                'cesspool_water_level_depth' => $request->cesspool_water_level_depth,
-                'pumping_recommended_yes'    => $request->has('pumping_yes') ? 1 : 0,
-                'pumping_recommended_no'     => $request->has('pumping_no') ? 1 : 0,
-                'cesspool_pumped'            => $request->cesspool_pumped,
-                'water_stream_from_house'    => $request->water_stream_from_house,
-                'inlet_pipe_needs_repair'    => $request->inlet_pipe_needs_repair,
-                'cesspool_composition'       => $request->cesspool_composition,
-                'service_recommended'        => $request->service_recommended,
-                'comments'                   => $request->comments,
-                'notes'                      => $request->notes,
-                'inspector_signature'        => $request->inspector_signature,
-                'print_name'                 => $request->print_name,
-                'date'                       => date('Y-m-d', strtotime($request->date)),
-                'inserted_at'                => Carbon::now(),
-            ]);
-
-            Log::info('Cesspool form saved successfully', [
-                'id' => $entry->id,
-                'ip' => $request->ip(),
-            ]);
-
-            return redirect()->route('frontend.thank_you')->with('message', 'Cesspool inspection submitted successfully!');
-
+            if ($response->successful()) {
+                $data = $response->json();
+                if (($data['status'] ?? '') === 'success') {
+                    $location['country']  = $data['country']    ?? null;
+                    $location['city']     = $data['city']       ?? null;
+                    $location['region']   = $data['regionName'] ?? null;
+                    $location['timezone'] = $data['timezone']   ?? null;
+                }
+            }
         } catch (\Exception $e) {
-            Log::error('Cesspool form save failed', [
-                'ip'    => $request->ip(),
-                'error' => $e->getMessage(),
-            ]);
-
-            return redirect()->back()
-                ->with('error', 'Something went wrong. Please try again.')
-                ->withInput();
+            Log::debug('IP geolocation lookup failed', ['ip' => $ip, 'error' => $e->getMessage()]);
         }
+
+        return $location;
     }
 }
