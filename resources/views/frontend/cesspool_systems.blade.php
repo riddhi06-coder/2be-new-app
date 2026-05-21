@@ -413,6 +413,12 @@
 
 
 
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
+        <div class="spinner-border text-light" role="status" style="width:3.5rem;height:3.5rem;border-width:4px;"></div>
+        <p id="loadingText" style="color:#fff;margin-top:20px;font-size:18px;font-weight:600;letter-spacing:0.5px;">Please wait...</p>
+    </div>
+
     @include('components.frontend.footer')
 
     @include('components.frontend.main-js')
@@ -694,7 +700,10 @@
         document.getElementById('cesspoolForm').addEventListener('submit', function(e) {
             if (!validateStep(currentStep)) {
                 e.preventDefault();
+                return;
             }
+            document.getElementById('loadingText').textContent = 'Submitting your form...';
+            document.getElementById('loadingOverlay').style.display = 'flex';
         });
 
         showStep(currentStep);
@@ -705,7 +714,8 @@
         flatpickr("#date_of_pickup", {
             dateFormat: "m/d/Y",
             allowInput: true,
-            disableMobile: true
+            disableMobile: true,
+            maxDate: "today"
         });
 
         document.getElementById('calendar-icon-pickup').addEventListener('click', function() {
@@ -715,7 +725,8 @@
         flatpickr("#date", {
             dateFormat: "m/d/Y",
             allowInput: true,
-            disableMobile: true
+            disableMobile: true,
+            maxDate: "today"
         });
 
         document.getElementById('calendar-icon-date').addEventListener('click', function() {
@@ -728,8 +739,12 @@
             if (!validateStep(currentStep)) return;
 
             const btn = this;
+            const overlay = document.getElementById('loadingOverlay');
+
             btn.disabled = true;
             btn.textContent = 'Saving...';
+            document.getElementById('loadingText').textContent = 'Saving your draft...';
+            overlay.style.display = 'flex';
 
             const formData = new FormData(document.getElementById('cesspoolForm'));
             formData.append('is_draft', '1');
@@ -741,6 +756,7 @@
             })
             .then(function (res) { return res.json(); })
             .then(function (data) {
+                overlay.style.display = 'none';
                 btn.disabled = false;
                 btn.textContent = 'Save Draft';
                 if (data.success) {
@@ -760,6 +776,7 @@
                 }
             })
             .catch(function () {
+                overlay.style.display = 'none';
                 btn.disabled = false;
                 btn.textContent = 'Save Draft';
                 Swal.fire({
