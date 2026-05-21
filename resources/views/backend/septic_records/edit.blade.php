@@ -3,12 +3,121 @@
 
 <head>
     @include('components.backend.head')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6c757d; margin-bottom: 0.75rem; }
-        .field-group { background: #f8f9fa; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
-        .media-preview img  { max-width: 100%; max-height: 200px; border-radius: 6px; object-fit: cover; border: 1px solid #dee2e6; }
-        .media-preview video { max-width: 100%; max-height: 200px; border-radius: 6px; border: 1px solid #dee2e6; }
-        .nav-tabs .nav-link { font-size: 0.85rem; font-weight: 600; }
+        .edit-page-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f6f8fb 100%);
+            border: 1px solid #e6eaf0;
+            border-radius: 12px;
+            padding: 20px 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+        }
+        .edit-page-header .page-title {
+            font-size: 1.3rem; font-weight: 600; color: #1f2937;
+            margin: 0; display: flex; align-items: center; gap: 12px;
+        }
+        .edit-page-header .title-icon {
+            width: 38px; height: 38px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #eaf2ff; color: #0d6efd;
+            border-radius: 10px; font-size: 1rem;
+        }
+        .edit-page-header .breadcrumb { margin: 6px 0 0 50px; font-size: 0.82rem; }
+        .edit-page-header .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #9aa3b2; }
+        .edit-page-header .breadcrumb-item a { color: #6b7280; text-decoration: none; }
+        .edit-page-header .breadcrumb-item a:hover { color: #0d6efd; }
+        .edit-page-header .breadcrumb-item.active { color: #1f2937; font-weight: 500; }
+
+        .edit-card {
+            border: 1px solid #e6eaf0; border-radius: 12px;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+        }
+        .edit-card .nav-tabs {
+            border-bottom: 1px solid #e6eaf0;
+            padding: 8px 16px 0;
+            background: #fafbfd;
+            border-top-left-radius: 12px; border-top-right-radius: 12px;
+            gap: 4px;
+        }
+        .edit-card .nav-tabs .nav-link {
+            font-size: 0.88rem; font-weight: 600; color: #6b7280;
+            border: none; padding: 12px 18px;
+            border-bottom: 3px solid transparent;
+        }
+        .edit-card .nav-tabs .nav-link.active {
+            color: #0d6efd; background: transparent;
+            border-bottom-color: #0d6efd;
+        }
+        .edit-card .nav-tabs .nav-link i { margin-right: 6px; }
+
+        .section-block {
+            padding: 28px 30px; border-bottom: 1px dashed #e6eaf0;
+        }
+        .section-block:last-child { border-bottom: 0; }
+        .section-block .section-title {
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #6b7280; margin-bottom: 18px;
+            padding-bottom: 8px; border-bottom: 1px solid #f1f3f7;
+        }
+        .section-block .section-title i { color: #0d6efd; margin-right: 8px; }
+
+        .form-label {
+            font-weight: 600; color: #344054; font-size: 0.85rem; margin-bottom: 6px;
+        }
+        .form-control, .form-select {
+            font-size: 0.92rem; padding: 9px 12px;
+            border: 1px solid #d9dde3; border-radius: 8px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,0.12);
+        }
+        .form-text { font-size: 0.76rem; color: #8a93a3; margin-top: 4px; }
+
+        .row.g-form { --bs-gutter-x: 1.5rem; --bs-gutter-y: 1.25rem; }
+
+        .status-bar {
+            background: #f8fafc; border: 1px solid #eef0f4; border-radius: 10px;
+            padding: 12px 18px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .status-bar .badge { font-size: 0.78rem; padding: 7px 14px; }
+        .status-bar .submitted-time { font-size: 0.82rem; color: #6b7280; }
+        .status-bar .submitted-time i { margin-right: 4px; color: #9aa3b2; }
+
+        .media-card {
+            background: #fafbfd; border: 1px dashed #d9dde3; border-radius: 10px;
+            padding: 18px; height: 100%;
+        }
+        .media-card .media-title { font-weight: 600; color: #344054; margin-bottom: 4px; }
+        .media-card .media-help { color: #8a93a3; font-size: 0.78rem; margin-bottom: 12px; }
+        .media-card .media-preview img,
+        .media-card .media-preview video {
+            max-width: 100%; max-height: 220px; border-radius: 8px;
+            border: 1px solid #e6eaf0; object-fit: cover;
+        }
+        .media-card .empty-state {
+            color: #9aa3b2; font-size: 0.85rem; padding: 14px;
+            text-align: center; background: #fff; border-radius: 8px;
+            border: 1px dashed #e6eaf0;
+        }
+
+        .card-footer-actions {
+            background: #fafbfd; border-top: 1px solid #e6eaf0;
+            padding: 16px 26px; display: flex; gap: 10px; justify-content: flex-end;
+            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+        }
+        .card-footer-actions .btn { padding: 9px 22px; font-weight: 500; }
+
+        @media (max-width: 768px) {
+            .section-block { padding: 22px 18px; }
+        }
+
+        /* Toast */
+        .app-toast-container { z-index: 1080; }
+        .app-toast { min-width: 280px; border: 0; box-shadow: 0 8px 20px rgba(16,24,40,0.18); }
+        .app-toast .toast-body i { font-size: 1.05rem; }
     </style>
 </head>
 
@@ -17,95 +126,107 @@
 
 <div class="page-body">
     <div class="container-fluid">
-        <div class="row justify-content-center">
-            <div class="col-xl-10">
+
+        <!-- Toast container -->
+        <div class="toast-container position-fixed top-0 end-0 p-3 app-toast-container" id="toastContainer"></div>
+
+        <div class="row">
+            <div class="col-12">
 
                 <!-- Page Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div class="edit-page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div>
-                        <h5 class="mb-1 fw-semibold">Edit Septic Record #{{ $record->id }}</h5>
+                        <h5 class="page-title">
+                            <span class="title-icon"><i class="fa-solid fa-clipboard-list"></i></span>
+                            Edit Septic Record <span class="text-muted fw-normal">#{{ $record->id }}</span>
+                        </h5>
                         <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0 small">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-house-chimney me-1"></i>Dashboard</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('septic-records.index') }}">Septic Records</a></li>
                                 <li class="breadcrumb-item active">Edit #{{ $record->id }}</li>
                             </ol>
                         </nav>
                     </div>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex flex-wrap gap-2">
                         <a href="{{ route('septic-records.pdf', $record->id) }}" class="btn btn-sm btn-danger" target="_blank">
-                            <i class="fa fa-file-pdf-o me-1"></i> Download PDF
+                            <i class="fa-solid fa-file-pdf me-1"></i> Download PDF
                         </a>
                         <button type="button" class="btn btn-sm btn-info text-white" id="btnOpenSendModal">
-                            <i class="fa fa-envelope me-1"></i> Send Report
+                            <i class="fa-solid fa-envelope me-1"></i> Send Report
                         </button>
                         <a href="{{ route('septic-records.index') }}" class="btn btn-sm btn-secondary">
-                            <i class="fa fa-arrow-left me-1"></i> Back
+                            <i class="fa-solid fa-arrow-left me-1"></i> Back
                         </a>
                     </div>
                 </div>
 
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show">
-                        {{ session('success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <div>
+                        @if($record->is_draft)
+                            <span class="badge bg-warning text-dark"><i class="fa-solid fa-pen-ruler me-1"></i>Draft</span>
+                        @else
+                            <span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Submitted</span>
+                        @endif
                     </div>
-                @endif
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <ul class="mb-0 ps-3">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <div class="submitted-time">
+                        <i class="fa-regular fa-clock"></i>
+                        Submitted: {{ $record->inserted_at ? \Carbon\Carbon::parse($record->inserted_at)->format('d-m-Y H:i') : '—' }}
                     </div>
-                @endif
-
-                <!-- Status Badge -->
-                <div class="mb-3">
-                    @if($record->is_draft)
-                        <span class="badge bg-warning text-dark fs-6 px-3 py-2">Draft</span>
-                    @else
-                        <span class="badge bg-success fs-6 px-3 py-2">Submitted</span>
-                    @endif
-                    <span class="text-muted small ms-2">Submitted: {{ $record->inserted_at ? \Carbon\Carbon::parse($record->inserted_at)->format('m/d/Y H:i') : '—' }}</span>
                 </div>
 
                 <form method="POST" action="{{ route('septic-records.update', $record->id) }}" enctype="multipart/form-data">
                     @csrf @method('PUT')
 
-                    <div class="card shadow-sm">
-                        <div class="card-body p-0">
+                    <div class="card edit-card">
 
-                            <ul class="nav nav-tabs px-3 pt-3" id="editTabs">
-                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-basic">Basic Info</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-site">Site Observations</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-eval">System Evaluation</a></li>
-                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-media">Media Files</a></li>
-                            </ul>
+                        <ul class="nav nav-tabs" id="editTabs">
+                            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-basic"><i class="fa-solid fa-circle-info"></i>Basic Info</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-site"><i class="fa-solid fa-eye"></i>Site Observations</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-eval"><i class="fa-solid fa-magnifying-glass-chart"></i>System Evaluation</a></li>
+                            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-media"><i class="fa-solid fa-photo-film"></i>Media Files</a></li>
+                        </ul>
 
-                            <div class="tab-content p-4">
+                        <div class="tab-content">
 
-                                <!-- TAB 1: BASIC INFO -->
-                                <div class="tab-pane fade show active" id="tab-basic">
-                                    <p class="section-label">Basic Information</p>
-                                    <div class="row g-3">
+                            <!-- ==================== TAB 1: BASIC INFO ==================== -->
+                            <div class="tab-pane fade show active" id="tab-basic">
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-circle-info"></i>Inspection Details</div>
+                                    <div class="row g-form">
                                         <div class="col-md-12">
                                             <label class="form-label">Type of Inspection</label>
-                                            <input type="text" name="inspection_type" class="form-control" value="{{ old('inspection_type', $record->inspection_type) }}">
-                                            <div class="form-text">Comma-separated e.g. Home Inspector, Realtor</div>
+                                            <input type="text" name="inspection_type" class="form-control"
+                                                   value="{{ old('inspection_type', $record->inspection_type) }}">
+                                            <div class="form-text">Comma-separated, e.g. Home Inspector, Realtor, Routine Maintenance</div>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Date of Inspection</label>
-                                            <input type="date" name="date_of_pickup" class="form-control" value="{{ old('date_of_pickup', $record->date_of_pickup ? \Carbon\Carbon::parse($record->date_of_pickup)->format('Y-m-d') : '') }}">
+                                            <input type="date" name="date_of_pickup" class="form-control"
+                                                   value="{{ old('date_of_pickup', $record->date_of_pickup ? \Carbon\Carbon::parse($record->date_of_pickup)->format('Y-m-d') : '') }}">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Time</label>
-                                            <input type="text" name="time" class="form-control" value="{{ old('time', $record->time) }}" placeholder="e.g. 10:30 AM">
+                                            <input type="text" name="time" class="form-control"
+                                                   value="{{ old('time', $record->time) }}" placeholder="e.g. 10:30 AM">
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label">Weather</label>
-                                            <input type="text" name="weather" class="form-control" value="{{ old('weather', $record->weather) }}">
+                                            <input type="text" name="weather" class="form-control"
+                                                   value="{{ old('weather', $record->weather) }}" placeholder="e.g. Sunny">
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-user-tie"></i>Inspector &amp; Site</div>
+                                    <div class="row g-form">
                                         <div class="col-md-12">
-                                            <label class="form-label">Inspector Name & Company</label>
-                                            <input type="text" name="inspector_name_company" class="form-control" value="{{ old('inspector_name_company', $record->inspector_name_company) }}">
+                                            <label class="form-label">Inspector Name &amp; Company</label>
+                                            <input type="text" name="inspector_name_company" class="form-control"
+                                                   value="{{ old('inspector_name_company', $record->inspector_name_company) }}">
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label">Site Address</label>
@@ -113,42 +234,57 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Tax Map Number</label>
-                                            <input type="text" name="tax_map_number" class="form-control" value="{{ old('tax_map_number', $record->tax_map_number) }}">
+                                            <input type="text" name="tax_map_number" class="form-control"
+                                                   value="{{ old('tax_map_number', $record->tax_map_number) }}">
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Type of System</label>
-                                            <input type="text" name="type_of_system" class="form-control" value="{{ old('type_of_system', $record->type_of_system) }}">
+                                            <label class="form-label">Type of System (DOH code if available)</label>
+                                            <input type="text" name="type_of_system" class="form-control"
+                                                   value="{{ old('type_of_system', $record->type_of_system) }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Inspector Signature</label>
-                                            <input type="text" name="inspector_signature" class="form-control" value="{{ old('inspector_signature', $record->inspector_signature) }}">
+                                            <input type="text" name="inspector_signature" class="form-control"
+                                                   value="{{ old('inspector_signature', $record->inspector_signature) }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Status</label>
                                             <select name="is_draft" class="form-select">
                                                 <option value="0" {{ !$record->is_draft ? 'selected' : '' }}>Submitted</option>
-                                                <option value="1" {{ $record->is_draft  ? 'selected' : '' }}>Draft</option>
+                                                <option value="1" {{  $record->is_draft ? 'selected' : '' }}>Draft</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- TAB 2: SITE OBSERVATIONS -->
-                                <div class="tab-pane fade" id="tab-site">
-                                    <p class="section-label">Site Observations</p>
-                                    <div class="row g-3">
+                            </div>
+
+                            <!-- ==================== TAB 2: SITE OBSERVATIONS ==================== -->
+                            <div class="tab-pane fade" id="tab-site">
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-house-chimney-user"></i>Property Use &amp; Site Conditions</div>
+                                    <div class="row g-form">
                                         <div class="col-md-12">
                                             <label class="form-label">Property in Use</label>
-                                            <input type="text" name="property_in_use" class="form-control" value="{{ old('property_in_use', $record->property_in_use) }}">
-                                            <div class="form-text">Comma-separated e.g. Yes, Full time</div>
+                                            <input type="text" name="property_in_use" class="form-control"
+                                                   value="{{ old('property_in_use', $record->property_in_use) }}">
+                                            <div class="form-text">Comma-separated values, e.g. Yes, Full time</div>
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label">General Site Conditions</label>
-                                            <input type="text" name="site_conditions" class="form-control" value="{{ old('site_conditions', $record->site_conditions) }}">
-                                            <div class="form-text">Comma-separated selected conditions</div>
+                                            <input type="text" name="site_conditions" class="form-control"
+                                                   value="{{ old('site_conditions', $record->site_conditions) }}">
+                                            <div class="form-text">Comma-separated values selected on the inspection form</div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-droplet"></i>Runoff &amp; Malfunction</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
-                                            <label class="form-label">Surface Runoff</label>
+                                            <label class="form-label">Surface Runoff Directed Away from System</label>
                                             <select name="surface_runoff" class="form-select">
                                                 <option value="">— Select —</option>
                                                 @foreach(['Yes','No','N/A'] as $opt)
@@ -158,16 +294,21 @@
                                         </div>
                                         <div class="col-md-12">
                                             <label class="form-label">Malfunction / Surface Discharge</label>
-                                            <input type="text" name="malfunction" class="form-control" value="{{ old('malfunction', $record->malfunction) }}">
-                                            <div class="form-text">Comma-separated selected options</div>
+                                            <input type="text" name="malfunction" class="form-control"
+                                                   value="{{ old('malfunction', $record->malfunction) }}">
+                                            <div class="form-text">Comma-separated values from the inspection form</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- TAB 3: SYSTEM EVALUATION -->
-                                <div class="tab-pane fade" id="tab-eval">
-                                    <p class="section-label">Manhole Covers &amp; Tank</p>
-                                    <div class="row g-3">
+                            </div>
+
+                            <!-- ==================== TAB 3: SYSTEM EVALUATION ==================== -->
+                            <div class="tab-pane fade" id="tab-eval">
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-circle-dot"></i>Manhole Covers &amp; Lid</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
                                             <label class="form-label">Accessible</label>
                                             <select name="manhole_accessible" class="form-select">
@@ -186,18 +327,34 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-flask"></i>Tank Contents</div>
+                                    <div class="row g-form">
                                         <div class="col-md-12">
                                             <label class="form-label">Liquid Operating Level</label>
-                                            <input type="text" name="liquid_operating_level" class="form-control" value="{{ old('liquid_operating_level', $record->liquid_operating_level) }}">
+                                            <input type="text" name="liquid_operating_level" class="form-control"
+                                                   value="{{ old('liquid_operating_level', $record->liquid_operating_level) }}">
+                                            <div class="form-text">Comma-separated, e.g. At outlet invert, Above outlet invert</div>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Scum Layer Thickness (in.)</label>
-                                            <input type="text" name="scum_layer_thickness" class="form-control" value="{{ old('scum_layer_thickness', $record->scum_layer_thickness) }}">
+                                            <input type="text" name="scum_layer_thickness" class="form-control"
+                                                   value="{{ old('scum_layer_thickness', $record->scum_layer_thickness) }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Sludge Layer Thickness (in.)</label>
-                                            <input type="text" name="sludge_layer_thickness" class="form-control" value="{{ old('sludge_layer_thickness', $record->sludge_layer_thickness) }}">
+                                            <input type="text" name="sludge_layer_thickness" class="form-control"
+                                                   value="{{ old('sludge_layer_thickness', $record->sludge_layer_thickness) }}">
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-pump-soap"></i>Pumping</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
                                             <label class="form-label">Tank Pumping Recommended</label>
                                             <select name="tank_pumping_recommended" class="form-select">
@@ -208,7 +365,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Tank Pumped</label>
+                                            <label class="form-label">Tank Pumped (Liquids &amp; Solids)</label>
                                             <select name="tank_pumped" class="form-select">
                                                 <option value="">— Select —</option>
                                                 @foreach(['Yes','No','N/A'] as $opt)
@@ -218,23 +375,36 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Approx. Volume Pumped (gals)</label>
-                                            <input type="text" name="approx_volume_pumped" class="form-control" value="{{ old('approx_volume_pumped', $record->approx_volume_pumped) }}">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Tank Composition</label>
-                                            <input type="text" name="tank_composition" class="form-control" value="{{ old('tank_composition', $record->tank_composition) }}">
+                                            <input type="text" name="approx_volume_pumped" class="form-control"
+                                                   value="{{ old('approx_volume_pumped', $record->approx_volume_pumped) }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Approx. Size of Tank (gals)</label>
-                                            <input type="text" name="approx_tank_size" class="form-control" value="{{ old('approx_tank_size', $record->approx_tank_size) }}">
+                                            <input type="text" name="approx_tank_size" class="form-control"
+                                                   value="{{ old('approx_tank_size', $record->approx_tank_size) }}">
                                         </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Tank Composition</label>
+                                            <input type="text" name="tank_composition" class="form-control"
+                                                   value="{{ old('tank_composition', $record->tank_composition) }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-arrows-left-right-to-line"></i>Flow &amp; Tees</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
                                             <label class="form-label">Water Stream from House</label>
-                                            <input type="text" name="water_stream_from_house" class="form-control" value="{{ old('water_stream_from_house', $record->water_stream_from_house) }}">
+                                            <input type="text" name="water_stream_from_house" class="form-control"
+                                                   value="{{ old('water_stream_from_house', $record->water_stream_from_house) }}">
+                                            <div class="form-text">Comma-separated, e.g. Yes, Trickle</div>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Water Stream from Drain Field</label>
-                                            <input type="text" name="water_stream_from_drain" class="form-control" value="{{ old('water_stream_from_drain', $record->water_stream_from_drain) }}">
+                                            <input type="text" name="water_stream_from_drain" class="form-control"
+                                                   value="{{ old('water_stream_from_drain', $record->water_stream_from_drain) }}">
+                                            <div class="form-text">Comma-separated values</div>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Inlet Tee Needs Repair</label>
@@ -254,6 +424,12 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-pen-nib"></i>Service &amp; Notes</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
                                             <label class="form-label">Service Recommended</label>
                                             <select name="service_recommended" class="form-select">
@@ -263,81 +439,79 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label class="form-label">Comments</label>
-                                            <textarea name="comments" class="form-control" rows="3">{{ old('comments', $record->comments) }}</textarea>
+                                            <textarea name="comments" class="form-control" rows="4">{{ old('comments', $record->comments) }}</textarea>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label class="form-label">Notes</label>
-                                            <textarea name="notes" class="form-control" rows="3">{{ old('notes', $record->notes) }}</textarea>
+                                            <textarea name="notes" class="form-control" rows="4">{{ old('notes', $record->notes) }}</textarea>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- TAB 4: MEDIA -->
-                                <div class="tab-pane fade" id="tab-media">
-                                    <p class="section-label">Media Files</p>
-                                    <div class="row g-4">
+                            </div>
 
-                                        <!-- Image -->
+                            <!-- ==================== TAB 4: MEDIA ==================== -->
+                            <div class="tab-pane fade" id="tab-media">
+                                <div class="section-block">
+                                    <div class="section-title"><i class="fa-solid fa-photo-film"></i>Inspection Media</div>
+                                    <div class="row g-form">
                                         <div class="col-md-6">
-                                            <div class="field-group">
-                                                <label class="form-label fw-semibold">Inspection Image</label>
-                                                <div class="form-text mb-2">Accepted: JPG, PNG, WebP &nbsp;|&nbsp; Max: 2 MB</div>
+                                            <div class="media-card">
+                                                <div class="media-title">Inspection Image</div>
+                                                <div class="media-help">Accepted: JPG, PNG, WebP &nbsp;|&nbsp; Max size: 2 MB</div>
                                                 @if($record->image_path)
-                                                    <div class="media-preview mb-2">
+                                                    <div class="media-preview mb-3">
                                                         <img src="{{ Storage::url($record->image_path) }}" alt="Inspection Image">
                                                     </div>
-                                                    <div class="form-check mb-2">
+                                                    <div class="form-check mb-3">
                                                         <input class="form-check-input" type="checkbox" name="remove_image" id="remove_image" value="1">
                                                         <label class="form-check-label text-danger small" for="remove_image">Remove existing image</label>
                                                     </div>
                                                 @else
-                                                    <p class="text-muted small mb-2">No image uploaded yet.</p>
+                                                    <div class="empty-state mb-3"><i class="fa-regular fa-image me-1"></i> No image uploaded yet</div>
                                                 @endif
                                                 <input type="file" name="image" class="form-control" accept=".jpg,.jpeg,.png,.webp">
-                                                @error('image')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                                                @error('image')<div class="text-danger small mt-2">{{ $message }}</div>@enderror
                                             </div>
                                         </div>
-
-                                        <!-- Video -->
                                         <div class="col-md-6">
-                                            <div class="field-group">
-                                                <label class="form-label fw-semibold">Inspection Video</label>
-                                                <div class="form-text mb-2">Accepted: MP4, MOV, AVI, WMV, MKV &nbsp;|&nbsp; Max: 5 MB</div>
+                                            <div class="media-card">
+                                                <div class="media-title">Inspection Video</div>
+                                                <div class="media-help">Accepted: MP4, MOV, AVI, WMV, MKV &nbsp;|&nbsp; Max size: 5 MB</div>
                                                 @if($record->video_path)
-                                                    <div class="media-preview mb-2">
+                                                    <div class="media-preview mb-3">
                                                         <video controls>
                                                             <source src="{{ Storage::url($record->video_path) }}">
                                                             Your browser does not support video playback.
                                                         </video>
                                                     </div>
-                                                    <div class="form-check mb-2">
+                                                    <div class="form-check mb-3">
                                                         <input class="form-check-input" type="checkbox" name="remove_video" id="remove_video" value="1">
                                                         <label class="form-check-label text-danger small" for="remove_video">Remove existing video</label>
                                                     </div>
                                                 @else
-                                                    <p class="text-muted small mb-2">No video uploaded yet.</p>
+                                                    <div class="empty-state mb-3"><i class="fa-regular fa-circle-play me-1"></i> No video uploaded yet</div>
                                                 @endif
                                                 <input type="file" name="video" class="form-control" accept=".mp4,.mov,.avi,.wmv,.mkv">
-                                                @error('video')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
+                                                @error('video')<div class="text-danger small mt-2">{{ $message }}</div>@enderror
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
+                            </div>
 
-                            </div><!-- end tab-content -->
-                        </div>
+                        </div><!-- end tab-content -->
 
-                        <div class="card-footer d-flex justify-content-end gap-2 bg-white">
+                        <div class="card-footer-actions">
                             <a href="{{ route('septic-records.index') }}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="fa fa-save me-1"></i> Save Changes
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
                             </button>
                         </div>
 
-                    </div>
+                    </div><!-- end edit-card -->
                 </form>
 
             </div>
@@ -350,7 +524,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fa fa-envelope me-2"></i>Send Inspection Report</h5>
+                <h5 class="modal-title"><i class="fa-solid fa-envelope me-2"></i>Send Inspection Report</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -364,7 +538,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-info text-white" id="btnSendReport">
-                    <span id="sendBtnText"><i class="fa fa-paper-plane me-1"></i>Send Report</span>
+                    <span id="sendBtnText"><i class="fa-solid fa-paper-plane me-1"></i>Send Report</span>
                     <span id="sendBtnSpinner" style="display:none;"><span class="spinner-border spinner-border-sm me-1"></span>Sending...</span>
                 </button>
             </div>
@@ -379,51 +553,90 @@
 @include('components.backend.main-js')
 
 <script>
-    document.getElementById('btnOpenSendModal').addEventListener('click', function() {
-        document.getElementById('modal_to_email').value = '';
-        document.getElementById('modal_email_error').style.display = 'none';
-        new bootstrap.Modal(document.getElementById('sendReportModal')).show();
+/* ── Toast helper ────────────────────────────────────────────────────────── */
+function showToast(message, type) {
+    type = type || 'success';
+    const colorMap = {
+        success: 'bg-success text-white',
+        error:   'bg-danger  text-white',
+        warning: 'bg-warning text-dark',
+        info:    'bg-info    text-white'
+    };
+    const iconMap = {
+        success: 'fa-circle-check',
+        error:   'fa-circle-xmark',
+        warning: 'fa-triangle-exclamation',
+        info:    'fa-circle-info'
+    };
+    const cls = colorMap[type] || colorMap.success;
+    const ico = iconMap[type]  || iconMap.success;
+    const id  = 't' + Date.now() + Math.floor(Math.random() * 999);
+    const html =
+        '<div id="' + id + '" class="toast app-toast align-items-center ' + cls + ' border-0" role="alert" aria-live="assertive" aria-atomic="true">' +
+            '<div class="d-flex">' +
+                '<div class="toast-body"><i class="fa-solid ' + ico + ' me-2"></i>' + message + '</div>' +
+                '<button type="button" class="btn-close ' + (type === 'warning' ? '' : 'btn-close-white') + ' me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>' +
+            '</div>' +
+        '</div>';
+    const container = document.getElementById('toastContainer');
+    container.insertAdjacentHTML('beforeend', html);
+    const el = document.getElementById(id);
+    const t  = new bootstrap.Toast(el, { delay: 4500 });
+    t.show();
+    el.addEventListener('hidden.bs.toast', () => el.remove());
+}
+
+@if(session('success'))
+    document.addEventListener('DOMContentLoaded', () => showToast(@json(session('success')), 'success'));
+@endif
+@if(session('error'))
+    document.addEventListener('DOMContentLoaded', () => showToast(@json(session('error')), 'error'));
+@endif
+@if($errors->any())
+    document.addEventListener('DOMContentLoaded', () => showToast(@json($errors->first()), 'error'));
+@endif
+
+document.getElementById('btnOpenSendModal').addEventListener('click', function() {
+    document.getElementById('modal_to_email').value = '';
+    document.getElementById('modal_email_error').style.display = 'none';
+    new bootstrap.Modal(document.getElementById('sendReportModal')).show();
+});
+
+document.getElementById('btnSendReport').addEventListener('click', function() {
+    const email  = document.getElementById('modal_to_email').value.trim();
+    const errDiv = document.getElementById('modal_email_error');
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errDiv.textContent = 'Please enter a valid email address.';
+        errDiv.style.display = 'block';
+        return;
+    }
+    errDiv.style.display = 'none';
+
+    document.getElementById('sendBtnText').style.display    = 'none';
+    document.getElementById('sendBtnSpinner').style.display = 'inline';
+    this.disabled = true;
+
+    fetch('{{ route("septic-records.send-report") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        body: JSON.stringify({ record_id: {{ $record->id }}, to_email: email })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('sendBtnText').style.display    = 'inline';
+        document.getElementById('sendBtnSpinner').style.display = 'none';
+        document.getElementById('btnSendReport').disabled = false;
+        bootstrap.Modal.getInstance(document.getElementById('sendReportModal')).hide();
+        showToast(data.message, data.success ? 'success' : 'error');
+    })
+    .catch(() => {
+        document.getElementById('sendBtnText').style.display    = 'inline';
+        document.getElementById('sendBtnSpinner').style.display = 'none';
+        document.getElementById('btnSendReport').disabled = false;
+        showToast('Something went wrong. Please try again.', 'error');
     });
-
-    document.getElementById('btnSendReport').addEventListener('click', function() {
-        const email  = document.getElementById('modal_to_email').value.trim();
-        const errDiv = document.getElementById('modal_email_error');
-
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errDiv.textContent = 'Please enter a valid email address.';
-            errDiv.style.display = 'block';
-            return;
-        }
-        errDiv.style.display = 'none';
-
-        document.getElementById('sendBtnText').style.display    = 'none';
-        document.getElementById('sendBtnSpinner').style.display = 'inline';
-        this.disabled = true;
-
-        fetch('{{ route("septic-records.send-report") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: JSON.stringify({ record_id: {{ $record->id }}, to_email: email })
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('sendBtnText').style.display    = 'inline';
-            document.getElementById('sendBtnSpinner').style.display = 'none';
-            document.getElementById('btnSendReport').disabled = false;
-            bootstrap.Modal.getInstance(document.getElementById('sendReportModal')).hide();
-
-            const cls   = data.success ? 'alert-success' : 'alert-danger';
-            const alert = '<div class="alert ' + cls + ' alert-dismissible fade show mb-3" role="alert">' + data.message + '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
-            document.querySelector('.page-body .container-fluid').insertAdjacentHTML('afterbegin', alert);
-        })
-        .catch(() => {
-            document.getElementById('sendBtnText').style.display    = 'inline';
-            document.getElementById('sendBtnSpinner').style.display = 'none';
-            document.getElementById('btnSendReport').disabled = false;
-            errDiv.textContent = 'Something went wrong. Please try again.';
-            errDiv.style.display = 'block';
-        });
-    });
+});
 </script>
 
 </body>
