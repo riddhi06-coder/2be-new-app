@@ -63,10 +63,10 @@
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('cesspool-records.index') }}">
                     <svg class="stroke-icon">
-                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-starter-kit') }}"></use>
                     </svg>
                     <svg class="fill-icon">
-                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-starter-kit') }}"></use>
                     </svg>
                     <span>Cesspool Records</span>
                   </a>
@@ -76,10 +76,10 @@
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('septic-records.index') }}">
                     <svg class="stroke-icon">
-                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-internationalization') }}"></use>
                     </svg>
                     <svg class="fill-icon">
-                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-internationalization') }}"></use>
                     </svg>
                     <span>Septic Records</span>
                   </a>
