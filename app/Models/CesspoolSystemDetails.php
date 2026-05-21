@@ -56,6 +56,10 @@ class CesspoolSystemDetails extends Model
         'print_name',
         'date',
 
+        // Media
+        'image_path',
+        'video_path',
+
         // Draft management
         'is_draft',
         'session_key',

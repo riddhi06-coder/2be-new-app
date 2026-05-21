@@ -34,6 +34,9 @@ class SepticSystemDetails extends Model
         'tank_composition', 'approx_tank_size', 'service_recommended',
         'comments', 'inspector_signature', 'notes',
 
+        // Media
+        'image_path', 'video_path',
+
         // Draft management
         'is_draft', 'session_key', 'expires_at', 'inserted_at',
     ];

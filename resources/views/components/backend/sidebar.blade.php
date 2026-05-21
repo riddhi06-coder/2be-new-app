@@ -9,7 +9,7 @@
 		  <div class="back-btn mt-5"><i class="fa fa-angle-left"> </i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
           </div>
-          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt=""  style="max-width: 20% !important;margin-reight:50px !important;"></a></div>
+          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt=""  style="max-width: 20% !important;margin-right:50px !important;"></a></div>
           <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
@@ -49,13 +49,39 @@
                 <li class="sidebar-list {{ request()->routeIs('manage-email-settings.index') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('manage-email-settings.index') }}">
-                    <svg class="stroke-icon"> 
+                    <svg class="stroke-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#doller-return') }}"></use>
                     </svg>
                     <svg class="fill-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#doller-return') }}"></use>
                     </svg>
                     <span>Email Setting</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-list {{ request()->routeIs('cesspool-records.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('cesspool-records.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                    </svg>
+                    <span>Cesspool Records</span>
+                  </a>
+                </li>
+
+                <li class="sidebar-list {{ request()->routeIs('septic-records.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('septic-records.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
+                    </svg>
+                    <span>Septic Records</span>
                   </a>
                 </li>
 
