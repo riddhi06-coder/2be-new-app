@@ -7,6 +7,10 @@
     body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #1a1a1a; line-height: 1.5; }
     .page { padding: 30px 35px; }
 
+    /* Logo */
+    .logo-wrap { text-align: center; margin-bottom: 10px; }
+    .logo-wrap img { max-height: 60px; }
+
     /* Header */
     .report-header { border-bottom: 3px solid #1a5276; padding-bottom: 12px; margin-bottom: 20px; }
     .report-header h1 { font-size: 18px; color: #1a5276; font-weight: 700; }
@@ -28,10 +32,28 @@
     /* Footer */
     .report-footer { margin-top: 28px; border-top: 1px solid #ccc; padding-top: 8px; font-size: 9px; color: #888; text-align: center; }
     .clearfix::after { content: ''; display: table; clear: both; }
+
+    /* Media */
+    .media-img { max-width: 100%; max-height: 280px; border: 1px solid #dde4ec; padding: 4px; background: #fff; }
+    .media-link { color: #1a5276; word-break: break-all; text-decoration: underline; }
+    .media-note { font-size: 9.5px; color: #666; margin-top: 4px; }
 </style>
 </head>
 <body>
 <div class="page">
+
+    @php
+        $logoPath = public_path('admin/assets/images/logo/logo.webp');
+        $imageAbsPath = $record->image_path ? storage_path('app/public/' . $record->image_path) : null;
+        $imageExists = $imageAbsPath && file_exists($imageAbsPath);
+        $videoUrl = $record->video_path ? asset('storage/' . $record->video_path) : null;
+    @endphp
+
+    @if(file_exists($logoPath))
+        <div class="logo-wrap">
+            <img src="{{ $logoPath }}" alt="Logo">
+        </div>
+    @endif
 
     <!-- Header -->
     <div class="report-header clearfix">
@@ -153,6 +175,31 @@
             <td></td>
         </tr>
     </table>
+
+    <!-- Section 5: Media Attachments -->
+    @if($imageExists || $videoUrl)
+        <div class="section-title">Media Attachments</div>
+        <table class="data-table">
+            @if($imageExists)
+                <tr>
+                    <td class="label">Site Photo</td>
+                    <td>
+                        <img class="media-img" src="{{ $imageAbsPath }}" alt="Site photo">
+                        <div class="media-note">{{ basename($record->image_path) }}</div>
+                    </td>
+                </tr>
+            @endif
+            @if($videoUrl)
+                <tr>
+                    <td class="label">Site Video</td>
+                    <td>
+                        <a class="media-link" href="{{ $videoUrl }}">{{ $videoUrl }}</a>
+                        <div class="media-note">Click the link above to view the uploaded video.</div>
+                    </td>
+                </tr>
+            @endif
+        </table>
+    @endif
 
     <!-- Disclaimer -->
     <p style="margin-top:14px; font-size:9px; color:#666; font-style:italic;">

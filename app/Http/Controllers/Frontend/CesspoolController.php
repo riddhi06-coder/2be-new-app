@@ -336,23 +336,4 @@ class CesspoolController extends Controller
         return $location;
     }
 
-
-    public function cesspool_form()
-    {
-        // Sample data to pass to view
-        $data = [
-            'title' => 'Cesspool Form',
-            'date' => date('d-m-Y'),
-            'customer_name' => 'John Doe',
-            'total' => 2500,
-        ];
- 
-        // Load view and pass data
-        $pdf = PDF::loadView('frontend.cesspool-form', $data);
- 
-        // Stream the PDF in the browser (instead of download)
-        return $pdf->stream('cesspool_form.pdf');
-    }
-    
-    
 }
