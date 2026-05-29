@@ -97,7 +97,7 @@
     .frow {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
     .frow > tbody > tr > td {
       vertical-align: top;
@@ -124,46 +124,46 @@
 
     /* ── SECTION TITLES ── */
     .section {
-      margin: 26px 0 12px;
+      margin: 34px 0 18px;
       border-top: 2px solid #0d3a17;
-      padding-top: 8px;
+      padding-top: 10px;
       page-break-after: avoid;
     }
     .section-title {
-      font-size: 9.5pt;
+      font-size: 10pt;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.5px;
       color: #0d3a17;
     }
     .subsection {
-      font-size: 8.5pt;
+      font-size: 9pt;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #6b7d72;
       border-bottom: 1px solid #e6ede9;
-      padding: 4px 0 6px;
-      margin: 16px 0 10px;
+      padding: 6px 0 8px;
+      margin: 22px 0 16px;
       page-break-after: avoid;
     }
 
     /* ── QUESTION BLOCK ── */
     .q {
-      margin-bottom: 16px;
+      margin-bottom: 26px;
       page-break-inside: avoid;
     }
     .q-lbl {
-      font-size: 8.5pt;
+      font-size: 9pt;
       color: #1a1a1a;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
     }
     .q-note {
       font-size: 7.5pt;
       color: #888;
       font-weight: normal;
-      margin-top: 1px;
+      margin-top: 2px;
     }
     .q-sub {
       font-size: 7pt;
@@ -171,7 +171,7 @@
       letter-spacing: 0.6px;
       color: #6b7d72;
       font-weight: bold;
-      margin: 8px 0 4px;
+      margin: 14px 0 6px;
     }
 
     /* ── CHECKBOX ── */
@@ -199,7 +199,7 @@
       table-layout: fixed;
     }
     .opts td {
-      padding: 6px 8px 6px 0;
+      padding: 9px 10px 9px 0;
       font-size: 9pt;
       vertical-align: middle;
       color: #1a1a1a;
@@ -209,7 +209,7 @@
     /* ── CHECKLIST — ONE OPTION PER ROW ── */
     .checklist { width: 100%; border-collapse: collapse; }
     .checklist td {
-      padding: 7px 0;
+      padding: 10px 0;
       font-size: 9pt;
       vertical-align: middle;
       border-bottom: 1px solid #f4f6f5;
