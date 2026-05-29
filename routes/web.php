@@ -78,9 +78,13 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/cesspool-systems', [CesspoolController::class, 'cesspool_systems'])->name('frontend.cesspool_systems');
     Route::post('/cesspool-systems', [CesspoolController::class, 'store_cesspool'])->name('cesspool.store');
     Route::post('/cesspool-systems/draft', [CesspoolController::class, 'save_draft'])->name('cesspool.draft');
+    Route::get('/cesspool-report-form', [CesspoolController::class, 'cesspool_form'])->name('frontend.cesspool_form');
+
 
     Route::get('/septic-systems', [SepticController::class, 'septic_systems'])->name('frontend.septic_systems');
     Route::post('/septic-systems', [SepticController::class, 'store_septic'])->name('septic.store');
     Route::post('/septic-systems/draft', [SepticController::class, 'save_draft'])->name('septic.draft');
+    Route::get('/septic-report-form', [SepticController::class, 'septic_form'])->name('frontend.septic_form');
 
+    
 });

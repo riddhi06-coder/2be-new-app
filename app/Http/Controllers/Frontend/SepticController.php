@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use PDF;
 
 use App\Models\SepticSystemDetails;
 
@@ -388,5 +389,22 @@ class SepticController extends Controller
         }
 
         return $location;
+    }
+
+    public function septic_form()
+    {
+        // Sample data to pass to view
+        $data = [
+            'title' => 'Septic Form',
+            'date' => date('d-m-Y'),
+            'customer_name' => 'John Doe',
+            'total' => 2500,
+        ];
+ 
+        // Load view and pass data
+        $pdf = PDF::loadView('frontend.septic-form', $data);
+ 
+        // Stream the PDF in the browser (instead of download)
+        return $pdf->stream('septic_form.pdf');
     }
 }
