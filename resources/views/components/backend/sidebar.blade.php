@@ -14,9 +14,12 @@
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
               <ul class="sidebar-links" id="simple-bar">
+
+              
                 <li class="back-btn"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/logo//images/favicon.ico') }}" alt="" style="max-width: 40% !important; margin-right:15px;"></a>
                   <div class="mobile-back text-end"> <span>Back </span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                 </li>
+
 
                 <li class="sidebar-list mt-5 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"> </i>
@@ -59,6 +62,7 @@
                   </a>
                 </li>
 
+
                 <li class="sidebar-list {{ request()->routeIs('cesspool-records.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('cesspool-records.index') }}">
@@ -71,6 +75,7 @@
                     <span>Cesspool Records</span>
                   </a>
                 </li>
+
 
                 <li class="sidebar-list {{ request()->routeIs('septic-records.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
@@ -86,7 +91,6 @@
                 </li>
 
 
-               
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>
