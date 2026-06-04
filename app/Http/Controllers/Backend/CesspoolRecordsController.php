@@ -109,7 +109,8 @@ class CesspoolRecordsController extends Controller
         $record = CesspoolSystemDetails::findOrFail($id);
         $pdf    = PDF::loadView('backend.cesspool_records.pdf', compact('record'));
         $pdf->setPaper('a4', 'portrait');
-        return $pdf->download('cesspool-report-' . $record->id . '.pdf');
+        $fileName = 'Cesspool-Inspection-Report_' . Carbon::now()->format('m-d-Y') . '.pdf';
+        return $pdf->download($fileName);
     }
 
     // ── Send Report via Email ────────────────────────────────────────────────
@@ -127,11 +128,12 @@ class CesspoolRecordsController extends Controller
             $pdfContent = $pdf->output();
             $toEmail    = $request->to_email;
             $subject    = 'Cesspool Inspection Report — ' . ($record->site_address ?? 'ID #' . $record->id);
+            $fileName   = 'Cesspool-Inspection-Report_' . Carbon::now()->format('m-d-Y') . '.pdf';
 
-            Mail::send('emails.inspection_report', ['record' => $record, 'type' => 'Cesspool'], function ($msg) use ($toEmail, $subject, $pdfContent, $record) {
+            Mail::send('emails.inspection_report', ['record' => $record, 'type' => 'Cesspool'], function ($msg) use ($toEmail, $subject, $pdfContent, $fileName) {
                 $msg->to($toEmail)
                     ->subject($subject)
-                    ->attachData($pdfContent, 'cesspool-report-' . $record->id . '.pdf', ['mime' => 'application/pdf']);
+                    ->attachData($pdfContent, $fileName, ['mime' => 'application/pdf']);
             });
 
             return response()->json(['success' => true, 'message' => 'Report sent to ' . $toEmail]);
