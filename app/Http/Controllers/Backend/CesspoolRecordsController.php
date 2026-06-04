@@ -86,14 +86,23 @@ class CesspoolRecordsController extends Controller
             $data['image_path'] = null;
         }
 
-        // Handle video
+        // Handle video — stored directly under public/cesspool/videos/
         if ($request->hasFile('video')) {
-            if ($record->video_path) {
-                Storage::disk('public')->delete($record->video_path);
+            if ($record->video_path && file_exists(public_path($record->video_path))) {
+                @unlink(public_path($record->video_path));
             }
-            $data['video_path'] = $request->file('video')->store('cesspool/videos', 'public');
+            $video    = $request->file('video');
+            $filename = uniqid('vid_', true) . '.' . $video->getClientOriginalExtension();
+            $destDir  = public_path('cesspool/videos');
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            $video->move($destDir, $filename);
+            $data['video_path'] = 'cesspool/videos/' . $filename;
         } elseif ($request->boolean('remove_video') && $record->video_path) {
-            Storage::disk('public')->delete($record->video_path);
+            if (file_exists(public_path($record->video_path))) {
+                @unlink(public_path($record->video_path));
+            }
             $data['video_path'] = null;
         }
 
@@ -151,8 +160,8 @@ class CesspoolRecordsController extends Controller
         if ($record->image_path) {
             Storage::disk('public')->delete($record->image_path);
         }
-        if ($record->video_path) {
-            Storage::disk('public')->delete($record->video_path);
+        if ($record->video_path && file_exists(public_path($record->video_path))) {
+            @unlink(public_path($record->video_path));
         }
 
         $record->delete();

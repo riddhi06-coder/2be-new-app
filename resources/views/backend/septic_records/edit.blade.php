@@ -483,7 +483,7 @@
                                                 @if($record->video_path)
                                                     <div class="media-preview mb-3">
                                                         <video controls>
-                                                            <source src="{{ Storage::url($record->video_path) }}">
+                                                            <source src="{{ asset($record->video_path) }}">
                                                             Your browser does not support video playback.
                                                         </video>
                                                     </div>

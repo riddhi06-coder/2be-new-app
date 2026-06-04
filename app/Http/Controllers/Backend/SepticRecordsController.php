@@ -83,14 +83,23 @@ class SepticRecordsController extends Controller
             $data['image_path'] = null;
         }
 
-        // Handle video
+        // Handle video — stored directly under public/septic/videos/
         if ($request->hasFile('video')) {
-            if ($record->video_path) {
-                Storage::disk('public')->delete($record->video_path);
+            if ($record->video_path && file_exists(public_path($record->video_path))) {
+                @unlink(public_path($record->video_path));
             }
-            $data['video_path'] = $request->file('video')->store('septic/videos', 'public');
+            $video    = $request->file('video');
+            $filename = uniqid('vid_', true) . '.' . $video->getClientOriginalExtension();
+            $destDir  = public_path('septic/videos');
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            $video->move($destDir, $filename);
+            $data['video_path'] = 'septic/videos/' . $filename;
         } elseif ($request->boolean('remove_video') && $record->video_path) {
-            Storage::disk('public')->delete($record->video_path);
+            if (file_exists(public_path($record->video_path))) {
+                @unlink(public_path($record->video_path));
+            }
             $data['video_path'] = null;
         }
 
@@ -148,8 +157,8 @@ class SepticRecordsController extends Controller
         if ($record->image_path) {
             Storage::disk('public')->delete($record->image_path);
         }
-        if ($record->video_path) {
-            Storage::disk('public')->delete($record->video_path);
+        if ($record->video_path && file_exists(public_path($record->video_path))) {
+            @unlink(public_path($record->video_path));
         }
 
         $record->delete();

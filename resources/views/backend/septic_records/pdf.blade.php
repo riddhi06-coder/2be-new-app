@@ -24,7 +24,7 @@
     $logoPath     = public_path('admin/assets/images/logo/logo.webp');
     $imageAbsPath = $record->image_path ? storage_path('app/public/' . $record->image_path) : null;
     $imageExists  = $imageAbsPath && file_exists($imageAbsPath);
-    $videoUrl     = $record->video_path ? asset('storage/' . $record->video_path) : null;
+    $videoUrl     = $record->video_path ? asset($record->video_path) : null;
 
     $dateFmt = $record->date_of_pickup
         ? \Carbon\Carbon::parse($record->date_of_pickup)->format('m/d/Y')
