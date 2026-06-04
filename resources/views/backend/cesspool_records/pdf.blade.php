@@ -4,8 +4,19 @@
         $parts = array_map('trim', explode(',', $val));
         return in_array($opt, $parts, true);
     };
-    $cb = function ($val, $opt) use ($isOn) {
-        return $isOn($val, $opt)
+    // Emits an inline-table: [checkbox][label] — guaranteed to share one baseline
+    $opt = function ($val, $opt, $label) use ($isOn) {
+        $box = $isOn($val, $opt)
+            ? '<span class="cb cb-on">&#10003;</span>'
+            : '<span class="cb"></span>';
+        return '<table class="opt"><tr>'
+             . '<td class="opt-cell">' . $box . '</td>'
+             . '<td class="opt-cell opt-lbl">' . $label . '</td>'
+             . '</tr></table>';
+    };
+    // Legacy alias so any leftover {!! $cb(...) !!} call still renders
+    $cb = function ($val, $option) use ($isOn) {
+        return $isOn($val, $option)
             ? '<span class="cb cb-on">&#10003;</span>'
             : '<span class="cb"></span>';
     };
@@ -32,23 +43,24 @@
 
     body {
       font-family: DejaVu Sans, Arial, sans-serif;
-      font-size: 9.5pt;
+      font-size: 10pt;
       color: #1a1a1a;
       background: #fff;
+      line-height: 1.3;
     }
 
     .page {
       width: 700px;
       margin: 0 auto;
-      padding: 36px 44px 44px;
+      padding: 22px 40px 22px;
     }
 
     /* ── LOGO ── */
-    .logo-wrap { text-align: center; margin-bottom: 14px; }
-    .logo-wrap img { max-height: 95px; }
+    .logo-wrap { text-align: center; margin-bottom: 8px; }
+    .logo-wrap img { max-height: 70px; }
 
     /* ── HEADER ── */
-    .header { border-top: 3px solid #0d3a17; padding: 14px 0 10px; }
+    .header { border-top: 3px solid #0d3a17; padding: 10px 0 6px; }
     .header-title {
       font-size: 14pt;
       font-weight: bold;
@@ -56,33 +68,33 @@
       text-transform: uppercase;
       color: #0d3a17;
     }
-    .header-sub { font-size: 8pt; color: #777; margin-top: 3px; }
-    .header-rule { border-bottom: 1px solid #ddd; margin-bottom: 14px; }
+    .header-sub { font-size: 8pt; color: #777; margin-top: 2px; }
+    .header-rule { border-bottom: 1px solid #ddd; margin-bottom: 10px; }
 
     /* ── META STRIP ── */
     .meta {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 22px;
+      margin-bottom: 10px;
       background: #f7faf8;
       border: 1px solid #e6ede9;
     }
     .meta td {
-      padding: 8px 14px;
-      font-size: 9pt;
-      color: #444;
+      padding: 6px 12px;
+      font-size: 9.5pt;
+      color: #1a1a1a;
       vertical-align: middle;
       border-right: 1px solid #e6ede9;
     }
     .meta td:last-child { border-right: 0; }
     .meta-key {
-      font-size: 7pt;
+      font-size: 8pt;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #0d3a17;
       font-weight: bold;
       display: block;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
     .badge {
       display: inline-block;
@@ -100,100 +112,116 @@
     .frow {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 18px;
+      margin-bottom: 6px;
+      page-break-inside: avoid;
     }
     .frow > tbody > tr > td {
       vertical-align: top;
-      padding: 0 18px 0 0;
+      padding: 0 16px 0 0;
     }
     .frow > tbody > tr > td:last-child { padding-right: 0; }
     .field-lbl {
-      font-size: 7pt;
+      font-size: 8pt;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #6b7d72;
-      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+      color: #0d3a17;
+      margin-bottom: 2px;
     }
     .field-val {
-      border-bottom: 1px solid #d4dad6;
-      min-height: 18px;
-      font-size: 9.5pt;
+      border-bottom: 1px solid #c4cac6;
+      min-height: 16px;
+      font-size: 10pt;
       color: #1a1a1a;
-      padding: 2px 0 4px;
+      padding: 1px 0 2px;
       word-wrap: break-word;
     }
     .field-val.bold { font-weight: bold; }
 
     /* ── SECTION TITLES ── */
     .section {
-      margin: 34px 0 18px;
+      margin: 12px 0 6px;
       border-top: 2px solid #0d3a17;
-      padding-top: 10px;
+      padding-top: 6px;
       page-break-after: avoid;
     }
     .section-title {
-      font-size: 10pt;
+      font-size: 11pt;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.4px;
       color: #0d3a17;
     }
     .subsection {
-      font-size: 9pt;
+      font-size: 10pt;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #6b7d72;
-      border-bottom: 1px solid #e6ede9;
-      padding: 6px 0 8px;
-      margin: 22px 0 16px;
+      color: #0d3a17;
+      border-bottom: 1px solid #b4d4bf;
+      padding: 3px 0 4px;
+      margin: 8px 0 6px;
       page-break-after: avoid;
     }
 
     /* ── QUESTION BLOCK ── */
     .q {
-      margin-bottom: 26px;
+      margin-bottom: 8px;
       page-break-inside: avoid;
     }
     .q-lbl {
-      font-size: 9pt;
-      color: #1a1a1a;
+      font-size: 10pt;
+      color: #0d3a17;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 4px;
     }
     .q-note {
-      font-size: 7.5pt;
-      color: #888;
+      font-size: 8.5pt;
+      color: #777;
       font-weight: normal;
+      font-style: italic;
       margin-top: 2px;
     }
     .q-sub {
-      font-size: 7pt;
+      font-size: 8.5pt;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #6b7d72;
+      letter-spacing: 0.5px;
+      color: #0d3a17;
       font-weight: bold;
-      margin: 14px 0 6px;
+      margin: 10px 0 5px;
     }
 
-    /* ── CHECKBOX ── */
+    /* ── CHECKBOX (inline-table so box + label sit on one baseline) ── */
+    .opt {
+      display: inline-table;
+      border-collapse: collapse;
+      vertical-align: middle;
+    }
+    .opt-cell {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 0;
+    }
     .cb {
-      display: inline-block;
+      display: block;
       width: 12px;
       height: 12px;
       border: 1.3px solid #555;
-      vertical-align: -2px;
       background: #fff;
       text-align: center;
       line-height: 10px;
-      font-size: 13pt;
+      font-size: 10pt;
       font-weight: bold;
       color: #0d3a17;
       font-family: DejaVu Sans, sans-serif;
-      margin-right: 6px;
     }
     .cb-on { border-color: #0d3a17; background: #e8f3ec; }
+    .opt-lbl {
+      padding-left: 7px;
+      font-size: 10pt;
+      color: #1a1a1a;
+      line-height: 1.3;
+    }
 
     /* ── OPTION GRID — ONE CELL PER OPTION ── */
     .opts {
@@ -202,8 +230,8 @@
       table-layout: fixed;
     }
     .opts td {
-      padding: 9px 10px 9px 0;
-      font-size: 9pt;
+      padding: 4px 10px 4px 0;
+      font-size: 10pt;
       vertical-align: middle;
       color: #1a1a1a;
     }
@@ -212,8 +240,8 @@
     /* ── CHECKLIST — ONE OPTION PER ROW ── */
     .checklist { width: 100%; border-collapse: collapse; }
     .checklist td {
-      padding: 10px 0;
-      font-size: 9pt;
+      padding: 4px 0;
+      font-size: 10pt;
       vertical-align: middle;
       border-bottom: 1px solid #f4f6f5;
       color: #1a1a1a;
@@ -236,58 +264,60 @@
     }
 
     /* ── COMMENTS / MEDIA ── */
+    .comments-wrap { margin-top: 8px; page-break-inside: avoid; }
     .comments-box {
-      border: 1px solid #d4dad6;
-      min-height: 58px;
-      padding: 10px 12px;
-      font-size: 9pt;
+      border: 1px solid #c4cac6;
+      min-height: 36px;
+      padding: 6px 10px;
+      font-size: 10pt;
       color: #1a1a1a;
       background: #fafbfa;
-      margin-top: 4px;
+      margin-top: 3px;
+      line-height: 1.35;
     }
-    .media-section { margin-top: 20px; page-break-inside: avoid; }
-    .media-link { color: #0d3a17; word-break: break-all; text-decoration: underline; font-size: 9pt; }
-    .media-note { font-size: 8.5pt; color: #888; margin-top: 4px; }
+    .media-section { margin-top: 8px; page-break-inside: avoid; }
+    .media-link { color: #0d3a17; word-break: break-all; text-decoration: underline; font-size: 9.5pt; }
+    .media-note { font-size: 8.5pt; color: #777; margin-top: 2px; }
 
     /* ── FOOTER ── */
-    .footer-rule { border-top: 1px solid #e0e0e0; margin: 26px 0 16px; }
+    .footer-rule { border-top: 1px solid #e0e0e0; margin: 10px 0 6px; }
     .disclaimer {
-      font-size: 7.5pt;
+      font-size: 8.5pt;
       font-style: italic;
-      color: #888;
-      line-height: 1.7;
-      padding: 12px 0;
+      color: #555;
+      line-height: 1.4;
+      padding: 5px 0;
       border-top: 1px solid #eee;
       border-bottom: 1px solid #eee;
-      margin: 16px 0 10px;
+      margin: 6px 0 4px;
     }
     .legend {
       width: 100%;
       border-collapse: collapse;
-      font-size: 8pt;
-      color: #777;
+      font-size: 8.5pt;
+      color: #555;
     }
-    .legend td { padding: 4px 0; }
+    .legend td { padding: 2px 0; }
 
     /* ══════════ PAGE 2 ══════════ */
     .page2 {
       width: 700px;
       margin: 0 auto;
-      padding: 40px 44px 44px;
+      padding: 26px 40px 30px;
       page-break-before: always;
     }
-    .sketch-header { border-top: 3px solid #0d3a17; padding: 14px 0 10px; }
+    .sketch-header { border-top: 3px solid #0d3a17; padding: 10px 0 6px; }
     .sketch-header-title {
       font-size: 12pt; font-weight: bold;
       text-transform: uppercase; letter-spacing: 0.5px;
       color: #0d3a17;
     }
-    .sketch-header-sub { font-size: 8pt; color: #888; margin-top: 4px; }
-    .sketch-rule { border-bottom: 1px solid #ddd; margin-bottom: 16px; }
+    .sketch-header-sub { font-size: 8.5pt; color: #888; margin-top: 3px; }
+    .sketch-rule { border-bottom: 1px solid #ddd; margin-bottom: 10px; }
 
     .sketch-wrap {
       width: 100%;
-      height: 550px;
+      height: 480px;
       background-repeat: no-repeat;
       background-position: center center;
       background-size: contain;
@@ -301,19 +331,19 @@
     }
     .sketch-grid td {
       border: 1px solid #c8d1cc;
-      height: 22px;
+      height: 18px;
       background: transparent;
     }
     .knrow {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 22px;
+      margin-top: 14px;
       border-top: 1px solid #e6ede9;
-      padding-top: 14px;
+      padding-top: 8px;
     }
     .knrow td { vertical-align: top; }
-    .kn-key   { width: 200px; padding-right: 24px; padding-top: 14px; }
-    .kn-notes { padding-left: 24px; padding-top: 14px; border-left: 1px solid #eee; }
+    .kn-key   { width: 200px; padding-right: 24px; padding-top: 10px; }
+    .kn-notes { padding-left: 24px; padding-top: 10px; border-left: 1px solid #eee; }
     .kn-title {
       font-size: 7pt; font-weight: bold;
       text-transform: uppercase; letter-spacing: 0.6px;
@@ -327,11 +357,11 @@
     }
     .note-line {
       border-bottom: 1px solid #ddd;
-      min-height: 26px;
-      margin-bottom: 8px;
-      font-size: 9pt;
+      min-height: 22px;
+      margin-bottom: 6px;
+      font-size: 9.5pt;
       color: #1a1a1a;
-      padding: 4px 0;
+      padding: 3px 0;
     }
   </style>
 </head>
@@ -379,9 +409,9 @@
     <table class="opts">
       <colgroup><col style="width:34%;"><col style="width:33%;"><col style="width:33%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->inspection_type, 'Home Inspector') !!}Home Inspector</td>
-        <td>{!! $cb($record->inspection_type, 'Realtor') !!}Realtor</td>
-        <td>{!! $cb($record->inspection_type, 'Routine Maintenance') !!}Routine Maintenance</td>
+        <td>{!! $opt($record->inspection_type, 'Home Inspector', 'Home Inspector') !!}</td>
+        <td>{!! $opt($record->inspection_type, 'Realtor', 'Realtor') !!}</td>
+        <td>{!! $opt($record->inspection_type, 'Routine Maintenance', 'Routine Maintenance') !!}</td>
       </tr>
     </table>
   </div>
@@ -434,15 +464,15 @@
     <table class="opts">
       <colgroup><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->property_in_use, 'Yes') !!}Yes</td>
-        <td>{!! $cb($record->property_in_use, 'No') !!}No</td>
-        <td>{!! $cb($record->property_in_use, 'Full time') !!}Full Time</td>
-        <td>{!! $cb($record->property_in_use, 'Vacation Rental') !!}Vacation Rental</td>
+        <td>{!! $opt($record->property_in_use, 'Yes', 'Yes') !!}</td>
+        <td>{!! $opt($record->property_in_use, 'No', 'No') !!}</td>
+        <td>{!! $opt($record->property_in_use, 'Full time', 'Full Time') !!}</td>
+        <td>{!! $opt($record->property_in_use, 'Vacation Rental', 'Vacation Rental') !!}</td>
       </tr>
       <tr>
-        <td>{!! $cb($record->property_in_use, 'Vacant') !!}Vacant</td>
-        <td>{!! $cb($record->property_in_use, 'Other') !!}Other</td>
-        <td>{!! $cb($record->property_in_use, 'Unknown') !!}Unknown</td>
+        <td>{!! $opt($record->property_in_use, 'Vacant', 'Vacant') !!}</td>
+        <td>{!! $opt($record->property_in_use, 'Other', 'Other') !!}</td>
+        <td>{!! $opt($record->property_in_use, 'Unknown', 'Unknown') !!}</td>
         <td></td>
       </tr>
     </table>
@@ -451,32 +481,23 @@
   <!-- General Site Conditions -->
   <div class="q">
     <div class="q-lbl">General Site Conditions</div>
-
-    <div class="q-sub">Vegetation</div>
     <table class="opts">
-      <colgroup><col style="width:100%;"></colgroup>
+      <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->site_conditions, 'Grass cover/vegetation condition') !!}Grass Cover / Vegetation Condition</td>
+        <td>{!! $opt($record->site_conditions, 'Grass cover/vegetation condition', 'Grass Cover / Vegetation Condition') !!}</td>
+        <td>{!! $opt($record->site_conditions, 'Surface Ponding', 'Surface Ponding') !!}</td>
       </tr>
-    </table>
-
-    <div class="q-sub">Surface Ponding</div>
-    <table class="opts">
-      <colgroup><col style="width:34%;"><col style="width:33%;"><col style="width:33%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->site_conditions, 'Surface Ponding') !!}Surface Ponding</td>
-        <td>{!! $cb($record->site_conditions, 'System area') !!}System Area</td>
-        <td>{!! $cb($record->site_conditions, 'Other areas') !!}Other Areas</td>
+        <td>{!! $opt($record->site_conditions, 'System area', 'System Area') !!}</td>
+        <td>{!! $opt($record->site_conditions, 'Other areas', 'Other Areas') !!}</td>
       </tr>
-    </table>
-
-    <div class="q-sub">Protective Barriers</div>
-    <table class="opts">
-      <colgroup><col style="width:40%;"><col style="width:30%;"><col style="width:30%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->site_conditions, 'Protective Barriers Present') !!}Present</td>
-        <td>{!! $cb($record->site_conditions, 'Effective') !!}Effective</td>
-        <td>{!! $cb($record->site_conditions, 'Not effective') !!}Not Effective</td>
+        <td>{!! $opt($record->site_conditions, 'Protective Barriers Present', 'Protective Barriers Present') !!}</td>
+        <td>{!! $opt($record->site_conditions, 'Effective', 'Effective') !!}</td>
+      </tr>
+      <tr>
+        <td>{!! $opt($record->site_conditions, 'Not effective', 'Not Effective') !!}</td>
+        <td></td>
       </tr>
     </table>
   </div>
@@ -487,9 +508,9 @@
     <table class="opts">
       <colgroup><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->surface_runoff, 'Yes') !!}Yes</td>
-        <td>{!! $cb($record->surface_runoff, 'No') !!}No</td>
-        <td>{!! $cb($record->surface_runoff, 'N/A') !!}N/A</td>
+        <td>{!! $opt($record->surface_runoff, 'Yes', 'Yes') !!}</td>
+        <td>{!! $opt($record->surface_runoff, 'No', 'No') !!}</td>
+        <td>{!! $opt($record->surface_runoff, 'N/A', 'N/A') !!}</td>
         <td></td>
       </tr>
     </table>
@@ -501,30 +522,32 @@
     <table class="opts">
       <colgroup><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"><col style="width:25%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->malfunction, 'Yes') !!}Yes</td>
-        <td>{!! $cb($record->malfunction, 'No') !!}No</td>
+        <td>{!! $opt($record->malfunction, 'Yes', 'Yes') !!}</td>
+        <td>{!! $opt($record->malfunction, 'No', 'No') !!}</td>
         <td></td>
         <td></td>
       </tr>
     </table>
 
-    <div class="q-sub">Surface Discharge Details</div>
-    <table class="checklist">
-      <tr><td><strong>Surface Discharge via Straight-Pipe or Damaged Plumbing</strong></td></tr>
-    </table>
-    <table class="opts" style="margin: 4px 0 4px 24px; width: calc(100% - 24px);">
+    <div class="q-sub">Surface Discharge via Straight-Pipe or Damaged Plumbing</div>
+    <table class="opts">
       <colgroup><col style="width:34%;"><col style="width:33%;"><col style="width:33%;"></colgroup>
       <tr>
-        <td>{!! $cb($record->surface_discharge, 'Grey water') !!}Grey Water</td>
-        <td>{!! $cb($record->surface_discharge, 'Black water') !!}Black Water</td>
-        <td>{!! $cb($record->surface_discharge, 'Unknown') !!}Unknown</td>
+        <td>{!! $opt($record->surface_discharge, 'Grey water', 'Grey Water') !!}</td>
+        <td>{!! $opt($record->surface_discharge, 'Black water', 'Black Water') !!}</td>
+        <td>{!! $opt($record->surface_discharge, 'Unknown', 'Unknown') !!}</td>
       </tr>
     </table>
-    <table class="checklist">
-      <tr><td>{!! $cb($record->surface_discharge, 'Surface discharge in area of cesspool') !!}Surface Discharge in Area of Cesspool</td></tr>
-      <tr><td>{!! $cb($record->surface_discharge, 'Surface discharge at edge of cesspool area') !!}Surface Discharge at Edge of Cesspool Area</td></tr>
-      <tr><td>{!! $cb($record->surface_discharge, 'Surface discharge - bleed-out away') !!}Surface Discharge &mdash; Bleed-Out Away from System Location</td></tr>
-      <tr><td>{!! $cb($record->surface_discharge, 'Evidence of past failure') !!}Evidence of Past Failure</td></tr>
+    <table class="opts" style="margin-top: 4px;">
+      <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
+      <tr>
+        <td>{!! $opt($record->surface_discharge, 'Surface discharge in area of cesspool', 'Surface Discharge in Area of Cesspool') !!}</td>
+        <td>{!! $opt($record->surface_discharge, 'Surface discharge at edge of cesspool area', 'Surface Discharge at Edge of Cesspool Area') !!}</td>
+      </tr>
+      <tr>
+        <td>{!! $opt($record->surface_discharge, 'Surface discharge - bleed-out away', 'Bleed-Out Away from System Location') !!}</td>
+        <td>{!! $opt($record->surface_discharge, 'Evidence of past failure', 'Evidence of Past Failure') !!}</td>
+      </tr>
     </table>
   </div>
 
@@ -546,8 +569,8 @@
           <table class="opts">
             <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
             <tr>
-              <td>{!! $cb($record->accessible_lids, 'Yes') !!}Yes</td>
-              <td>{!! $cb($record->accessible_lids, 'No') !!}No</td>
+              <td>{!! $opt($record->accessible_lids, 'Yes', 'Yes') !!}</td>
+              <td>{!! $opt($record->accessible_lids, 'No', 'No') !!}</td>
             </tr>
           </table>
         </div>
@@ -557,8 +580,8 @@
           <table class="opts">
             <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
             <tr>
-              <td>{!! $cb($record->access_lid_repair, 'Yes') !!}Yes</td>
-              <td>{!! $cb($record->access_lid_repair, 'No') !!}No</td>
+              <td>{!! $opt($record->access_lid_repair, 'Yes', 'Yes') !!}</td>
+              <td>{!! $opt($record->access_lid_repair, 'No', 'No') !!}</td>
             </tr>
           </table>
         </div>
@@ -578,8 +601,8 @@
           <table class="opts">
             <colgroup><col style="width:50%;"><col style="width:50%;"></colgroup>
             <tr>
-              <td>{!! $cb($record->pumping_recommended, 'Yes') !!}Yes</td>
-              <td>{!! $cb($record->pumping_recommended, 'No') !!}No</td>
+              <td>{!! $opt($record->pumping_recommended, 'Yes', 'Yes') !!}</td>
+              <td>{!! $opt($record->pumping_recommended, 'No', 'No') !!}</td>
             </tr>
           </table>
         </div>
@@ -629,7 +652,7 @@
   </table>
 
   <!-- COMMENTS -->
-  <div style="margin-top:20px;">
+  <div class="comments-wrap">
     <div class="field-lbl">Comments</div>
     <div class="comments-box">{{ $record->comments }}</div>
   </div>
@@ -643,36 +666,38 @@
     </div>
   @endif
 
-  <!-- SIGNATURE -->
-  <div class="footer-rule"></div>
-  <table class="frow">
-    <tr>
-      <td style="width:40%;">
-        <div class="field-lbl">Inspector Signature</div>
-        <div class="field-val">{{ $record->inspector_signature }}</div>
-      </td>
-      <td style="width:35%;">
-        <div class="field-lbl">Print Name</div>
-        <div class="field-val">{{ $record->print_name }}</div>
-      </td>
-      <td style="width:25%;">
-        <div class="field-lbl">Date</div>
-        <div class="field-val">{{ $sigDate }}</div>
-      </td>
-    </tr>
-  </table>
+  <!-- SIGNATURE + DISCLAIMER + LEGEND — kept together -->
+  <div style="page-break-inside: avoid;">
+    <div class="footer-rule"></div>
+    <table class="frow">
+      <tr>
+        <td style="width:40%;">
+          <div class="field-lbl">Inspector Signature</div>
+          <div class="field-val">{{ $record->inspector_signature }}</div>
+        </td>
+        <td style="width:35%;">
+          <div class="field-lbl">Print Name</div>
+          <div class="field-val">{{ $record->print_name }}</div>
+        </td>
+        <td style="width:25%;">
+          <div class="field-lbl">Date</div>
+          <div class="field-val">{{ $sigDate }}</div>
+        </td>
+      </tr>
+    </table>
 
-  <div class="disclaimer">
-    <strong>Disclaimer:</strong>&ensp;The above information indicates the condition of the cesspool system at the time of inspection.
-    This is not a guarantee or warranty of future system performance.
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong>&ensp;The above information indicates the condition of the cesspool system at the time of inspection.
+      This is not a guarantee or warranty of future system performance.
+    </div>
+
+    <table class="legend">
+      <tr>
+        <td style="width:50%;"><strong>N/A</strong> &mdash; Not Applicable</td>
+        <td><strong>N/D</strong> &mdash; Not Determined</td>
+      </tr>
+    </table>
   </div>
-
-  <table class="legend">
-    <tr>
-      <td style="width:50%;"><strong>N/A</strong> &mdash; Not Applicable</td>
-      <td><strong>N/D</strong> &mdash; Not Determined</td>
-    </tr>
-  </table>
 
 </div><!-- /page -->
 
@@ -707,7 +732,7 @@
         <col style="width:3.33%;"><col style="width:3.33%;"><col style="width:3.43%;">
       </colgroup>
       <tbody>
-        @for($r=0; $r<25; $r++)
+        @for($r=0; $r<22; $r++)
           <tr>
             @for($c=0; $c<30; $c++)<td></td>@endfor
           </tr>
@@ -728,8 +753,6 @@
       <td class="kn-notes">
         <div class="kn-title">Notes</div>
         <div class="note-line">{{ $record->notes }}</div>
-        <div class="note-line"></div>
-        <div class="note-line"></div>
         <div class="note-line"></div>
         <div class="note-line"></div>
       </td>
