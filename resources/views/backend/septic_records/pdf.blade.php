@@ -40,16 +40,16 @@
 
     body {
       font-family: DejaVu Sans, Arial, sans-serif;
-      font-size: 9.5pt;
+      font-size: 10pt;
       color: #1a1a1a;
       background: #fff;
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     .page {
       width: 700px;
       margin: 0 auto;
-      padding: 18px 40px 18px;
+      padding: 22px 40px 22px;
     }
 
     /* ── LOGO ── */
@@ -72,13 +72,13 @@
     .meta {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       background: #f7faf8;
       border: 1px solid #e6ede9;
     }
     .meta td {
-      padding: 5px 12px;
-      font-size: 9pt;
+      padding: 6px 12px;
+      font-size: 9.5pt;
       color: #1a1a1a;
       vertical-align: middle;
       border-right: 1px solid #e6ede9;
@@ -109,7 +109,7 @@
     .frow {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 4px;
+      margin-bottom: 7px;
       page-break-inside: avoid;
     }
     .frow > tbody > tr > td {
@@ -118,74 +118,74 @@
     }
     .frow > tbody > tr > td:last-child { padding-right: 0; }
     .field-lbl {
-      font-size: 7.5pt;
+      font-size: 8pt;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #0d3a17;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
     .field-val {
       border-bottom: 1px solid #c4cac6;
-      min-height: 14px;
-      font-size: 9.5pt;
+      min-height: 17px;
+      font-size: 10pt;
       color: #1a1a1a;
-      padding: 0 0 2px;
+      padding: 1px 0 3px;
       word-wrap: break-word;
     }
     .field-val.bold { font-weight: bold; }
 
     /* ── SECTION TITLES ── */
     .section {
-      margin: 8px 0 4px;
+      margin: 12px 0 6px;
       border-top: 2px solid #0d3a17;
-      padding-top: 4px;
+      padding-top: 6px;
       page-break-after: avoid;
     }
     .section-title {
-      font-size: 10.5pt;
+      font-size: 11pt;
       font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1.3px;
+      letter-spacing: 1.4px;
       color: #0d3a17;
     }
     .subsection {
-      font-size: 9.5pt;
+      font-size: 10pt;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #0d3a17;
       border-bottom: 1px solid #b4d4bf;
-      padding: 2px 0 3px;
-      margin: 5px 0 4px;
+      padding: 3px 0 4px;
+      margin: 8px 0 6px;
       page-break-after: avoid;
     }
 
     /* ── QUESTION BLOCK ── */
     .q {
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       page-break-inside: avoid;
     }
     .q-lbl {
-      font-size: 9.5pt;
+      font-size: 10pt;
       color: #0d3a17;
       font-weight: bold;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .q-note {
-      font-size: 8pt;
+      font-size: 8.5pt;
       color: #777;
       font-weight: normal;
       font-style: italic;
-      margin-top: 1px;
+      margin-top: 2px;
     }
     .q-sub {
-      font-size: 8pt;
+      font-size: 8.5pt;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #0d3a17;
       font-weight: bold;
-      margin: 6px 0 3px;
+      margin: 8px 0 4px;
     }
 
     /* ── CHECKBOX (inline-table so box + label sit on one baseline) ── */
@@ -201,23 +201,23 @@
     }
     .cb {
       display: block;
-      width: 11px;
-      height: 11px;
+      width: 12px;
+      height: 12px;
       border: 1.3px solid #555;
       background: #fff;
       text-align: center;
-      line-height: 9px;
-      font-size: 9.5pt;
+      line-height: 10px;
+      font-size: 10pt;
       font-weight: bold;
       color: #0d3a17;
       font-family: DejaVu Sans, sans-serif;
     }
     .cb-on { border-color: #0d3a17; background: #e8f3ec; }
     .opt-lbl {
-      padding-left: 6px;
-      font-size: 9.5pt;
+      padding-left: 7px;
+      font-size: 10pt;
       color: #1a1a1a;
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     /* ── OPTION GRID — ONE CELL PER OPTION ── */
@@ -227,8 +227,8 @@
       table-layout: fixed;
     }
     .opts td {
-      padding: 3px 10px 3px 0;
-      font-size: 9.5pt;
+      padding: 5px 10px 5px 0;
+      font-size: 10pt;
       vertical-align: middle;
       color: #1a1a1a;
     }
@@ -237,8 +237,8 @@
     /* ── CHECKLIST — ONE OPTION PER ROW ── */
     .checklist { width: 100%; border-collapse: collapse; }
     .checklist td {
-      padding: 3px 0;
-      font-size: 9.5pt;
+      padding: 5px 0;
+      font-size: 10pt;
       vertical-align: middle;
       border-bottom: 1px solid #f4f6f5;
       color: #1a1a1a;
@@ -261,40 +261,40 @@
     }
 
     /* ── COMMENTS / MEDIA ── */
-    .comments-wrap { margin-top: 5px; page-break-inside: avoid; }
+    .comments-wrap { margin-top: 10px; page-break-inside: avoid; }
     .comments-box {
       border: 1px solid #c4cac6;
-      min-height: 28px;
-      padding: 5px 9px;
-      font-size: 9.5pt;
+      min-height: 42px;
+      padding: 7px 11px;
+      font-size: 10pt;
       color: #1a1a1a;
       background: #fafbfa;
-      margin-top: 2px;
-      line-height: 1.3;
+      margin-top: 4px;
+      line-height: 1.4;
     }
-    .media-section { margin-top: 5px; page-break-inside: avoid; }
-    .media-link { color: #0d3a17; word-break: break-all; text-decoration: underline; font-size: 9pt; }
-    .media-note { font-size: 8pt; color: #777; margin-top: 1px; }
+    .media-section { margin-top: 10px; page-break-inside: avoid; }
+    .media-link { color: #0d3a17; word-break: break-all; text-decoration: underline; font-size: 9.5pt; }
+    .media-note { font-size: 8.5pt; color: #777; margin-top: 2px; }
 
     /* ── FOOTER ── */
-    .footer-rule { border-top: 1px solid #e0e0e0; margin: 6px 0 4px; }
+    .footer-rule { border-top: 1px solid #e0e0e0; margin: 12px 0 8px; }
     .disclaimer {
-      font-size: 8pt;
+      font-size: 8.5pt;
       font-style: italic;
       color: #555;
-      line-height: 1.35;
-      padding: 4px 0;
+      line-height: 1.5;
+      padding: 7px 0;
       border-top: 1px solid #eee;
       border-bottom: 1px solid #eee;
-      margin: 4px 0 3px;
+      margin: 8px 0 6px;
     }
     .legend {
       width: 100%;
       border-collapse: collapse;
-      font-size: 8pt;
+      font-size: 8.5pt;
       color: #555;
     }
-    .legend td { padding: 2px 0; }
+    .legend td { padding: 3px 0; }
 
     /* ══════════ PAGE 2 / DIAGRAM BLOCK ══════════ */
     .page2 {
