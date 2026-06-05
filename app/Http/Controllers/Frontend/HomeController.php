@@ -117,7 +117,7 @@ class HomeController extends Controller
                 'ip' => $request->ip()
             ]);
 
-            return redirect()->route('frontend.thank_you')->with('message', 'Waste entry submitted successfully!');
+            return redirect()->route('frontend.thank_you')->with('message', 'Your Wastewater Pumping & Hauling entry has been submitted.');
 
         } catch (\Exception $e) {
 

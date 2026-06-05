@@ -66,7 +66,7 @@ class CesspoolController extends Controller
             Log::info('Cesspool form saved successfully', ['id' => $entry->id, 'ip' => $request->ip()]);
 
             return redirect()->route('frontend.thank_you')
-                ->with('message', 'Cesspool inspection submitted successfully!');
+                ->with('message', 'Your Cesspool Inspection entry has been submitted.');
 
         } catch (\Exception $e) {
             Log::error('Cesspool form save failed', ['ip' => $request->ip(), 'error' => $e->getMessage()]);

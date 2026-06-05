@@ -19,7 +19,7 @@
                                 <img src="{{ asset('frontend/assets/images/checklist.png') }}" alt="success">
                             </div>
                             <h1>Thank You!</h1>
-                            <p>Your waste disposal entry has been submitted.</p>
+                            <p>{{ session('message', 'Your entry has been submitted.') }}</p>
                             <a href="{{ route('frontend.index') }}" class="btn btn-primary">Add New Entry</a>
                         </div>
                     </div>

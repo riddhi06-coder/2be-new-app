@@ -66,7 +66,7 @@ class SepticController extends Controller
             Log::info('Septic form saved successfully', ['id' => $entry->id, 'ip' => $request->ip()]);
 
             return redirect()->route('frontend.thank_you')
-                ->with('message', 'Septic inspection submitted successfully!');
+                ->with('message', 'Your Septic Tank Inspection entry has been submitted.');
 
         } catch (\Exception $e) {
             Log::error('Septic form save failed', ['ip' => $request->ip(), 'error' => $e->getMessage()]);
