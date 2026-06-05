@@ -55,13 +55,17 @@ class SepticRecordsController extends Controller
         $request->validate([
             'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
             'video' => 'nullable|file|mimes:mp4,mov,avi,wmv,mkv|max:5120',
+            'inspector_signature' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
         ], [
-            'image.mimes' => 'Image must be JPG, PNG, or WebP.',
-            'image.max'   => 'Image size must not exceed 2MB.',
-            'video.max'   => 'Video size must not exceed 5MB.',
+            'image.mimes'              => 'Image must be JPG, PNG, or WebP.',
+            'image.max'                => 'Image size must not exceed 2MB.',
+            'video.max'                => 'Video size must not exceed 5MB.',
+            'inspector_signature.image'=> 'Signature must be an image file.',
+            'inspector_signature.mimes'=> 'Signature must be JPG, PNG, or WebP.',
+            'inspector_signature.max'  => 'Signature image must not exceed 1 MB.',
         ]);
 
-        $data = $request->except(['_token', '_method', 'image', 'video', 'remove_image', 'remove_video']);
+        $data = $request->except(['_token', '_method', 'image', 'video', 'remove_image', 'remove_video', 'inspector_signature']);
 
         // Date formatting
         if (!empty($data['date_of_pickup'])) {
@@ -101,6 +105,21 @@ class SepticRecordsController extends Controller
                 @unlink(public_path($record->video_path));
             }
             $data['video_path'] = null;
+        }
+
+        // Handle signature image upload — stored under public/septic/signatures/
+        if ($request->hasFile('inspector_signature')) {
+            if ($record->inspector_signature && file_exists(public_path($record->inspector_signature))) {
+                @unlink(public_path($record->inspector_signature));
+            }
+            $sig      = $request->file('inspector_signature');
+            $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
+            $destDir  = public_path('septic/signatures');
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            $sig->move($destDir, $filename);
+            $data['inspector_signature'] = 'septic/signatures/' . $filename;
         }
 
         $record->update($data);
@@ -159,6 +178,9 @@ class SepticRecordsController extends Controller
         }
         if ($record->video_path && file_exists(public_path($record->video_path))) {
             @unlink(public_path($record->video_path));
+        }
+        if ($record->inspector_signature && file_exists(public_path($record->inspector_signature))) {
+            @unlink(public_path($record->inspector_signature));
         }
 
         $record->delete();

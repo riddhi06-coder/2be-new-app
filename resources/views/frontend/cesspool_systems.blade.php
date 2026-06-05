@@ -41,7 +41,7 @@
                         </div>
 
 
-                        <form id="cesspoolForm" action="{{ route('cesspool.store') }}" method="POST">
+                        <form id="cesspoolForm" action="{{ route('cesspool.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <!-- Basic Info -->
@@ -366,7 +366,11 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label>Inspector Signature: <span class="text-danger">*</span></label>
-                                        <input type="text" id="inspector_signature" name="inspector_signature" class="form-control">
+                                        <input type="file" id="inspector_signature" name="inspector_signature" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                        <small class="text-muted" style="font-size:13px;">Upload signature image (JPG, PNG, or WebP &middot; max 1 MB)</small>
+                                        <div id="sig_preview_wrap" style="display:none; margin-top:10px;">
+                                            <img id="sig_preview" src="" alt="Signature preview" style="max-height:80px; border:1px solid #c4cac6; padding:6px; background:#fafbfa;">
+                                        </div>
                                         <div class="field-error text-danger" id="err_inspector_signature" style="display:none;font-size:15px;margin-top:4px;"></div>
                                     </div>
 
@@ -496,10 +500,6 @@
                 const inspectorName = document.getElementById('inspector_name_company').value.trim();
                 if (!inspectorName) {
                     showError('err_inspector_name_company', 'Inspector Name & Company is required.');
-                    document.getElementById('inspector_name_company').classList.add('is-invalid');
-                    isValid = false;
-                } else if (/\d/.test(inspectorName)) {
-                    showError('err_inspector_name_company', 'Inspector Name & Company cannot contain numbers.');
                     document.getElementById('inspector_name_company').classList.add('is-invalid');
                     isValid = false;
                 }
@@ -646,16 +646,24 @@
                     isValid = false;
                 }
 
-                // Inspector Signature
-                const inspSig = document.getElementById('inspector_signature').value.trim();
-                if (!inspSig) {
-                    showError('err_inspector_signature', 'Inspector Signature is required.');
-                    document.getElementById('inspector_signature').classList.add('is-invalid');
+                // Inspector Signature (file upload)
+                const inspSigInput = document.getElementById('inspector_signature');
+                const inspSigFile  = inspSigInput.files && inspSigInput.files[0];
+                if (!inspSigFile) {
+                    showError('err_inspector_signature', 'Inspector Signature image is required.');
+                    inspSigInput.classList.add('is-invalid');
                     isValid = false;
-                } else if (/\d/.test(inspSig)) {
-                    showError('err_inspector_signature', 'Inspector Signature cannot contain numbers.');
-                    document.getElementById('inspector_signature').classList.add('is-invalid');
-                    isValid = false;
+                } else {
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                    if (!allowedTypes.includes(inspSigFile.type)) {
+                        showError('err_inspector_signature', 'Signature must be a JPG, PNG, or WebP image.');
+                        inspSigInput.classList.add('is-invalid');
+                        isValid = false;
+                    } else if (inspSigFile.size > 1024 * 1024) {
+                        showError('err_inspector_signature', 'Signature image must not exceed 1 MB.');
+                        inspSigInput.classList.add('is-invalid');
+                        isValid = false;
+                    }
                 }
 
                 // Print Name
@@ -704,6 +712,20 @@
             }
             document.getElementById('loadingText').textContent = 'Submitting your form...';
             document.getElementById('loadingOverlay').style.display = 'flex';
+        });
+
+        // Signature image live preview
+        document.getElementById('inspector_signature').addEventListener('change', function (e) {
+            const file = e.target.files && e.target.files[0];
+            const wrap = document.getElementById('sig_preview_wrap');
+            const img  = document.getElementById('sig_preview');
+            if (file && file.type.startsWith('image/')) {
+                img.src = URL.createObjectURL(file);
+                wrap.style.display = 'block';
+            } else {
+                img.src = '';
+                wrap.style.display = 'none';
+            }
         });
 
         showStep(currentStep);

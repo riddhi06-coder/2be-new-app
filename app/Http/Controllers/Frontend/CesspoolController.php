@@ -200,10 +200,26 @@ class CesspoolController extends Controller
             'service_recommended'        => $request->service_recommended,
             'comments'                   => $request->comments,
             'notes'                      => $request->notes,
-            'inspector_signature'        => $request->inspector_signature,
+            'inspector_signature'        => $this->storeSignature($request),
             'print_name'                 => $request->print_name,
             'date'                       => $parseDate($request->date),
         ];
+    }
+
+    // ── Signature image upload → public/cesspool/signatures/ ─────────────────
+    private function storeSignature(Request $request): ?string
+    {
+        if (!$request->hasFile('inspector_signature')) {
+            return null;
+        }
+        $sig      = $request->file('inspector_signature');
+        $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
+        $destDir  = public_path('cesspool/signatures');
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+        $sig->move($destDir, $filename);
+        return 'cesspool/signatures/' . $filename;
     }
 
     // ── Validation ───────────────────────────────────────────────────────────
@@ -211,7 +227,7 @@ class CesspoolController extends Controller
     {
         return [
             'date_of_pickup'             => 'required|date_format:m/d/Y',
-            'inspector_name_company'     => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'inspector_name_company'     => 'required|string|max:255',
             'site_address'               => 'required|string|max:500',
             'tax_map_number'             => 'required|string|max:100',
             'type_of_system'             => 'required|string|max:255',
@@ -223,7 +239,7 @@ class CesspoolController extends Controller
             'service_recommended'        => 'required|string|max:255',
             'comments'                   => 'required|string',
             'notes'                      => 'required|string',
-            'inspector_signature'        => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'inspector_signature'        => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
             'print_name'                 => 'required|string|max:255|regex:/^[^0-9]+$/',
             'date'                       => 'required|date_format:m/d/Y',
         ];
@@ -235,7 +251,6 @@ class CesspoolController extends Controller
             'date_of_pickup.required'            => 'Date of Inspection is required.',
             'date_of_pickup.date_format'         => 'Date must be in MM/DD/YYYY format.',
             'inspector_name_company.required'    => 'Inspector Name & Company is required.',
-            'inspector_name_company.regex'       => 'Inspector Name & Company cannot contain numbers.',
             'site_address.required'              => 'Site Address is required.',
             'tax_map_number.required'            => 'Tax Map Number is required.',
             'type_of_system.required'            => 'Type of System is required.',
@@ -248,11 +263,13 @@ class CesspoolController extends Controller
             'comments.required'                  => 'Comments are required.',
             'notes.required'                     => 'Notes are required.',
             'inspector_signature.required'       => 'Inspector Signature is required.',
-            'inspector_signature.regex'          => 'Inspector Signature cannot contain numbers.',
-            'print_name.required'               => 'Print Name is required.',
-            'print_name.regex'                  => 'Print Name cannot contain numbers.',
-            'date.required'                     => 'Date is required.',
-            'date.date_format'                  => 'Date must be in MM/DD/YYYY format.',
+            'inspector_signature.image'          => 'Signature must be an image file.',
+            'inspector_signature.mimes'          => 'Signature must be JPG, PNG, or WebP.',
+            'inspector_signature.max'            => 'Signature image must not exceed 1 MB.',
+            'print_name.required'                => 'Print Name is required.',
+            'print_name.regex'                   => 'Print Name cannot contain numbers.',
+            'date.required'                      => 'Date is required.',
+            'date.date_format'                   => 'Date must be in MM/DD/YYYY format.',
         ];
     }
 

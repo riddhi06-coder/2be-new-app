@@ -265,9 +265,25 @@ class SepticController extends Controller
             'approx_tank_size'        => $request->approx_tank_size,
             'service_recommended'     => $serviceRec,
             'comments'                => $request->comments,
-            'inspector_signature'     => $request->inspector_signature,
+            'inspector_signature'     => $this->storeSignature($request),
             'notes'                   => $request->notes,
         ];
+    }
+
+    // ── Signature image upload → public/septic/signatures/ ───────────────────
+    private function storeSignature(Request $request): ?string
+    {
+        if (!$request->hasFile('inspector_signature')) {
+            return null;
+        }
+        $sig      = $request->file('inspector_signature');
+        $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
+        $destDir  = public_path('septic/signatures');
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+        $sig->move($destDir, $filename);
+        return 'septic/signatures/' . $filename;
     }
 
     // ── Validation ───────────────────────────────────────────────────────────
@@ -275,7 +291,7 @@ class SepticController extends Controller
     {
         return [
             'date_of_pickup'          => 'required|date_format:m/d/Y',
-            'inspector_name_company'  => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'inspector_name_company'  => 'required|string|max:255',
             'site_address'            => 'required|string|max:1000',
             'tax_map_number'          => 'required|string|max:100',
             'type_of_system'          => 'required|string|max:255',
@@ -285,7 +301,7 @@ class SepticController extends Controller
             'tank_composition'        => 'required|string|max:255',
             'approx_tank_size'        => 'required|string|max:100',
             'comments'                => 'required|string',
-            'inspector_signature'     => 'required|string|max:255|regex:/^[^0-9]+$/',
+            'inspector_signature'     => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
             'notes'                   => 'required|string',
         ];
     }
@@ -296,7 +312,6 @@ class SepticController extends Controller
             'date_of_pickup.required'           => 'Date of Inspection is required.',
             'date_of_pickup.date_format'        => 'Date must be in MM/DD/YYYY format.',
             'inspector_name_company.required'   => 'Inspector Name & Company is required.',
-            'inspector_name_company.regex'      => 'Inspector Name & Company cannot contain numbers.',
             'site_address.required'             => 'Site Address is required.',
             'tax_map_number.required'           => 'Tax Map Number is required.',
             'type_of_system.required'           => 'Type of System is required.',
@@ -307,7 +322,9 @@ class SepticController extends Controller
             'approx_tank_size.required'         => 'Approx. size of tank is required.',
             'comments.required'                 => 'Comments are required.',
             'inspector_signature.required'      => 'Inspector Signature is required.',
-            'inspector_signature.regex'         => 'Inspector Signature cannot contain numbers.',
+            'inspector_signature.image'         => 'Signature must be an image file.',
+            'inspector_signature.mimes'         => 'Signature must be JPG, PNG, or WebP.',
+            'inspector_signature.max'           => 'Signature image must not exceed 1 MB.',
             'notes.required'                    => 'Notes are required.',
         ];
     }

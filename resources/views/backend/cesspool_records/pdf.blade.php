@@ -26,6 +26,9 @@
     $imageExists  = $imageAbsPath && file_exists($imageAbsPath);
     $videoUrl     = $record->video_path ? asset($record->video_path) : null;
 
+    $sigAbsPath   = $record->inspector_signature ? public_path($record->inspector_signature) : null;
+    $sigIsImage   = $sigAbsPath && file_exists($sigAbsPath) && @getimagesize($sigAbsPath) !== false;
+
     $inspDate = $record->date_of_pickup
         ? \Carbon\Carbon::parse($record->date_of_pickup)->format('m/d/Y')
         : '';
@@ -673,7 +676,13 @@
       <tr>
         <td style="width:40%;">
           <div class="field-lbl">Inspector Signature</div>
-          <div class="field-val">{{ $record->inspector_signature }}</div>
+          <div class="field-val" style="min-height:42px; padding-bottom:2px;">
+            @if($sigIsImage)
+              <img src="{{ $sigAbsPath }}" alt="Signature" style="max-height:38px; max-width:200px;">
+            @else
+              {{ $record->inspector_signature }}
+            @endif
+          </div>
         </td>
         <td style="width:35%;">
           <div class="field-lbl">Print Name</div>

@@ -244,8 +244,17 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Inspector Signature</label>
-                                            <input type="text" name="inspector_signature" class="form-control"
-                                                   value="{{ old('inspector_signature', $record->inspector_signature) }}">
+                                            @if($record->inspector_signature && file_exists(public_path($record->inspector_signature)))
+                                                <div class="mb-2">
+                                                    <img src="{{ asset($record->inspector_signature) }}" alt="Signature" style="max-height:70px; border:1px solid #c4cac6; padding:5px; background:#fafbfa;">
+                                                </div>
+                                            @elseif($record->inspector_signature)
+                                                <div class="mb-2 text-muted" style="font-size:13px;">
+                                                    Current value (legacy text): <em>{{ $record->inspector_signature }}</em>
+                                                </div>
+                                            @endif
+                                            <input type="file" name="inspector_signature" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                            <small class="text-muted">Upload a new signature image (JPG, PNG, or WebP &middot; max 1 MB). Leave empty to keep the existing one.</small>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Status</label>
