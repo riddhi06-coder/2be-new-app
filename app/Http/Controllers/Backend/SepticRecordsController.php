@@ -55,14 +55,11 @@ class SepticRecordsController extends Controller
         $request->validate([
             'image' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048',
             'video' => 'nullable|file|mimes:mp4,mov,avi,wmv,mkv|max:5120',
-            'inspector_signature' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'inspector_signature' => ['nullable', 'string'],
         ], [
-            'image.mimes'              => 'Image must be JPG, PNG, or WebP.',
-            'image.max'                => 'Image size must not exceed 2MB.',
-            'video.max'                => 'Video size must not exceed 5MB.',
-            'inspector_signature.image'=> 'Signature must be an image file.',
-            'inspector_signature.mimes'=> 'Signature must be JPG, PNG, or WebP.',
-            'inspector_signature.max'  => 'Signature image must not exceed 1 MB.',
+            'image.mimes' => 'Image must be JPG, PNG, or WebP.',
+            'image.max'   => 'Image size must not exceed 2MB.',
+            'video.max'   => 'Video size must not exceed 5MB.',
         ]);
 
         $data = $request->except(['_token', '_method', 'image', 'video', 'remove_image', 'remove_video', 'inspector_signature']);
@@ -107,19 +104,23 @@ class SepticRecordsController extends Controller
             $data['video_path'] = null;
         }
 
-        // Handle signature image upload — stored under public/septic/signatures/
-        if ($request->hasFile('inspector_signature')) {
+        // Handle signature pad — base64 data URL → PNG file in public/septic/signatures/
+        $sigRaw = $request->input('inspector_signature');
+        if (is_string($sigRaw) && preg_match('/^data:image\/(\w+);base64,(.+)$/', $sigRaw, $m)) {
             if ($record->inspector_signature && file_exists(public_path($record->inspector_signature))) {
                 @unlink(public_path($record->inspector_signature));
             }
-            $sig      = $request->file('inspector_signature');
-            $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
-            $destDir  = public_path('septic/signatures');
-            if (!is_dir($destDir)) {
-                mkdir($destDir, 0755, true);
+            $ext      = strtolower($m[1]) === 'jpeg' ? 'jpg' : strtolower($m[1]);
+            $imgBytes = base64_decode($m[2], true);
+            if ($imgBytes !== false) {
+                $filename = uniqid('sig_', true) . '.' . $ext;
+                $destDir  = public_path('septic/signatures');
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                file_put_contents($destDir . DIRECTORY_SEPARATOR . $filename, $imgBytes);
+                $data['inspector_signature'] = 'septic/signatures/' . $filename;
             }
-            $sig->move($destDir, $filename);
-            $data['inspector_signature'] = 'septic/signatures/' . $filename;
         }
 
         $record->update($data);

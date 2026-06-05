@@ -242,19 +242,26 @@
                                             <input type="text" name="type_of_system" class="form-control"
                                                    value="{{ old('type_of_system', $record->type_of_system) }}">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <label class="form-label">Inspector Signature</label>
                                             @if($record->inspector_signature && file_exists(public_path($record->inspector_signature)))
                                                 <div class="mb-2">
-                                                    <img src="{{ asset($record->inspector_signature) }}" alt="Signature" style="max-height:70px; border:1px solid #c4cac6; padding:5px; background:#fafbfa;">
+                                                    <div style="font-size:12px; color:#6b7d72; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">Current signature on file</div>
+                                                    <img src="{{ asset($record->inspector_signature) }}" alt="Signature" style="max-height:80px; border:1px solid #c4cac6; padding:6px; background:#fafbfa;">
                                                 </div>
                                             @elseif($record->inspector_signature)
                                                 <div class="mb-2 text-muted" style="font-size:13px;">
                                                     Current value (legacy text): <em>{{ $record->inspector_signature }}</em>
                                                 </div>
                                             @endif
-                                            <input type="file" name="inspector_signature" class="form-control" accept="image/jpeg,image/png,image/webp">
-                                            <small class="text-muted">Upload a new signature image (JPG, PNG, or WebP &middot; max 1 MB). Leave empty to keep the existing one.</small>
+                                            <div class="signature-pad-wrap" style="border:1px solid #c4cac6; border-radius:6px; background:#fafbfa; padding:10px; max-width:600px;">
+                                                <canvas id="signature_canvas" style="width:100%; height:160px; display:block; background:#fff; touch-action:none; border:1px dashed #c4cac6; border-radius:4px; cursor:crosshair;"></canvas>
+                                                <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                                                    <small class="text-muted" style="font-size:13px;">Draw a new signature to replace the current one. Leave blank to keep existing.</small>
+                                                    <button type="button" id="sig_clear_btn" class="btn btn-sm btn-outline-secondary" style="padding:4px 14px; font-size:13px;">Clear</button>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="inspector_signature" name="inspector_signature" value="">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label">Status</label>
@@ -646,6 +653,65 @@ document.getElementById('btnSendReport').addEventListener('click', function() {
         showToast('Something went wrong. Please try again.', 'error');
     });
 });
+</script>
+
+<!-- Signature Pad library + canvas init + serialize on submit -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
+<script>
+    (function () {
+        const canvas = document.getElementById('signature_canvas');
+        if (!canvas || typeof SignaturePad === 'undefined') return;
+
+        window.editSignaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(13, 58, 23)',
+            minWidth: 0.8,
+            maxWidth: 2.2
+        });
+
+        let lastW = 0, lastH = 0;
+        function resizeCanvas() {
+            if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) return;
+            if (canvas.offsetWidth === lastW && canvas.offsetHeight === lastH) return;
+
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            const data  = window.editSignaturePad.toData();
+
+            canvas.width  = canvas.offsetWidth  * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+
+            window.editSignaturePad.clear();
+            if (data && data.length) window.editSignaturePad.fromData(data);
+
+            lastW = canvas.offsetWidth;
+            lastH = canvas.offsetHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(resizeCanvas).observe(canvas);
+        }
+        resizeCanvas();
+
+        document.getElementById('sig_clear_btn').addEventListener('click', function () {
+            window.editSignaturePad.clear();
+            document.getElementById('inspector_signature').value = '';
+        });
+
+        // Serialize canvas to hidden input on form submit (only if user drew something)
+        const editForm = document.querySelector('form[action*="septic-records"]');
+        if (editForm) {
+            editForm.addEventListener('submit', function () {
+                if (window.editSignaturePad && !window.editSignaturePad.isEmpty()) {
+                    document.getElementById('inspector_signature').value =
+                        window.editSignaturePad.toDataURL('image/png');
+                } else {
+                    document.getElementById('inspector_signature').value = '';
+                }
+            });
+        }
+    })();
 </script>
 
 </body>

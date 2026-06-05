@@ -270,19 +270,24 @@ class SepticController extends Controller
         ];
     }
 
-    // ── Signature image upload → public/septic/signatures/ ───────────────────
+    // ── Signature pad → decode base64 PNG → public/septic/signatures/ ────────
     private function storeSignature(Request $request): ?string
     {
-        if (!$request->hasFile('inspector_signature')) {
+        $raw = $request->input('inspector_signature');
+        if (!is_string($raw) || !preg_match('/^data:image\/(\w+);base64,(.+)$/', $raw, $m)) {
             return null;
         }
-        $sig      = $request->file('inspector_signature');
-        $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
+        $ext      = strtolower($m[1]) === 'jpeg' ? 'jpg' : strtolower($m[1]);
+        $imgBytes = base64_decode($m[2], true);
+        if ($imgBytes === false) {
+            return null;
+        }
+        $filename = uniqid('sig_', true) . '.' . $ext;
         $destDir  = public_path('septic/signatures');
         if (!is_dir($destDir)) {
             mkdir($destDir, 0755, true);
         }
-        $sig->move($destDir, $filename);
+        file_put_contents($destDir . DIRECTORY_SEPARATOR . $filename, $imgBytes);
         return 'septic/signatures/' . $filename;
     }
 
@@ -301,7 +306,7 @@ class SepticController extends Controller
             'tank_composition'        => 'required|string|max:255',
             'approx_tank_size'        => 'required|string|max:100',
             'comments'                => 'required|string',
-            'inspector_signature'     => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'inspector_signature'     => ['required', 'string', 'regex:/^data:image\/(png|jpeg|jpg|webp);base64,/'],
             'notes'                   => 'required|string',
         ];
     }
@@ -321,10 +326,8 @@ class SepticController extends Controller
             'tank_composition.required'         => 'Tank composition is required.',
             'approx_tank_size.required'         => 'Approx. size of tank is required.',
             'comments.required'                 => 'Comments are required.',
-            'inspector_signature.required'      => 'Inspector Signature is required.',
-            'inspector_signature.image'         => 'Signature must be an image file.',
-            'inspector_signature.mimes'         => 'Signature must be JPG, PNG, or WebP.',
-            'inspector_signature.max'           => 'Signature image must not exceed 1 MB.',
+            'inspector_signature.required'      => 'Please sign in the signature box.',
+            'inspector_signature.regex'         => 'Invalid signature data — please draw your signature again.',
             'notes.required'                    => 'Notes are required.',
         ];
     }

@@ -515,11 +515,14 @@
 
                                         <div class="form-group col-md-12">
                                             <label>Inspector Signature: <span class="text-danger">*</span></label>
-                                            <input type="file" id="inspector_signature" name="inspector_signature" class="form-control" accept="image/jpeg,image/png,image/webp">
-                                            <small class="text-muted" style="font-size:13px;">Upload signature image (JPG, PNG, or WebP &middot; max 1 MB)</small>
-                                            <div id="sig_preview_wrap" style="display:none; margin-top:10px;">
-                                                <img id="sig_preview" src="" alt="Signature preview" style="max-height:80px; border:1px solid #c4cac6; padding:6px; background:#fafbfa;">
+                                            <div class="signature-pad-wrap" style="border:1px solid #c4cac6; border-radius:6px; background:#fafbfa; padding:10px;">
+                                                <canvas id="signature_canvas" style="width:100%; height:170px; display:block; background:#fff; touch-action:none; border:1px dashed #c4cac6; border-radius:4px; cursor:crosshair;"></canvas>
+                                                <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                                                    <small class="text-muted" style="font-size:13px;">Sign above using your finger, stylus, or mouse.</small>
+                                                    <button type="button" id="sig_clear_btn" class="btn btn-sm btn-outline-secondary" style="padding:4px 14px; font-size:13px;">Clear</button>
+                                                </div>
                                             </div>
+                                            <input type="hidden" id="inspector_signature" name="inspector_signature" value="">
                                             <div class="field-error text-danger" id="err_inspector_signature" style="display:none;font-size:15px;margin-top:4px;"></div>
                                         </div>
 
@@ -813,24 +816,10 @@
                     isValid = false;
                 }
 
-                // Inspector Signature (file upload)
-                const inspSigInput = document.getElementById('inspector_signature');
-                const inspSigFile  = inspSigInput.files && inspSigInput.files[0];
-                if (!inspSigFile) {
-                    showError('err_inspector_signature', 'Inspector Signature image is required.');
-                    inspSigInput.classList.add('is-invalid');
+                // Inspector Signature (canvas pad)
+                if (!window.septicSignaturePad || window.septicSignaturePad.isEmpty()) {
+                    showError('err_inspector_signature', 'Please sign in the signature box above.');
                     isValid = false;
-                } else {
-                    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-                    if (!allowedTypes.includes(inspSigFile.type)) {
-                        showError('err_inspector_signature', 'Signature must be a JPG, PNG, or WebP image.');
-                        inspSigInput.classList.add('is-invalid');
-                        isValid = false;
-                    } else if (inspSigFile.size > 1024 * 1024) {
-                        showError('err_inspector_signature', 'Signature image must not exceed 1 MB.');
-                        inspSigInput.classList.add('is-invalid');
-                        isValid = false;
-                    }
                 }
 
                 // Notes
@@ -861,26 +850,20 @@
         });
 
         document.getElementById('septicForm').addEventListener('submit', function(e) {
+            // Serialize canvas signature → hidden input BEFORE validation runs
+            if (window.septicSignaturePad && !window.septicSignaturePad.isEmpty()) {
+                document.getElementById('inspector_signature').value =
+                    window.septicSignaturePad.toDataURL('image/png');
+            } else {
+                document.getElementById('inspector_signature').value = '';
+            }
+
             if (!validateStep(currentStep)) {
                 e.preventDefault();
                 return;
             }
             document.getElementById('loadingText').textContent = 'Submitting your form...';
             document.getElementById('loadingOverlay').style.display = 'flex';
-        });
-
-        // Signature image live preview
-        document.getElementById('inspector_signature').addEventListener('change', function (e) {
-            const file = e.target.files && e.target.files[0];
-            const wrap = document.getElementById('sig_preview_wrap');
-            const img  = document.getElementById('sig_preview');
-            if (file && file.type.startsWith('image/')) {
-                img.src = URL.createObjectURL(file);
-                wrap.style.display = 'block';
-            } else {
-                img.src = '';
-                wrap.style.display = 'none';
-            }
         });
 
         showStep(currentStep);
@@ -901,6 +884,14 @@
 
     <script>
         document.getElementById('saveBtn').addEventListener('click', function () {
+            // Serialize canvas signature into hidden input before FormData captures it
+            if (window.septicSignaturePad && !window.septicSignaturePad.isEmpty()) {
+                document.getElementById('inspector_signature').value =
+                    window.septicSignaturePad.toDataURL('image/png');
+            } else {
+                document.getElementById('inspector_signature').value = '';
+            }
+
             if (!validateStep(currentStep)) return;
 
             const btn = this;
@@ -951,6 +942,52 @@
                 });
             });
         });
+    </script>
+
+    <!-- Signature Pad library + canvas init -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.2.0/dist/signature_pad.umd.min.js"></script>
+    <script>
+        (function () {
+            const canvas = document.getElementById('signature_canvas');
+            if (!canvas || typeof SignaturePad === 'undefined') return;
+
+            window.septicSignaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)',
+                penColor: 'rgb(13, 58, 23)',
+                minWidth: 0.8,
+                maxWidth: 2.2
+            });
+
+            let lastW = 0, lastH = 0;
+            function resizeCanvas() {
+                if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) return;
+                if (canvas.offsetWidth === lastW && canvas.offsetHeight === lastH) return;
+
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                const data  = window.septicSignaturePad.toData();
+
+                canvas.width  = canvas.offsetWidth  * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext('2d').scale(ratio, ratio);
+
+                window.septicSignaturePad.clear();
+                if (data && data.length) window.septicSignaturePad.fromData(data);
+
+                lastW = canvas.offsetWidth;
+                lastH = canvas.offsetHeight;
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            if (typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(resizeCanvas).observe(canvas);
+            }
+            resizeCanvas();
+
+            document.getElementById('sig_clear_btn').addEventListener('click', function () {
+                window.septicSignaturePad.clear();
+                document.getElementById('inspector_signature').value = '';
+            });
+        })();
     </script>
 
 </body>

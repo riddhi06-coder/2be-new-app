@@ -206,19 +206,24 @@ class CesspoolController extends Controller
         ];
     }
 
-    // ── Signature image upload → public/cesspool/signatures/ ─────────────────
+    // ── Signature pad → decode base64 PNG → public/cesspool/signatures/ ──────
     private function storeSignature(Request $request): ?string
     {
-        if (!$request->hasFile('inspector_signature')) {
+        $raw = $request->input('inspector_signature');
+        if (!is_string($raw) || !preg_match('/^data:image\/(\w+);base64,(.+)$/', $raw, $m)) {
             return null;
         }
-        $sig      = $request->file('inspector_signature');
-        $filename = uniqid('sig_', true) . '.' . $sig->getClientOriginalExtension();
+        $ext      = strtolower($m[1]) === 'jpeg' ? 'jpg' : strtolower($m[1]);
+        $imgBytes = base64_decode($m[2], true);
+        if ($imgBytes === false) {
+            return null;
+        }
+        $filename = uniqid('sig_', true) . '.' . $ext;
         $destDir  = public_path('cesspool/signatures');
         if (!is_dir($destDir)) {
             mkdir($destDir, 0755, true);
         }
-        $sig->move($destDir, $filename);
+        file_put_contents($destDir . DIRECTORY_SEPARATOR . $filename, $imgBytes);
         return 'cesspool/signatures/' . $filename;
     }
 
@@ -239,7 +244,7 @@ class CesspoolController extends Controller
             'service_recommended'        => 'required|string|max:255',
             'comments'                   => 'required|string',
             'notes'                      => 'required|string',
-            'inspector_signature'        => 'required|image|mimes:jpg,jpeg,png,webp|max:1024',
+            'inspector_signature'        => ['required', 'string', 'regex:/^data:image\/(png|jpeg|jpg|webp);base64,/'],
             'print_name'                 => 'required|string|max:255|regex:/^[^0-9]+$/',
             'date'                       => 'required|date_format:m/d/Y',
         ];
@@ -262,10 +267,8 @@ class CesspoolController extends Controller
             'service_recommended.required'       => 'Service recommended is required.',
             'comments.required'                  => 'Comments are required.',
             'notes.required'                     => 'Notes are required.',
-            'inspector_signature.required'       => 'Inspector Signature is required.',
-            'inspector_signature.image'          => 'Signature must be an image file.',
-            'inspector_signature.mimes'          => 'Signature must be JPG, PNG, or WebP.',
-            'inspector_signature.max'            => 'Signature image must not exceed 1 MB.',
+            'inspector_signature.required'       => 'Please sign in the signature box.',
+            'inspector_signature.regex'          => 'Invalid signature data — please draw your signature again.',
             'print_name.required'                => 'Print Name is required.',
             'print_name.regex'                   => 'Print Name cannot contain numbers.',
             'date.required'                      => 'Date is required.',
