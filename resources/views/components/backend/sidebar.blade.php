@@ -2,7 +2,7 @@
  <div class="page-body-wrapper">
         <!-- Page Sidebar Start-->
         <div class="sidebar-wrapper" data-layout="stroke-svg" style="width:20%;">
-          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 50% !important; margin-left:40px;"></a>
+          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 40% !important; margin-left:40px;"></a>
 		  	<a href="{{ route('admin.dashboard') }}">
 				<!-- <img class="img-fluid" src="{{ asset('admin/assets/images/logo/logo-icon.png') }}" alt="" style="max-width: 65% !important;"> -->
 			</a>  
