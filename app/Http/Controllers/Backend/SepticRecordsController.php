@@ -35,7 +35,7 @@ class SepticRecordsController extends Controller
             }
         }
 
-        $records = $query->orderBy('inserted_at', 'desc')->get();
+        $records = $query->orderBy('id', 'desc')->get();
 
         return view('backend.septic_records.index', compact('records'));
     }
