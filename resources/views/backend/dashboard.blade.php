@@ -9,6 +9,72 @@
             background: #f4f6f9;
         }
 
+        /* ── STAT CARDS ── */
+        .stats-wrap { padding-top: 24px; }
+        .stat-card {
+            display: block;
+            background: #ffffff;
+            border: 1px solid #e6ede9;
+            border-radius: 14px;
+            padding: 20px 22px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 4px 14px rgba(13, 58, 23, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(13, 58, 23, 0.10);
+            border-color: #b4d4bf;
+            color: inherit;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: #0d3a17;
+        }
+        .stat-row-inner { display: flex; align-items: center; gap: 16px; }
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: #e8f3ec;
+            color: #0d3a17;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        .stat-body { flex-grow: 1; min-width: 0; }
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #6b7d72;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d3a17;
+            line-height: 1.1;
+        }
+        .stat-meta {
+            font-size: 12px;
+            color: #8a9b91;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        .stat-meta strong { color: #0d3a17; font-weight: 600; }
+
         .qa-card {
             background: #bfaeae;
             border-radius: 16px;
@@ -99,19 +165,73 @@
 	  @include('components.backend.sidebar')
 	  <!--end sidebar wrapper-->
 
+      <div class="page-body">
 
+          @php
+              $cesspoolTotal     = \App\Models\CesspoolSystemDetails::count();
+              $cesspoolSubmitted = \App\Models\CesspoolSystemDetails::where('is_draft', false)->count();
+              $septicTotal       = \App\Models\SepticSystemDetails::count();
+              $septicSubmitted   = \App\Models\SepticSystemDetails::where('is_draft', false)->count();
+              $disposalTotal     = \App\Models\WasteDisposalDetails::count();
+          @endphp
 
-      <div class="page-body"> 
-          <div class="container-fluid">            
-            <div class="page-title"> 
-              <div class="row">
-                
-                
+          <!-- ═══ STATS ROW ═══ -->
+          <div class="container stats-wrap">
+              <div class="row g-3">
+
+                  <div class="col-lg-4 col-md-6">
+                      <a href="{{ route('cesspool-records.index') }}" class="stat-card">
+                          <div class="stat-row-inner">
+                              <div class="stat-icon"><i class="fa fa-tint" aria-hidden="true"></i></div>
+                              <div class="stat-body">
+                                  <div class="stat-label">Cesspool Inspections</div>
+                                  <div class="stat-value">{{ $cesspoolTotal }}</div>
+                                  <div class="stat-meta">
+                                      <strong>{{ $cesspoolSubmitted }}</strong> submitted
+                                      @if($cesspoolTotal - $cesspoolSubmitted > 0)
+                                          &middot; {{ $cesspoolTotal - $cesspoolSubmitted }} draft{{ ($cesspoolTotal - $cesspoolSubmitted) === 1 ? '' : 's' }}
+                                      @endif
+                                  </div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6">
+                      <a href="{{ route('septic-records.index') }}" class="stat-card">
+                          <div class="stat-row-inner">
+                              <div class="stat-icon"><i class="fa fa-shower" aria-hidden="true"></i></div>
+                              <div class="stat-body">
+                                  <div class="stat-label">Septic Tank Inspections</div>
+                                  <div class="stat-value">{{ $septicTotal }}</div>
+                                  <div class="stat-meta">
+                                      <strong>{{ $septicSubmitted }}</strong> submitted
+                                      @if($septicTotal - $septicSubmitted > 0)
+                                          &middot; {{ $septicTotal - $septicSubmitted }} draft{{ ($septicTotal - $septicSubmitted) === 1 ? '' : 's' }}
+                                      @endif
+                                  </div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6">
+                      <a href="{{ route('manage-disposal-details.index') }}" class="stat-card">
+                          <div class="stat-row-inner">
+                              <div class="stat-icon"><i class="fa fa-recycle" aria-hidden="true"></i></div>
+                              <div class="stat-body">
+                                  <div class="stat-label">Wastewater Pumping &amp; Hauling</div>
+                                  <div class="stat-value">{{ $disposalTotal }}</div>
+                                  <div class="stat-meta">
+                                      <strong>{{ $disposalTotal }}</strong> total {{ $disposalTotal === 1 ? 'entry' : 'entries' }}
+                                  </div>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+
               </div>
-            </div>
           </div>
-
-
 
           <div class="container py-5">
               <div class="row justify-content-center">
