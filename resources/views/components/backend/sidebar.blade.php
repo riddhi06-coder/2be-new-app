@@ -1,15 +1,15 @@
 <!-- Page Body Start-->
  <div class="page-body-wrapper">
         <!-- Page Sidebar Start-->
-        <div class="sidebar-wrapper" data-layout="stroke-svg" style="width:20%;">
-          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 40% !important; margin-left:40px;"></a>
+        <div class="sidebar-wrapper" data-layout="stroke-svg" style="width:17%;">
+          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 35% !important; margin-left:25px;"></a>
 		  	<a href="{{ route('admin.dashboard') }}">
 				<!-- <img class="img-fluid" src="{{ asset('admin/assets/images/logo/logo-icon.png') }}" alt="" style="max-width: 65% !important;"> -->
 			</a>  
 		  <div class="back-btn mt-5"><i class="fa fa-angle-left"> </i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
           </div>
-          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt=""  style="max-width: 20% !important;margin-right:50px !important;"></a></div>
+          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt=""  style="max-width: 23% !important;margin-right:190px !important;"></a></div>
           <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
