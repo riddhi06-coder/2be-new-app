@@ -1,7 +1,7 @@
 <!-- Page Body Start-->
  <div class="page-body-wrapper">
         <!-- Page Sidebar Start-->
-        <div class="sidebar-wrapper" data-layout="stroke-svg" style="width:17%;">
+        <div class="sidebar-wrapper" data-layout="stroke-svg">
           <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 35% !important; margin-left:25px;"></a>
 		  	<a href="{{ route('admin.dashboard') }}">
 				<!-- <img class="img-fluid" src="{{ asset('admin/assets/images/logo/logo-icon.png') }}" alt="" style="max-width: 65% !important;"> -->
