@@ -28,3 +28,6 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 /* ---- Announcements list thumbnail (larger, landscape) ---- */
 .col-thumb { width: 140px; }
 .announcement-thumb { width: 120px; height: 68px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1px solid #e5e5e5; }
+
+/* ---- Incident report photo thumbnails ---- */
+.incident-photo-thumb { width: 90px; height: 68px; object-fit: cover; border-radius: 6px; border: 1px solid #e5e5e5; cursor: pointer; }

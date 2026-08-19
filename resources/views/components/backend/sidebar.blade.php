@@ -135,7 +135,7 @@
 
                 @if($can('employees.view'))
                 <li class="sidebar-main-title">
-                  <div><h6>Career Portal</h6></div>
+                  <div><h6>HR Portal</h6></div>
                 </li>
 
                 <li class="sidebar-list {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}">
@@ -188,6 +188,22 @@
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-blog') }}"></use>
                     </svg>
                     <span>Announcements</span>
+                  </a>
+                </li>
+                @endif
+
+
+                @if($can('incident-reports.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.incident-reports.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('admin.incident-reports.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-support-tickets') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-support-tickets') }}"></use>
+                    </svg>
+                    <span>Incident Reports</span>
                   </a>
                 </li>
                 @endif

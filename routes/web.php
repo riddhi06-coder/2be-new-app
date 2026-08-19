@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\DocumentCategoryController;
 use App\Http\Controllers\Backend\DocumentController;
 use App\Http\Controllers\Backend\AnnouncementController;
+use App\Http\Controllers\Backend\IncidentReportController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -142,6 +143,19 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->middleware('permission:announcements.edit')->name('admin.announcements.edit');
     Route::put('announcements/{announcement}',     [AnnouncementController::class, 'update'])->middleware('permission:announcements.edit')->name('admin.announcements.update');
     Route::delete('announcements/{announcement}',  [AnnouncementController::class, 'destroy'])->middleware('permission:announcements.delete')->name('admin.announcements.destroy');
+
+
+    // ==================== Career Portal — Incident Reports ====================
+    // view + create are available to employees (view is scoped to own in the controller);
+    // edit/delete are admin-only.
+    Route::get('incident-reports',                       [IncidentReportController::class, 'index'])->middleware('permission:incident-reports.view')->name('admin.incident-reports.index');
+    Route::get('incident-reports/create',                [IncidentReportController::class, 'create'])->middleware('permission:incident-reports.create')->name('admin.incident-reports.create');
+    Route::post('incident-reports',                      [IncidentReportController::class, 'store'])->middleware('permission:incident-reports.create')->name('admin.incident-reports.store');
+    Route::get('incident-reports/{incident_report}',     [IncidentReportController::class, 'show'])->middleware('permission:incident-reports.view')->name('admin.incident-reports.show');
+    Route::get('incident-reports/{incident_report}/edit',[IncidentReportController::class, 'edit'])->middleware('permission:incident-reports.edit')->name('admin.incident-reports.edit');
+    Route::put('incident-reports/{incident_report}',     [IncidentReportController::class, 'update'])->middleware('permission:incident-reports.edit')->name('admin.incident-reports.update');
+    Route::delete('incident-reports/{incident_report}',  [IncidentReportController::class, 'destroy'])->middleware('permission:incident-reports.delete')->name('admin.incident-reports.destroy');
+    Route::delete('incident-report-photos/{photo}',      [IncidentReportController::class, 'destroyPhoto'])->middleware('permission:incident-reports.edit')->name('admin.incident-reports.photos.destroy');
 });
 
 

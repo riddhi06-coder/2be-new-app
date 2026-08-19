@@ -54,7 +54,7 @@
                                     <label class="form-label">File <span class="text-danger">*</span></label>
                                     <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" required
                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
-                                    <small class="text-muted">PDF, Word, Excel, JPG or PNG. Max 10 MB.</small>
+                                    <small class="text-muted">PDF, Word, Excel, JPG or PNG. Max {{ round(config('uploads.document_max_kb') / 1024) }} MB.</small>
                                     @error('file')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                 </div>
 

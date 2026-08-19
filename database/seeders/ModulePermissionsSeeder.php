@@ -42,6 +42,7 @@ class ModulePermissionsSeeder extends Seeder
                 ['Files',             'documents',               ['view', 'create', 'edit', 'delete'], 'Documents'],
 
                 ['Announcements',     'announcements',           ['view', 'create', 'edit', 'delete']],
+                ['Incident Reports',  'incident-reports',        ['view', 'create', 'edit', 'delete']],
             ];
 
             $actionLabels = [
@@ -103,6 +104,16 @@ class ModulePermissionsSeeder extends Seeder
                 $newAdminIds      = Permission::whereIn('slug', $adminSlugs)->pluck('id')->all();
                 $mergedAdminIds   = array_unique(array_merge($existingAdminIds, $newAdminIds));
                 $admin->permissions()->sync($mergedAdminIds);
+            }
+
+            // Employee -> can submit and view their OWN incident reports (view+create,
+            // no edit/delete). Controller scopes "view" to their own records.
+            $employee = Role::where('slug', 'employee')->first();
+            if ($employee) {
+                $employeeSlugs   = ['dashboard.view', 'incident-reports.view', 'incident-reports.create'];
+                $existingEmpIds  = $employee->permissions()->pluck('permissions.id')->all();
+                $newEmpIds       = Permission::whereIn('slug', $employeeSlugs)->pluck('id')->all();
+                $employee->permissions()->sync(array_unique(array_merge($existingEmpIds, $newEmpIds)));
             }
         });
     }

@@ -50,7 +50,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Image <small class="text-muted">(optional)</small></label>
                                     <input type="file" name="image" id="imageInput" class="form-control @error('image') is-invalid @enderror" accept=".jpg,.jpeg,.png,.gif,.webp">
-                                    <small class="text-muted">JPG, PNG, GIF or WEBP. Max 5 MB.</small>
+                                    <small class="text-muted">JPG, PNG, GIF or WEBP. Max {{ round(config('uploads.image_max_kb') / 1024) }} MB.</small>
                                     @error('image')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <div class="mt-2">
                                         <img id="imagePreview" src="" alt="" class="form-image-preview d-none">

@@ -158,11 +158,11 @@ class DocumentController extends Controller
         return $request->validate([
             'document_category_id' => 'required|exists:document_categories,id',
             'title'                => 'required|string|max:255',
-            'file'                 => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png', 'max:10240'],
+            'file'                 => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png', 'max:'.config('uploads.document_max_kb')],
             'is_public'            => 'nullable|boolean',
             'user_id'              => [Rule::requiredIf(fn () => ! $request->boolean('is_public')), 'nullable', 'exists:users,id'],
         ], [
-            'file.max'          => 'The file may not be larger than 10 MB.',
+            'file.max'          => 'The file may not be larger than '.round(config('uploads.document_max_kb') / 1024).' MB.',
             'file.mimes'        => 'Allowed file types: PDF, Word, Excel, JPG, PNG.',
             'user_id.required'  => 'Please choose the employee this personal document belongs to.',
         ]);

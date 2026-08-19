@@ -79,11 +79,11 @@ class AnnouncementController extends Controller
         return $request->validate([
             'title'        => 'required|string|max:255',
             'body'         => 'required|string',
-            'image'        => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:'.config('uploads.image_max_kb'),
             'is_active'    => 'nullable|boolean',
             'published_at' => 'nullable|date',
         ], [
-            'image.max'   => 'The image may not be larger than 5 MB.',
+            'image.max'   => 'The image may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
             'image.image' => 'The file must be an image (JPG, PNG, GIF or WEBP).',
         ]);
     }
