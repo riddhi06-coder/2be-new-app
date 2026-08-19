@@ -133,6 +133,26 @@
                 @endif
 
 
+                @if($can('employees.view'))
+                <li class="sidebar-main-title">
+                  <div><h6>Career Portal</h6></div>
+                </li>
+
+                <li class="sidebar-list {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('admin.employees.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-user') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-user') }}"></use>
+                    </svg>
+                    <span>Employees</span>
+                  </a>
+                </li>
+                @endif
+
+
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\SepticRecordsController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PermissionController;
+use App\Http\Controllers\Backend\EmployeeController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -100,6 +101,15 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('permissions-catalog/{permission}/edit',        [PermissionController::class, 'editPermission'])->middleware('permission:permissions.assign')->name('admin.permissions.manage.edit');
     Route::put('permissions-catalog/{permission}',             [PermissionController::class, 'updatePermission'])->middleware('permission:permissions.assign')->name('admin.permissions.manage.update');
     Route::delete('permissions-catalog/{permission}',          [PermissionController::class, 'destroyPermission'])->middleware('permission:permissions.assign')->name('admin.permissions.manage.destroy');
+
+
+    // ==================== Career Portal — Employees ====================
+    Route::get('employees',                 [EmployeeController::class, 'index'])->middleware('permission:employees.view')->name('admin.employees.index');
+    Route::get('employees/create',          [EmployeeController::class, 'create'])->middleware('permission:employees.create')->name('admin.employees.create');
+    Route::post('employees',                [EmployeeController::class, 'store'])->middleware('permission:employees.create')->name('admin.employees.store');
+    Route::get('employees/{employee}/edit', [EmployeeController::class, 'edit'])->middleware('permission:employees.edit')->name('admin.employees.edit');
+    Route::put('employees/{employee}',      [EmployeeController::class, 'update'])->middleware('permission:employees.edit')->name('admin.employees.update');
+    Route::delete('employees/{employee}',   [EmployeeController::class, 'destroy'])->middleware('permission:employees.delete')->name('admin.employees.destroy');
 });
 
 

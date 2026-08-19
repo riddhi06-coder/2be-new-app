@@ -33,6 +33,9 @@ class ModulePermissionsSeeder extends Seeder
                 ['Email Settings',    'manage-email-settings',   ['view', 'create', 'edit', 'delete']],
                 ['Cesspool Records',  'cesspool-records',        ['view', 'edit', 'delete']],
                 ['Septic Records',    'septic-records',          ['view', 'edit', 'delete']],
+
+                // Career portal modules
+                ['Employees',         'employees',               ['view', 'create', 'edit', 'delete']],
             ];
 
             $actionLabels = [
