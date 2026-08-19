@@ -134,7 +134,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save Changes</button>
-                            <a href="{{ route('admin.incident-reports.show', $report) }}" class="btn btn-light">Cancel</a>
+                            <a href="{{ route('admin.incident-reports.index') }}" class="btn btn-light">Cancel</a>
                         </form>
 
                         {{-- Separate delete-photo forms (kept outside the main form) --}}
