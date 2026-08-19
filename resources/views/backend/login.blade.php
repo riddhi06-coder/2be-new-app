@@ -3,8 +3,11 @@
     
 <head>
     @include('components.backend.head')
+    <style>
+        html, body { overflow: hidden; height: 100%; }
+    </style>
 </head>
-	   
+
         <body>
             <!-- login page start-->
             <div class="container-fluid p-0">
@@ -48,7 +51,6 @@
                             </div>
                         </div>
 
-                        <p class="mt-4 mb-0 text-center">Don't have an account?<a class="ms-2" href="{{ route('admin.register') }}">Create Account</a></p>
                     </form>
 
                     </div>

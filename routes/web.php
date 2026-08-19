@@ -29,37 +29,36 @@ Route::post('/register', [LoginController::class, 'authenticate_register'])->nam
 // Admin Routes with Middleware
 Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHistoryMiddleware::class]], function () {
         Route::get('/dashboard', function () {
-            return view('backend.dashboard'); 
+            return view('backend.dashboard');
         })->name('admin.dashboard');
+
+    // ==== Manage Disposal Details
+    Route::get('manage-disposal-details/export', [DisposalController::class, 'export'])->name('manage-disposal-details.export');
+    Route::post('manage-disposal-details/export-selected-pdf',[DisposalController::class, 'exportSelectedPdf'])->name('manage-disposal-details.exportSelectedPdf');
+
+    Route::post('/generate-monthly-report', [DisposalController::class, 'generate_monthly_report'])->name('generate.monthly.report');
+    Route::resource('manage-disposal-details', DisposalController::class);
+
+
+    Route::resource('manage-email-settings', EmailSettingsController::class);
+
+
+    // ==== Cesspool Records
+    Route::get('cesspool-records',                  [CesspoolRecordsController::class, 'index'])->name('cesspool-records.index');
+    Route::get('cesspool-records/{id}/edit',        [CesspoolRecordsController::class, 'edit'])->name('cesspool-records.edit');
+    Route::put('cesspool-records/{id}',             [CesspoolRecordsController::class, 'update'])->name('cesspool-records.update');
+    Route::get('cesspool-records/{id}/pdf',         [CesspoolRecordsController::class, 'exportPdf'])->name('cesspool-records.pdf');
+    Route::post('cesspool-records/send-report',     [CesspoolRecordsController::class, 'sendReport'])->name('cesspool-records.send-report');
+    Route::delete('cesspool-records/{id}',          [CesspoolRecordsController::class, 'destroy'])->name('cesspool-records.destroy');
+
+    // ==== Septic Records
+    Route::get('septic-records',                    [SepticRecordsController::class, 'index'])->name('septic-records.index');
+    Route::get('septic-records/{id}/edit',          [SepticRecordsController::class, 'edit'])->name('septic-records.edit');
+    Route::put('septic-records/{id}',               [SepticRecordsController::class, 'update'])->name('septic-records.update');
+    Route::get('septic-records/{id}/pdf',           [SepticRecordsController::class, 'exportPdf'])->name('septic-records.pdf');
+    Route::post('septic-records/send-report',       [SepticRecordsController::class, 'sendReport'])->name('septic-records.send-report');
+    Route::delete('septic-records/{id}',            [SepticRecordsController::class, 'destroy'])->name('septic-records.destroy');
 });
-
-
-// ==== Manage Disposal Details
-Route::get('manage-disposal-details/export', [DisposalController::class, 'export'])->name('manage-disposal-details.export');
-Route::post('manage-disposal-details/export-selected-pdf',[DisposalController::class, 'exportSelectedPdf'])->name('manage-disposal-details.exportSelectedPdf');
-
-Route::post('/generate-monthly-report', [DisposalController::class, 'generate_monthly_report'])->name('generate.monthly.report');
-Route::resource('manage-disposal-details', DisposalController::class);
-
-
-Route::resource('manage-email-settings', EmailSettingsController::class);
-
-
-// ==== Cesspool Records
-Route::get('cesspool-records',                  [CesspoolRecordsController::class, 'index'])->name('cesspool-records.index');
-Route::get('cesspool-records/{id}/edit',        [CesspoolRecordsController::class, 'edit'])->name('cesspool-records.edit');
-Route::put('cesspool-records/{id}',             [CesspoolRecordsController::class, 'update'])->name('cesspool-records.update');
-Route::get('cesspool-records/{id}/pdf',         [CesspoolRecordsController::class, 'exportPdf'])->name('cesspool-records.pdf');
-Route::post('cesspool-records/send-report',     [CesspoolRecordsController::class, 'sendReport'])->name('cesspool-records.send-report');
-Route::delete('cesspool-records/{id}',          [CesspoolRecordsController::class, 'destroy'])->name('cesspool-records.destroy');
-
-// ==== Septic Records
-Route::get('septic-records',                    [SepticRecordsController::class, 'index'])->name('septic-records.index');
-Route::get('septic-records/{id}/edit',          [SepticRecordsController::class, 'edit'])->name('septic-records.edit');
-Route::put('septic-records/{id}',               [SepticRecordsController::class, 'update'])->name('septic-records.update');
-Route::get('septic-records/{id}/pdf',           [SepticRecordsController::class, 'exportPdf'])->name('septic-records.pdf');
-Route::post('septic-records/send-report',       [SepticRecordsController::class, 'sendReport'])->name('septic-records.send-report');
-Route::delete('septic-records/{id}',            [SepticRecordsController::class, 'destroy'])->name('septic-records.destroy');
 
 
 
