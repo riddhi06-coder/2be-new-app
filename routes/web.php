@@ -11,6 +11,8 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\EmployeeController;
+use App\Http\Controllers\Backend\DocumentCategoryController;
+use App\Http\Controllers\Backend\DocumentController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -110,6 +112,26 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('employees/{employee}/edit', [EmployeeController::class, 'edit'])->middleware('permission:employees.edit')->name('admin.employees.edit');
     Route::put('employees/{employee}',      [EmployeeController::class, 'update'])->middleware('permission:employees.edit')->name('admin.employees.update');
     Route::delete('employees/{employee}',   [EmployeeController::class, 'destroy'])->middleware('permission:employees.delete')->name('admin.employees.destroy');
+
+
+    // ==================== Career Portal — Documents ====================
+
+    // ---- Folders (document categories) ----
+    Route::get('document-categories',                       [DocumentCategoryController::class, 'index'])->middleware('permission:document-categories.view')->name('admin.document-categories.index');
+    Route::get('document-categories/create',                [DocumentCategoryController::class, 'create'])->middleware('permission:document-categories.create')->name('admin.document-categories.create');
+    Route::post('document-categories',                      [DocumentCategoryController::class, 'store'])->middleware('permission:document-categories.create')->name('admin.document-categories.store');
+    Route::get('document-categories/{document_category}/edit', [DocumentCategoryController::class, 'edit'])->middleware('permission:document-categories.edit')->name('admin.document-categories.edit');
+    Route::put('document-categories/{document_category}',   [DocumentCategoryController::class, 'update'])->middleware('permission:document-categories.edit')->name('admin.document-categories.update');
+    Route::delete('document-categories/{document_category}', [DocumentCategoryController::class, 'destroy'])->middleware('permission:document-categories.delete')->name('admin.document-categories.destroy');
+
+    // ---- Documents (files) ----
+    Route::get('documents',                 [DocumentController::class, 'index'])->middleware('permission:documents.view')->name('admin.documents.index');
+    Route::get('documents/create',          [DocumentController::class, 'create'])->middleware('permission:documents.create')->name('admin.documents.create');
+    Route::post('documents',                [DocumentController::class, 'store'])->middleware('permission:documents.create')->name('admin.documents.store');
+    Route::get('documents/{document}/download', [DocumentController::class, 'download'])->middleware('permission:documents.view')->name('admin.documents.download');
+    Route::get('documents/{document}/edit', [DocumentController::class, 'edit'])->middleware('permission:documents.edit')->name('admin.documents.edit');
+    Route::put('documents/{document}',      [DocumentController::class, 'update'])->middleware('permission:documents.edit')->name('admin.documents.update');
+    Route::delete('documents/{document}',   [DocumentController::class, 'destroy'])->middleware('permission:documents.delete')->name('admin.documents.destroy');
 });
 
 

@@ -153,6 +153,30 @@
                 @endif
 
 
+                @if($can('document-categories.view') || $can('documents.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.document-categories.*', 'admin.documents.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link sidebar-title" href="#">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-file') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-file') }}"></use>
+                    </svg>
+                    <span>Documents</span>
+                  </a>
+                  <ul class="sidebar-submenu">
+                      @if($can('document-categories.view'))
+                          <li><a href="{{ route('admin.document-categories.index') }}" class="{{ request()->routeIs('admin.document-categories.*') ? 'active' : '' }}">Folders</a></li>
+                      @endif
+                      @if($can('documents.view'))
+                          <li><a href="{{ route('admin.documents.index') }}" class="{{ request()->routeIs('admin.documents.*') ? 'active' : '' }}">Documents</a></li>
+                      @endif
+                  </ul>
+                </li>
+                @endif
+
+
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>

@@ -36,6 +36,10 @@ class ModulePermissionsSeeder extends Seeder
 
                 // Career portal modules
                 ['Employees',         'employees',               ['view', 'create', 'edit', 'delete']],
+
+                // Documents (grouped under one "Documents" card: Folders + Files)
+                ['Folders',           'document-categories',     ['view', 'create', 'edit', 'delete'], 'Documents'],
+                ['Files',             'documents',               ['view', 'create', 'edit', 'delete'], 'Documents'],
             ];
 
             $actionLabels = [
