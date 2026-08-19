@@ -21,6 +21,12 @@
                 </li>
 
 
+                @php
+                    $u   = auth()->user();
+                    $can = fn (string $permission) => (bool) $u?->hasPermission($permission);
+                @endphp
+
+                @if($can('dashboard.view'))
                 <li class="sidebar-list mt-5 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"> </i>
                   <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.dashboard') }}">
@@ -33,12 +39,41 @@
                     <span class="lan-3">Dashboard</span>
                   </a>
                 </li>
+                @endif
 
 
+                @if($can('roles.view') || $can('users.view') || $can('permissions.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.roles.*', 'admin.users.*', 'admin.permissions.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link sidebar-title" href="#">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-user') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-user') }}"></use>
+                    </svg>
+                    <span>User Management</span>
+                  </a>
+                  <ul class="sidebar-submenu">
+                      @if($can('roles.view'))
+                          <li><a href="{{ route('admin.roles.index') }}" class="{{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles</a></li>
+                      @endif
+                      @if($can('users.view'))
+                          <li><a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Users</a></li>
+                      @endif
+                      @if($can('permissions.view'))
+                          <li><a href="{{ route('admin.permissions.index') }}" class="{{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">Permissions</a></li>
+                      @endif
+                  </ul>
+                </li>
+                @endif
+
+
+                @if($can('manage-disposal-details.view'))
                  <li class="sidebar-list {{ request()->routeIs('manage-disposal-details.index') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('manage-disposal-details.index') }}">
-                    <svg class="stroke-icon"> 
+                    <svg class="stroke-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#return-box') }}"></use>
                     </svg>
                     <svg class="fill-icon">
@@ -47,8 +82,10 @@
                     <span>Disposal Details</span>
                   </a>
                 </li>
+                @endif
 
 
+                @if($can('manage-email-settings.view'))
                 <li class="sidebar-list {{ request()->routeIs('manage-email-settings.index') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('manage-email-settings.index') }}">
@@ -61,8 +98,10 @@
                     <span>Email Setting</span>
                   </a>
                 </li>
+                @endif
 
 
+                @if($can('cesspool-records.view'))
                 <li class="sidebar-list {{ request()->routeIs('cesspool-records.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('cesspool-records.index') }}">
@@ -75,8 +114,10 @@
                     <span>Cesspool Records</span>
                   </a>
                 </li>
+                @endif
 
 
+                @if($can('septic-records.view'))
                 <li class="sidebar-list {{ request()->routeIs('septic-records.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
                   <a class="sidebar-link" href="{{ route('septic-records.index') }}">
@@ -89,6 +130,7 @@
                     <span>Septic Records</span>
                   </a>
                 </li>
+                @endif
 
 
               </ul>
