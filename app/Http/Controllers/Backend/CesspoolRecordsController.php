@@ -36,7 +36,9 @@ class CesspoolRecordsController extends Controller
             }
         }
 
-        $records = $query->orderBy('inserted_at', 'desc')->get();
+        $records = $query->orderBy('id', 'desc')->get();
+        
+        // dd($records);
 
         return view('backend.cesspool_records.index', compact('records'));
     }
@@ -147,28 +149,57 @@ class CesspoolRecordsController extends Controller
     {
         $request->validate([
             'record_id' => 'required|exists:cesspool_system_details,id',
-            'to_email'  => 'required|email',
+            'to_email'  => 'required|string',
         ]);
-
+    
+        // Split on comma / semicolon / whitespace, clean up, de-duplicate
+        $emails = collect(preg_split('/[\s,;]+/', $request->to_email))
+            ->map(fn ($e) => trim($e))
+            ->filter()
+            ->unique()
+            ->values();
+    
+        if ($emails->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please provide at least one email address.',
+            ], 422);
+        }
+    
+        // Validate every address
+        $invalid = $emails->filter(fn ($e) => !filter_var($e, FILTER_VALIDATE_EMAIL));
+        if ($invalid->isNotEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email address(es): ' . $invalid->implode(', '),
+            ], 422);
+        }
+    
         $record = CesspoolSystemDetails::findOrFail($request->record_id);
-
+    
         try {
             $pdf        = PDF::loadView('backend.cesspool_records.pdf', compact('record'))->setPaper('a4', 'portrait');
             $pdfContent = $pdf->output();
-            $toEmail    = $request->to_email;
             $subject    = 'Cesspool Inspection Report — ' . ($record->site_address ?? 'ID #' . $record->id);
             $fileName   = 'Cesspool-Inspection-Report_' . Carbon::now()->format('m-d-Y') . '.pdf';
-
-            Mail::send('emails.inspection_report', ['record' => $record, 'type' => 'Cesspool'], function ($msg) use ($toEmail, $subject, $pdfContent, $fileName) {
-                $msg->to($toEmail)
+            $toEmails   = $emails->all();
+    
+            Mail::send('emails.inspection_report', ['record' => $record, 'type' => 'Cesspool'], function ($msg) use ($toEmails, $subject, $pdfContent, $fileName) {
+                $msg->to($toEmails)        // array — all recipients on the same email
                     ->subject($subject)
                     ->attachData($pdfContent, $fileName, ['mime' => 'application/pdf']);
             });
-
-            return response()->json(['success' => true, 'message' => 'Report sent to ' . $toEmail]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Report sent to ' . $emails->implode(', '),
+            ]);
         } catch (\Exception $e) {
             Log::error('Cesspool report email failed', ['error' => $e->getMessage()]);
-            return response()->json(['success' => false, 'message' => 'Failed to send email. Please try again.'], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send email. Please try again.',
+            ], 500);
         }
     }
 

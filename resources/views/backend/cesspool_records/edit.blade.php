@@ -507,10 +507,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p class="text-muted small mb-3">The PDF for this record will be generated and sent to the email you enter below.</p>
+                <p class="text-muted small mb-3">The PDF for this record will be generated and sent to the email(s) you enter below.</p>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Recipient Email <span class="text-danger">*</span></label>
-                    <input type="email" id="modal_to_email" class="form-control" placeholder="e.g. client@example.com">
+                    <label class="form-label fw-semibold">Recipient Email(s) <span class="text-danger">*</span></label>
+                    <input type="text" id="modal_to_email" class="form-control" placeholder="e.g. client@example.com, manager@example.com">
+                    <div class="form-text">Separate multiple emails with a comma.</div>
                     <div id="modal_email_error" class="text-danger small mt-1" style="display:none;"></div>
                 </div>
             </div>
@@ -582,11 +583,21 @@ document.getElementById('btnOpenSendModal').addEventListener('click', function()
 });
 
 document.getElementById('btnSendReport').addEventListener('click', function() {
-    const email  = document.getElementById('modal_to_email').value.trim();
+    const raw    = document.getElementById('modal_to_email').value.trim();
     const errDiv = document.getElementById('modal_email_error');
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errDiv.textContent = 'Please enter a valid email address.';
+    // Split on comma / semicolon / whitespace, trim, drop blanks
+    const emails = raw.split(/[\s,;]+/).map(e => e.trim()).filter(Boolean);
+    const re     = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const bad    = emails.filter(e => !re.test(e));
+
+    if (emails.length === 0) {
+        errDiv.textContent = 'Please enter at least one email address.';
+        errDiv.style.display = 'block';
+        return;
+    }
+    if (bad.length) {
+        errDiv.textContent = 'Invalid email(s): ' + bad.join(', ');
         errDiv.style.display = 'block';
         return;
     }
@@ -599,7 +610,7 @@ document.getElementById('btnSendReport').addEventListener('click', function() {
     fetch('{{ route("cesspool-records.send-report") }}', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-        body: JSON.stringify({ record_id: {{ $record->id }}, to_email: email })
+        body: JSON.stringify({ record_id: {{ $record->id }}, to_email: emails.join(',') })
     })
     .then(res => res.json())
     .then(data => {

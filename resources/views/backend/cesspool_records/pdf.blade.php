@@ -672,11 +672,15 @@
   <!-- SIGNATURE + DISCLAIMER + LEGEND — kept together -->
   <div style="page-break-inside: avoid;">
     <div class="footer-rule"></div>
-    <table class="frow">
+    <table class="frow sig-row">
       <tr>
-        <td style="width:40%;">
-          <div class="field-lbl">Inspector Signature</div>
-          <div class="field-val" style="min-height:42px; padding-bottom:2px;">
+        <td style="width:40%;"><div class="field-lbl">Inspector Signature</div></td>
+        <td style="width:35%;"><div class="field-lbl">Print Name</div></td>
+        <td style="width:25%;"><div class="field-lbl">Date</div></td>
+      </tr>
+      <tr>
+        <td style="width:40%; height:44px; vertical-align:bottom;">
+          <div class="field-val">
             @if($sigIsImage)
               <img src="{{ $sigAbsPath }}" alt="Signature" style="max-height:38px; max-width:200px;">
             @else
@@ -684,12 +688,10 @@
             @endif
           </div>
         </td>
-        <td style="width:35%;">
-          <div class="field-lbl">Print Name</div>
+        <td style="width:35%; height:44px; vertical-align:bottom;">
           <div class="field-val">{{ $record->print_name }}</div>
         </td>
-        <td style="width:25%;">
-          <div class="field-lbl">Date</div>
+        <td style="width:25%; height:44px; vertical-align:bottom;">
           <div class="field-val">{{ $sigDate }}</div>
         </td>
       </tr>
