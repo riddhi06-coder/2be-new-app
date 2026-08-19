@@ -43,7 +43,7 @@
                                                     <span class="badge bg-warning text-dark ms-1">protected</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $role->description ?: '—' }}</td>
+                                            <td>{{ $role->description ? \Illuminate\Support\Str::limit(strip_tags($role->description), 70) : '—' }}</td>
                                             <td>
                                                 @if($role->is_active)
                                                     <span class="badge bg-success">Active</span>

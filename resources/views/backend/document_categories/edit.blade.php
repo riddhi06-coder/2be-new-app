@@ -9,7 +9,18 @@
 
 <div class="page-body">
     <div class="container-fluid">
-        <div class="page-title"><div class="row"><div class="col-12"><h3>Edit Folder — {{ $category->name }}</h3></div></div></div>
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6"><h3>Edit Folder</h3></div>
+                <div class="col-6">
+                    <ol class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.document-categories.index') }}">Folders</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12">
@@ -34,7 +45,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
-                                    <textarea name="description" class="form-control" rows="3" placeholder="Optional short description of this folder">{{ old('description', $category->description) }}</textarea>
+                                    <textarea name="description" class="form-control ckeditor" rows="3" placeholder="Optional description of this folder">{{ old('description', $category->description) }}</textarea>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Changes</button>

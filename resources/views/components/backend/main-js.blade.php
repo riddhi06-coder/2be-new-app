@@ -45,8 +45,17 @@
 
 
 <script>
-  ClassicEditor.create(document.querySelector('#editor'))
-    .catch(error => { console.error(error); });
+  // Initialise CKEditor on every element with the "ckeditor" class.
+  if (window.ClassicEditor) {
+    document.querySelectorAll('.ckeditor').forEach(function (el) {
+      ClassicEditor.create(el).catch(function (error) { console.error(error); });
+    });
+    // Backward-compat: legacy single #editor element (if not already a .ckeditor)
+    var legacyEditor = document.querySelector('#editor');
+    if (legacyEditor && !legacyEditor.classList.contains('ckeditor')) {
+      ClassicEditor.create(legacyEditor).catch(function (error) { console.error(error); });
+    }
+  }
 </script>
  
 

@@ -39,7 +39,7 @@
                                     @forelse($categories as $cat)
                                         <tr>
                                             <td>{{ $cat->name }}</td>
-                                            <td>{{ $cat->description ?: '—' }}</td>
+                                            <td>{{ $cat->description ? \Illuminate\Support\Str::limit(strip_tags($cat->description), 70) : '—' }}</td>
                                             <td><span class="badge bg-primary">{{ $cat->documents_count }}</span></td>
                                             <td>
                                                 @if($cat->is_active)

@@ -17,9 +17,17 @@
 <div class="page-body">
     <div class="container-fluid">
         <div class="page-title">
-            <div class="row"><div class="col-12">
-                <h3>{{ $isEdit ? 'Edit Permission — '.$permission->name : 'New Permission' }}</h3>
-            </div></div>
+            <div class="row">
+                <div class="col-6"><h3>{{ $isEdit ? 'Edit Permission' : 'New Permission' }}</h3></div>
+                <div class="col-6">
+                    <ol class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.permissions.index') }}">Permissions</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.permissions.manage') }}">Catalog</a></li>
+                        <li class="breadcrumb-item active">{{ $isEdit ? 'Edit' : 'New' }}</li>
+                    </ol>
+                </div>
+            </div>
         </div>
 
         <div class="row">

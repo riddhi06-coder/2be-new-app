@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\DocumentCategoryController;
 use App\Http\Controllers\Backend\DocumentController;
+use App\Http\Controllers\Backend\AnnouncementController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -132,6 +133,15 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('documents/{document}/edit', [DocumentController::class, 'edit'])->middleware('permission:documents.edit')->name('admin.documents.edit');
     Route::put('documents/{document}',      [DocumentController::class, 'update'])->middleware('permission:documents.edit')->name('admin.documents.update');
     Route::delete('documents/{document}',   [DocumentController::class, 'destroy'])->middleware('permission:documents.delete')->name('admin.documents.destroy');
+
+
+    // ==================== Career Portal — Announcements ====================
+    Route::get('announcements',                   [AnnouncementController::class, 'index'])->middleware('permission:announcements.view')->name('admin.announcements.index');
+    Route::get('announcements/create',            [AnnouncementController::class, 'create'])->middleware('permission:announcements.create')->name('admin.announcements.create');
+    Route::post('announcements',                  [AnnouncementController::class, 'store'])->middleware('permission:announcements.create')->name('admin.announcements.store');
+    Route::get('announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->middleware('permission:announcements.edit')->name('admin.announcements.edit');
+    Route::put('announcements/{announcement}',     [AnnouncementController::class, 'update'])->middleware('permission:announcements.edit')->name('admin.announcements.update');
+    Route::delete('announcements/{announcement}',  [AnnouncementController::class, 'destroy'])->middleware('permission:announcements.delete')->name('admin.announcements.destroy');
 });
 
 

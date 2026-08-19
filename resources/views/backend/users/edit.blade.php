@@ -9,7 +9,18 @@
 
 <div class="page-body">
     <div class="container-fluid">
-        <div class="page-title"><div class="row"><div class="col-12"><h3>Edit User — {{ $user->name }}</h3></div></div></div>
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6"><h3>Edit User</h3></div>
+                <div class="col-6">
+                    <ol class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">Users</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12">

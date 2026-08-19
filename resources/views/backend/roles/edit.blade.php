@@ -9,7 +9,18 @@
 
 <div class="page-body">
     <div class="container-fluid">
-        <div class="page-title"><div class="row"><div class="col-12"><h3>Edit Role — {{ $role->name }}</h3></div></div></div>
+        <div class="page-title">
+            <div class="row">
+                <div class="col-6"><h3>Edit Role</h3></div>
+                <div class="col-6">
+                    <ol class="breadcrumb justify-content-end">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.roles.index') }}">Roles</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-12">
@@ -41,7 +52,7 @@
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
-                                    <textarea name="description" class="form-control" rows="3" placeholder="Short description of what this role represents">{{ old('description', $role->description) }}</textarea>
+                                    <textarea name="description" class="form-control ckeditor" rows="3" placeholder="Description of what this role represents">{{ old('description', $role->description) }}</textarea>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Changes</button>

@@ -38,3 +38,12 @@
     <link id="color" rel="stylesheet" href="{{ asset('admin/assets/css/color-1.css') }}" media="screen') }}">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/responsive.css') }}">
+
+    <!-- Extra breathing room in module forms so fields aren't crowded -->
+    <style>
+        .theme-form .mb-3 { margin-bottom: 1.75rem !important; }
+        .theme-form .form-label { margin-bottom: 0.5rem; font-weight: 500; }
+        .theme-form .card-body,
+        .card-body .theme-form { padding-top: 0.5rem; }
+        .theme-form .btn { margin-top: 0.25rem; }
+    </style>

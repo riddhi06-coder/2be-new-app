@@ -40,6 +40,8 @@ class ModulePermissionsSeeder extends Seeder
                 // Documents (grouped under one "Documents" card: Folders + Files)
                 ['Folders',           'document-categories',     ['view', 'create', 'edit', 'delete'], 'Documents'],
                 ['Files',             'documents',               ['view', 'create', 'edit', 'delete'], 'Documents'],
+
+                ['Announcements',     'announcements',           ['view', 'create', 'edit', 'delete']],
             ];
 
             $actionLabels = [

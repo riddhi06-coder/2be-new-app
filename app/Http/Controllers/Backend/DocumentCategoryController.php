@@ -27,7 +27,7 @@ class DocumentCategoryController extends Controller
     {
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:5000',
         ]);
 
         DocumentCategory::create([
@@ -49,7 +49,7 @@ class DocumentCategoryController extends Controller
     {
         $validated = $request->validate([
             'name'        => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:5000',
         ]);
 
         $document_category->update([

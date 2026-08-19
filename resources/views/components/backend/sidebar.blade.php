@@ -177,6 +177,22 @@
                 @endif
 
 
+                @if($can('announcements.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.announcements.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('admin.announcements.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-blog') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-blog') }}"></use>
+                    </svg>
+                    <span>Announcements</span>
+                  </a>
+                </li>
+                @endif
+
+
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>
