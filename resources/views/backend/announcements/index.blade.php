@@ -28,7 +28,7 @@
                             <table id="basic-1" class="display table table-hover align-middle">
                                 <thead>
                                     <tr>
-                                        <th style="width:70px;">Image</th>
+                                        <th class="col-thumb">Image</th>
                                         <th>Title</th>
                                         <th>Status</th>
                                         <th class="text-end" style="min-width:170px;">Actions</th>
@@ -39,10 +39,9 @@
                                         <tr>
                                             <td>
                                                 @if($a->image_path)
-                                                    <img src="{{ asset($a->image_path) }}" alt="" class="preview-img"
+                                                    <img src="{{ asset($a->image_path) }}" alt="" class="preview-img announcement-thumb"
                                                          data-url="{{ asset($a->image_path) }}" data-title="{{ $a->title }}"
-                                                         title="Click to preview"
-                                                         style="width:52px; height:52px; object-fit:cover; border-radius:6px; cursor:pointer;">
+                                                         title="Click to preview">
                                                 @else
                                                     <span class="text-muted">—</span>
                                                 @endif
@@ -94,7 +93,7 @@
                 <h5 class="modal-title" id="previewTitle">Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center p-3" id="previewBody" style="background:#f4f4f4;"></div>
+            <div class="modal-body text-center p-3 preview-img-modal-body" id="previewBody"></div>
         </div>
     </div>
 </div>

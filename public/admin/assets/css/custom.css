@@ -1,0 +1,30 @@
+/* =====================================================================
+   2B Environmental — custom admin styles
+   (all project-specific CSS lives here; no inline <style> blocks in views)
+   ===================================================================== */
+
+/* ---- Form spacing: more breathing room in module create/edit forms ---- */
+.theme-form .mb-3 { margin-bottom: 1.75rem !important; }
+.theme-form .form-label { margin-bottom: 0.5rem; font-weight: 500; }
+.theme-form .card-body,
+.card-body .theme-form { padding-top: 0.5rem; }
+.theme-form .btn { margin-top: 0.25rem; }
+
+/* ---- Auth pages (login / forgot password): lock page scroll ---- */
+body.auth-scroll-lock,
+html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
+
+/* ---- Permissions matrix ---- */
+.perm-card-header { background: #f6f8fb; }
+.perm-matrix th.act-col, .perm-matrix td.act-col { width: 70px; }
+.perm-matrix th.sec-col { min-width: 140px; }
+
+/* ---- File / image preview helpers ---- */
+.preview-modal-body { min-height: 70vh; background: #f4f4f4; }
+.preview-img-modal-body { background: #f4f4f4; }
+.thumb-52 { width: 52px; height: 52px; object-fit: cover; border-radius: 6px; cursor: pointer; }
+.form-image-preview { max-width: 220px; max-height: 160px; border: 1px solid #e5e5e5; border-radius: 6px; }
+
+/* ---- Announcements list thumbnail (larger, landscape) ---- */
+.col-thumb { width: 140px; }
+.announcement-thumb { width: 120px; height: 68px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1px solid #e5e5e5; }

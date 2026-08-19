@@ -3,13 +3,10 @@
     
 <head>
     @include('components.backend.head')
-    <style>
-        html, body { overflow: hidden; height: 100%; }
-    </style>
 </head>
 
 
-<body>
+<body class="auth-scroll-lock">
     <!-- loader starts-->
     <div class="loader-wrapper">
       <div class="loader"> 

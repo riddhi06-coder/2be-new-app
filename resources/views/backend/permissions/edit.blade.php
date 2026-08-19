@@ -2,11 +2,6 @@
 <html lang="en">
 <head>
     @include('components.backend.head')
-    <style>
-        .perm-card-header { background: #f6f8fb; }
-        .perm-matrix th.act-col, .perm-matrix td.act-col { width: 70px; }
-        .perm-matrix th.sec-col { min-width: 140px; }
-    </style>
 </head>
 <body>
 @include('components.backend.header')

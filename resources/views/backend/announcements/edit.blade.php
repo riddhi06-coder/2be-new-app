@@ -53,7 +53,7 @@
                                     @error('image')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <div class="mt-2">
                                         <img id="imagePreview" src="{{ $announcement->image_path ? asset($announcement->image_path) : '' }}" alt=""
-                                             style="{{ $announcement->image_path ? '' : 'display:none;' }} max-width:220px; max-height:160px; border:1px solid #e5e5e5; border-radius:6px;">
+                                             class="form-image-preview {{ $announcement->image_path ? '' : 'd-none' }}">
                                     </div>
                                     @if($announcement->image_path)
                                         <div class="form-check mt-2">
@@ -94,7 +94,7 @@
             var file = this.files && this.files[0];
             if (file) {
                 preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
+                preview.classList.remove('d-none');
             }
         });
     })();

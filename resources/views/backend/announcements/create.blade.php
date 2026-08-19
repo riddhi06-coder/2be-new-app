@@ -53,7 +53,7 @@
                                     <small class="text-muted">JPG, PNG, GIF or WEBP. Max 5 MB.</small>
                                     @error('image')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <div class="mt-2">
-                                        <img id="imagePreview" src="" alt="" style="display:none; max-width:220px; max-height:160px; border:1px solid #e5e5e5; border-radius:6px;">
+                                        <img id="imagePreview" src="" alt="" class="form-image-preview d-none">
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -88,9 +88,9 @@
             var file = this.files && this.files[0];
             if (file) {
                 preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
+                preview.classList.remove('d-none');
             } else {
-                preview.style.display = 'none';
+                preview.classList.add('d-none');
             }
         });
     })();

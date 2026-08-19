@@ -94,7 +94,7 @@
                 <h5 class="modal-title" id="previewTitle">Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0" id="previewBody" style="min-height:70vh; background:#f4f4f4;"></div>
+            <div class="modal-body p-0 preview-modal-body" id="previewBody"></div>
             <div class="modal-footer">
                 <a href="#" id="previewOpen" target="_blank" class="btn btn-outline-secondary">Open in new tab</a>
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

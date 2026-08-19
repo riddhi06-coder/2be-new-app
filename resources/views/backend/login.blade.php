@@ -3,12 +3,9 @@
     
 <head>
     @include('components.backend.head')
-    <style>
-        html, body { overflow: hidden; height: 100%; }
-    </style>
 </head>
 
-        <body>
+        <body class="auth-scroll-lock">
             <!-- login page start-->
             <div class="container-fluid p-0">
             <div class="row m-0">
