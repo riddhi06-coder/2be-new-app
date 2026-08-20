@@ -2,21 +2,18 @@
  <div class="page-body-wrapper">
         <!-- Page Sidebar Start-->
         <div class="sidebar-wrapper" data-layout="stroke-svg">
-          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('/admin/assets/images/logo/logo.webp') }}" alt="" style="max-width: 35% !important; margin-left:25px;"></a>
-		  	<a href="{{ route('admin.dashboard') }}">
-				<!-- <img class="img-fluid" src="{{ asset('admin/assets/images/logo/logo-icon.png') }}" alt="" style="max-width: 65% !important;"> -->
-			</a>  
+          <div class="logo-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid sidebar-full-logo" src="{{ asset('admin/assets/images/logo/logo.webp') }}" alt="2B Environmental"></a>
 		  <div class="back-btn mt-5"><i class="fa fa-angle-left"> </i></div>
             <div class="toggle-sidebar"><i class="status_toggle middle sidebar-toggle" data-feather="grid"> </i></div>
           </div>
-          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt=""  style="max-width: 23% !important;margin-right:190px !important;"></a></div>
+          <div class="logo-icon-wrapper"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid sidebar-icon-logo" src="{{ asset('admin/assets/images/logo/logo.webp') }}" alt="2B"></a></div>
           <nav class="sidebar-main">
             <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
             <div id="sidebar-menu">
               <ul class="sidebar-links" id="simple-bar">
 
               
-                <li class="back-btn"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/logo//images/favicon.ico') }}" alt="" style="max-width: 40% !important; margin-right:15px;"></a>
+                <li class="back-btn"><a href="{{ route('admin.dashboard') }}"><img class="img-fluid" src="{{ asset('admin/assets/images/favicon.ico') }}" alt="" style="max-width: 40%; margin-right:15px;"></a>
                   <div class="mobile-back text-end"> <span>Back </span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                 </li>
 

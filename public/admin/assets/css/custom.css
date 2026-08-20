@@ -14,6 +14,44 @@
 body.auth-scroll-lock,
 html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 
+/* =========================================================================
+   Sidebar fixes
+   ========================================================================= */
+
+/* Logo (expanded): small, centred and capped so it can never overlap the menu */
+.page-body-wrapper div.sidebar-wrapper .logo-wrapper { text-align: center !important; padding: 14px 8px !important; }
+.page-body-wrapper div.sidebar-wrapper .logo-wrapper img.sidebar-full-logo {
+    max-width: 92px !important; width: 92px !important; height: auto !important;
+    margin: 0 auto !important; display: block !important;
+}
+
+/* Logo (collapsed): small centred icon */
+.page-body-wrapper div.sidebar-wrapper .logo-icon-wrapper { text-align: center !important; padding: 6px 0 !important; }
+.page-body-wrapper div.sidebar-wrapper .logo-icon-wrapper img.sidebar-icon-logo {
+    max-width: 44px !important; width: 44px !important; height: auto !important;
+    margin: 0 auto !important; display: block !important;
+}
+
+/* Collapsed (icon-only) sidebar: shrink to icon width, hide full logo, reflow content */
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper.close_icon { width: 90px !important; }
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper.close_icon:hover { width: 265px !important; }
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper.close_icon .logo-wrapper { display: none !important; }
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper.close_icon:hover .logo-wrapper { display: block !important; }
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper.close_icon ~ .page-body { margin-left: 90px !important; }
+
+/* Hide the theme's decorative icons that render as broken boxes:
+   the "pin" (fa-thumb-tack) and the dropdown-arrow (.according-menu). */
+.page-body-wrapper div.sidebar-wrapper .sidebar-main .sidebar-list i.fa-thumb-tack,
+.page-body-wrapper div.sidebar-wrapper .sidebar-main .according-menu { display: none !important; }
+
+/* ---- Dashboard: HR Portal section heading ---- */
+.hr-heading {
+    font-weight: 600; color: #0d3a17; margin-bottom: 16px; position: relative; padding-left: 12px;
+}
+.hr-heading::before {
+    content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; border-radius: 3px; background: #0d3a17;
+}
+
 /* ---- Permissions matrix ---- */
 .perm-card-header { background: #f6f8fb; }
 .perm-matrix th.act-col, .perm-matrix td.act-col { width: 70px; }

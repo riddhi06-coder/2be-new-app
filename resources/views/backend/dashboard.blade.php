@@ -293,6 +293,49 @@
               </div>
           </div>
 
+          <!-- ═══ HR PORTAL MODULES ═══ -->
+          @php
+              $u = auth()->user();
+              $hrCards = [];
+              if ($u->hasPermission('employees.view')) {
+                  $hrCards[] = ['route' => route('admin.employees.index'), 'icon' => 'fa-users', 'color' => '#2563eb', 'label' => 'Employees', 'count' => \App\Models\User::whereHas('role', fn($q) => $q->where('slug', 'employee'))->count(), 'meta' => 'Employee accounts'];
+              }
+              if ($u->hasPermission('document-categories.view') || $u->hasPermission('documents.view')) {
+                  $hrCards[] = ['route' => route('admin.documents.index'), 'icon' => 'fa-folder-open', 'color' => '#0d9488', 'label' => 'Documents', 'count' => \App\Models\Document::count(), 'meta' => \App\Models\DocumentCategory::count().' folders'];
+              }
+              if ($u->hasPermission('announcements.view')) {
+                  $hrCards[] = ['route' => route('admin.announcements.index'), 'icon' => 'fa-bullhorn', 'color' => '#f59e0b', 'label' => 'Announcements', 'count' => \App\Models\Announcement::count(), 'meta' => \App\Models\Announcement::where('is_active', true)->count().' active'];
+              }
+              if ($u->hasPermission('incident-reports.view')) {
+                  $hrCards[] = ['route' => route('admin.incident-reports.index'), 'icon' => 'fa-exclamation-triangle', 'color' => '#dc3545', 'label' => 'Incident Reports', 'count' => \App\Models\IncidentReport::count(), 'meta' => \App\Models\IncidentReport::where('status', 'open')->count().' open'];
+              }
+              if ($u->hasPermission('calendar.view')) {
+                  $hrCards[] = ['route' => route('admin.calendar.index'), 'icon' => 'fa-calendar', 'color' => '#7c3aed', 'label' => 'Team Calendar', 'count' => \App\Models\CalendarEvent::where('is_active', true)->count(), 'meta' => 'events scheduled'];
+              }
+          @endphp
+
+          @if(count($hrCards))
+          <div class="container stats-wrap pb-5">
+              <h5 class="hr-heading">HR Portal</h5>
+              <div class="row g-3">
+                  @foreach($hrCards as $card)
+                      <div class="col-lg-4 col-md-6">
+                          <a href="{{ $card['route'] }}" class="stat-card">
+                              <div class="stat-row-inner">
+                                  <div class="stat-icon"><i class="fa {{ $card['icon'] }}" aria-hidden="true"></i></div>
+                                  <div class="stat-body">
+                                      <div class="stat-label">{{ $card['label'] }}</div>
+                                      <div class="stat-value">{{ $card['count'] }}</div>
+                                      <div class="stat-meta">{{ $card['meta'] }}</div>
+                                  </div>
+                              </div>
+                          </a>
+                      </div>
+                  @endforeach
+              </div>
+          </div>
+          @endif
+
           <!-- Container-fluid Ends -->
           </div>
         <!-- footer start-->
