@@ -43,6 +43,7 @@ class ModulePermissionsSeeder extends Seeder
 
                 ['Announcements',     'announcements',           ['view', 'create', 'edit', 'delete']],
                 ['Incident Reports',  'incident-reports',        ['view', 'create', 'edit', 'delete']],
+                ['Team Calendar',     'calendar',                ['view', 'create', 'edit', 'delete']],
             ];
 
             $actionLabels = [
@@ -110,7 +111,7 @@ class ModulePermissionsSeeder extends Seeder
             // no edit/delete). Controller scopes "view" to their own records.
             $employee = Role::where('slug', 'employee')->first();
             if ($employee) {
-                $employeeSlugs   = ['dashboard.view', 'incident-reports.view', 'incident-reports.create'];
+                $employeeSlugs   = ['dashboard.view', 'incident-reports.view', 'incident-reports.create', 'calendar.view'];
                 $existingEmpIds  = $employee->permissions()->pluck('permissions.id')->all();
                 $newEmpIds       = Permission::whereIn('slug', $employeeSlugs)->pluck('id')->all();
                 $employee->permissions()->sync(array_unique(array_merge($existingEmpIds, $newEmpIds)));

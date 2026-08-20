@@ -209,6 +209,22 @@
                 @endif
 
 
+                @if($can('calendar.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.calendar.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('admin.calendar.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-calender') }}"></use>
+                    </svg>
+                    <span>Team Calendar</span>
+                  </a>
+                </li>
+                @endif
+
+
               </ul>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
             </div>

@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\DocumentCategoryController;
 use App\Http\Controllers\Backend\DocumentController;
 use App\Http\Controllers\Backend\AnnouncementController;
 use App\Http\Controllers\Backend\IncidentReportController;
+use App\Http\Controllers\Backend\CalendarEventController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -156,6 +157,16 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::put('incident-reports/{incident_report}',     [IncidentReportController::class, 'update'])->middleware('permission:incident-reports.edit')->name('admin.incident-reports.update');
     Route::delete('incident-reports/{incident_report}',  [IncidentReportController::class, 'destroy'])->middleware('permission:incident-reports.delete')->name('admin.incident-reports.destroy');
     Route::delete('incident-report-photos/{photo}',      [IncidentReportController::class, 'destroyPhoto'])->middleware('permission:incident-reports.edit')->name('admin.incident-reports.photos.destroy');
+
+
+    // ==================== Career Portal — Team Calendar ====================
+    Route::get('calendar',                  [CalendarEventController::class, 'index'])->middleware('permission:calendar.view')->name('admin.calendar.index');
+    Route::get('calendar/events',           [CalendarEventController::class, 'events'])->middleware('permission:calendar.view')->name('admin.calendar.events');
+    Route::get('calendar/create',           [CalendarEventController::class, 'create'])->middleware('permission:calendar.create')->name('admin.calendar.create');
+    Route::post('calendar',                 [CalendarEventController::class, 'store'])->middleware('permission:calendar.create')->name('admin.calendar.store');
+    Route::get('calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.calendar.edit');
+    Route::put('calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.calendar.update');
+    Route::delete('calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.calendar.destroy');
 });
 
 

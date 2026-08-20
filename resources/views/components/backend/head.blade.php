@@ -39,4 +39,4 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/responsive.css') }}">
     <!-- Project custom css-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom.css') }}?v={{ filemtime(public_path('admin/assets/css/custom.css')) }}">

@@ -31,3 +31,81 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 
 /* ---- Incident report photo thumbnails ---- */
 .incident-photo-thumb { width: 90px; height: 68px; object-fit: cover; border-radius: 6px; border: 1px solid #e5e5e5; cursor: pointer; }
+
+/* ---- Team calendar ---- */
+#teamCalendar { max-width: 100%; }
+#teamCalendar {
+    --fc-border-color: #e8eef0;
+    --fc-today-bg-color: #eaf4ee;
+    --fc-neutral-bg-color: #f7faf8;
+    /* FullCalendar button colors (clean blue) */
+    --fc-button-bg-color: #2563eb;
+    --fc-button-border-color: #2563eb;
+    --fc-button-hover-bg-color: #1d4ed8;
+    --fc-button-hover-border-color: #1d4ed8;
+    --fc-button-active-bg-color: #1e40af;
+    --fc-button-active-border-color: #1e40af;
+}
+
+/* Toolbar */
+#teamCalendar .fc-toolbar.fc-header-toolbar { margin-bottom: 1rem; }
+#teamCalendar .fc-toolbar-title { font-size: 1.3rem; font-weight: 600; color: #0d3a17; }
+#teamCalendar .fc .fc-button,
+#teamCalendar .fc .fc-button-primary {
+    background-color: #2563eb !important; border-color: #2563eb !important; color: #fff !important;
+    box-shadow: none !important;
+    text-transform: capitalize; font-size: 0.82rem; padding: 0.4rem 0.9rem; border-radius: 6px; font-weight: 500;
+}
+#teamCalendar .fc .fc-button-primary:hover { background-color: #1d4ed8 !important; border-color: #1d4ed8 !important; }
+#teamCalendar .fc .fc-button-primary:focus { box-shadow: none !important; }
+#teamCalendar .fc .fc-button-primary:disabled { background-color: #93b4f0 !important; border-color: #93b4f0 !important; }
+#teamCalendar .fc .fc-button-primary:not(:disabled).fc-button-active,
+#teamCalendar .fc .fc-button-primary:not(:disabled):active { background-color: #1e40af !important; border-color: #1e40af !important; }
+/* Spacing between all toolbar buttons (buttons are now space-separated, not grouped) */
+#teamCalendar .fc .fc-toolbar-chunk { display: inline-flex; align-items: center; }
+#teamCalendar .fc .fc-button { border-radius: 6px !important; }
+#teamCalendar .fc .fc-toolbar-chunk > .fc-button + .fc-button { margin-left: 8px !important; }
+
+/* Month/year jump picker */
+.cal-month-picker { width: auto; min-width: 150px; }
+
+/* Grid + header */
+#teamCalendar .fc-scrollgrid { border-radius: 10px; overflow: hidden; }
+#teamCalendar .fc-col-header-cell { background: #f7faf8; }
+#teamCalendar .fc-col-header-cell-cushion {
+    color: #6b7d72; font-weight: 600; text-transform: uppercase;
+    font-size: 0.7rem; letter-spacing: 0.5px; padding: 7px 4px;
+}
+#teamCalendar .fc-daygrid-day-number { color: #4a5a51; font-size: 0.78rem; padding: 4px 6px; }
+#teamCalendar .fc-day-today .fc-daygrid-day-number { color: #0d3a17; font-weight: 700; }
+#teamCalendar .fc-daygrid-day-frame { min-height: 56px; }
+#teamCalendar .fc-daygrid-day { transition: background 0.15s ease; }
+#teamCalendar .fc-daygrid-day:hover { background: #f6f9f7; cursor: pointer; }
+
+/* Events */
+#teamCalendar .fc-event, #teamCalendar .fc-daygrid-event { cursor: pointer; }
+#teamCalendar .fc-daygrid-event {
+    border: none; border-radius: 5px; padding: 2px 7px;
+    font-size: 0.74rem; font-weight: 500; margin-top: 2px;
+}
+#teamCalendar .fc-daygrid-block-event .fc-event-title { padding: 1px 0; }
+
+/* List view */
+#teamCalendar .fc-list { border: 1px solid #e8eef0; border-radius: 10px; overflow: hidden; }
+#teamCalendar .fc-list-day-cushion {
+    background: #f0f6f2; color: #0d3a17; font-weight: 600; font-size: 0.82rem;
+    text-transform: uppercase; letter-spacing: 0.4px;
+}
+#teamCalendar .fc-list-event { cursor: pointer; }
+#teamCalendar .fc-list-event:hover td { background: #f6f9f7; }
+#teamCalendar .fc-list-event-time { color: #6b7d72; font-size: 0.82rem; width: 140px; }
+#teamCalendar .fc-list-event-title a { color: #222; font-weight: 500; text-decoration: none; }
+#teamCalendar .fc-list-event-title a:hover { color: #0d3a17; }
+#teamCalendar .fc-list-event-graphic .fc-list-event-dot { border-width: 6px; }
+#teamCalendar .fc-list-empty { background: #f7faf8; color: #6b7d72; font-style: italic; padding: 40px 0; }
+#teamCalendar .fc-list-table td { padding: 12px 14px; }
+
+/* Legend chips */
+.cal-legend { display: flex; flex-wrap: wrap; gap: 14px; padding: 10px 14px; background: #f7faf8; border: 1px solid #e8eef0; border-radius: 8px; margin-bottom: 16px; }
+.cal-legend .cal-legend-item { display: inline-flex; align-items: center; font-size: 0.8rem; color: #4a5a51; }
+.cal-legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; }
