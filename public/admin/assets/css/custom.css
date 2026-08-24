@@ -20,6 +20,17 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 
 /* Logo (expanded): small, centred and capped so it can never overlap the menu */
 .page-body-wrapper div.sidebar-wrapper .logo-wrapper { text-align: center !important; padding: 14px 8px !important; }
+
+/* Keep the logo header pinned with a solid backdrop so the menu scrolls
+   BEHIND it instead of showing through (fixes the scroll overlap). Uses the
+   theme's own sidebar colour variable so it matches any colour scheme. */
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .logo-wrapper,
+.page-wrapper.compact-wrapper .page-body-wrapper div.sidebar-wrapper .logo-icon-wrapper {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 3 !important;
+    background: var(--theme-deafult) !important;
+}
 .page-body-wrapper div.sidebar-wrapper .logo-wrapper img.sidebar-full-logo {
     max-width: 92px !important; width: 92px !important; height: auto !important;
     margin: 0 auto !important; display: block !important;
