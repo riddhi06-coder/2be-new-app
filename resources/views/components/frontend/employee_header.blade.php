@@ -42,7 +42,7 @@
                   
                     <!-- Community Calendar -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> COMMUNITY CALENDAR </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_calendar') }}"> COMMUNITY CALENDAR </a>
                     </li>
                     </ul>
                 </div>

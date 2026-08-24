@@ -149,7 +149,7 @@
             eventClick: function (info) {
                 if (canEdit) {
                     info.jsEvent.preventDefault();
-                    window.location = '{{ url('calendar') }}/' + info.event.id + '/edit';
+                    window.location = '{{ url('manage-community-calendar') }}/' + info.event.id + '/edit';
                 }
             },
             dateClick: function (info) {

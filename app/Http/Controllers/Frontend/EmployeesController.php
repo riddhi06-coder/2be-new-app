@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\CalendarEvent;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Models\IncidentReport;
@@ -371,6 +372,77 @@ class EmployeesController extends Controller
         }
 
         return response()->download($full, $document->original_name ?: basename($document->file_path));
+    }
+
+    /** Community Calendar — read-only view for everyone. */
+    public function employee_calendar()
+    {
+        $today = now()->startOfDay();
+
+        $upcoming = CalendarEvent::where('is_active', true)
+            ->where(function ($q) use ($today) {
+                $q->whereDate('start_date', '>=', $today)
+                  ->orWhereDate('end_date', '>=', $today);
+            })
+            ->orderBy('start_date')
+            ->orderBy('start_time')
+            ->limit(8)
+            ->get();
+
+        return view('frontend.employee.calendar', [
+            'categories' => CalendarEvent::CATEGORIES,
+            'upcoming'   => $upcoming,
+        ]);
+    }
+
+    /** JSON feed for the frontend FullCalendar (active events only). */
+    public function employee_calendar_events()
+    {
+        $data = CalendarEvent::where('is_active', true)->get()->map(function (CalendarEvent $e) {
+            $allDay = $e->all_day;
+
+            if ($allDay) {
+                $start = $e->start_date->toDateString();
+                $end   = $e->end_date ? $e->end_date->copy()->addDay()->toDateString() : null; // FullCalendar end is exclusive
+            } else {
+                $start   = $e->start_date->toDateString().($e->start_time ? 'T'.$e->start_time : '');
+                $endDate = $e->end_date ?: $e->start_date;
+                $end     = $e->end_time ? $endDate->toDateString().'T'.$e->end_time : null;
+            }
+
+            // Friendly labels for the details popup.
+            $dateLabel = $e->start_date->format('D, M j, Y');
+            if ($e->end_date && $e->end_date->ne($e->start_date)) {
+                $dateLabel .= ' – '.$e->end_date->format('D, M j, Y');
+            }
+
+            $timeLabel = 'All day';
+            if (! $allDay && $e->start_time) {
+                $timeLabel = \Illuminate\Support\Carbon::parse($e->start_time)->format('g:i A');
+                if ($e->end_time) {
+                    $timeLabel .= ' – '.\Illuminate\Support\Carbon::parse($e->end_time)->format('g:i A');
+                }
+            }
+
+            return [
+                'id'      => $e->id,
+                'title'   => $e->title,
+                'start'   => $start,
+                'end'     => $end,
+                'allDay'  => $allDay,
+                'color'   => $e->color,
+                'extendedProps' => [
+                    'category'    => $e->category_label,
+                    'color'       => $e->color,
+                    'location'    => $e->location,
+                    'description' => $e->description ? trim(strip_tags($e->description)) : null,
+                    'dateLabel'   => $dateLabel,
+                    'timeLabel'   => $timeLabel,
+                ],
+            ];
+        });
+
+        return response()->json($data);
     }
 
     /** Log the employee out. */

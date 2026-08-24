@@ -160,13 +160,13 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
 
 
     // ==================== Career Portal — Team Calendar ====================
-    Route::get('community-calendar',                  [CalendarEventController::class, 'index'])->middleware('permission:calendar.view')->name('admin.community-calendar.index');
-    Route::get('community-calendar/events',           [CalendarEventController::class, 'events'])->middleware('permission:calendar.view')->name('admin.community-calendar.events');
-    Route::get('community-calendar/create',           [CalendarEventController::class, 'create'])->middleware('permission:calendar.create')->name('admin.community-calendar.create');
-    Route::post('community-calendar',                 [CalendarEventController::class, 'store'])->middleware('permission:calendar.create')->name('admin.community-calendar.store');
-    Route::get('community-calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.community-calendar.edit');
-    Route::put('community-calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.community-calendar.update');
-    Route::delete('community-calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.community-calendar.destroy');
+    Route::get('manage-community-calendar',                  [CalendarEventController::class, 'index'])->middleware('permission:calendar.view')->name('admin.community-calendar.index');
+    Route::get('manage-community-calendar/events',           [CalendarEventController::class, 'events'])->middleware('permission:calendar.view')->name('admin.community-calendar.events');
+    Route::get('manage-community-calendar/create',           [CalendarEventController::class, 'create'])->middleware('permission:calendar.create')->name('admin.community-calendar.create');
+    Route::post('manage-community-calendar',                 [CalendarEventController::class, 'store'])->middleware('permission:calendar.create')->name('admin.community-calendar.store');
+    Route::get('manage-community-calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.community-calendar.edit');
+    Route::put('manage-community-calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.community-calendar.update');
+    Route::delete('manage-community-calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.community-calendar.destroy');
 });
 
 
@@ -210,6 +210,9 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/document-library',                       [EmployeesController::class, 'employee_documents'])->name('frontend.employee_documents');
     Route::get('/document-library/category/{slug}/{space?}', [EmployeesController::class, 'employee_document_category'])->whereIn('space', ['public', 'personal'])->name('frontend.employee_document_category');
     Route::get('/document-library/download/{document}',   [EmployeesController::class, 'employee_document_download'])->name('frontend.employee_document_download');
+    // Public community calendar (admin management lives at /manage-community-calendar).
+    Route::get('/community-calendar',        [EmployeesController::class, 'employee_calendar'])->name('frontend.employee_calendar');
+    Route::get('/community-calendar/events', [EmployeesController::class, 'employee_calendar_events'])->name('frontend.employee_calendar_events');
 
 
 
