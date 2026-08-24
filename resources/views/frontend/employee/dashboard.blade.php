@@ -35,96 +35,96 @@
             </section>
 
             <section class="pumping-log-boxes-wrap">
-            <div class="container">
-                <div class="col-md-12">
-                <div class="psdude-info-boxes">
-                    <!-- Box 1 -->
-                    <div class="psdude-info-box">
-                    <div class="psdude-info-box__icon">
-                        <img src="{{ asset('frontend/assets/images/folder.svg') }}" alt="Employee Handbook" />
+                <div class="container">
+                    <div class="col-md-12">
+                    <div class="psdude-info-boxes">
+                        <!-- Box 1 -->
+                        <div class="psdude-info-box">
+                        <div class="psdude-info-box__icon">
+                            <img src="{{ asset('frontend/assets/images/folder.svg') }}" alt="Employee Handbook" />
+                        </div>
+
+                        <h3>Employee<br />Handbook</h3>
+                        <span class="psdude-info-box__line"></span>
+
+                        <p>Company policies,<br />procedures and guidelines</p>
+
+                        <a href="#" class="btn psdude-info-box__btn">
+                            View Handbook
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                        </div>
+
+                        <!-- Box 2 -->
+                        <div class="psdude-info-box">
+                        <div class="psdude-info-box__icon">
+                            <img src="{{ asset('frontend/assets/images/safety.svg') }}" alt="Safety Programs" />
+                        </div>
+
+                        <h3>Safety<br />Programs</h3>
+                        <span class="psdude-info-box__line"></span>
+
+                        <p>Safety policies, programs<br />and employee acknowledgements</p>
+
+                        <a href="#" class="btn psdude-info-box__btn">
+                            View Programs
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                        </div>
+
+                        <!-- Box 3 -->
+                        <div class="psdude-info-box">
+                        <div class="psdude-info-box__icon">
+                            <img src="{{ asset('frontend/assets/images/doc.svg') }}" alt="Incident Report Form" />
+                        </div>
+
+                        <h3>Incident Report<br />Form</h3>
+                        <span class="psdude-info-box__line"></span>
+
+                        <p>Report incidents and<br />submit documentation</p>
+
+                        <a href="#" class="btn psdude-info-box__btn psdude-info-box__btn--red">
+                            Submit Report
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                        </div>
+
+                        <!-- Box 4 -->
+                        <div class="psdude-info-box">
+                        <div class="psdude-info-box__icon">
+                            <img src="{{ asset('frontend/assets/images/law.svg') }}" alt="Labor Poster Laws" />
+                        </div>
+
+                        <h3>Labor Poster<br />Laws</h3>
+                        <span class="psdude-info-box__line"></span>
+
+                        <p>Federal and state labor<br />law posters and notices</p>
+
+                        <a href="#" class="btn psdude-info-box__btn">
+                            View Posters
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                        </div>
+
+                        <!-- Box 5 -->
+                        <div class="psdude-info-box">
+                        <div class="psdude-info-box__icon">
+                            <img src="{{ asset('frontend/assets/images/time.svg') }}" alt="Current Month Team Calendar" />
+                        </div>
+
+                        <h3>Current Month<br />Team Calendar</h3>
+                        <span class="psdude-info-box__line"></span>
+
+                        <p>View team schedule<br />and important dates</p>
+
+                        <a href="#" class="btn psdude-info-box__btn">
+                            View Calendar
+                            <i class="fa fa-long-arrow-right"></i>
+                        </a>
+                        </div>
                     </div>
-
-                    <h3>Employee<br />Handbook</h3>
-                    <span class="psdude-info-box__line"></span>
-
-                    <p>Company policies,<br />procedures and guidelines</p>
-
-                    <a href="#" class="btn psdude-info-box__btn">
-                        View Handbook
-                        <i class="fa fa-long-arrow-right"></i>
-                    </a>
-                    </div>
-
-                    <!-- Box 2 -->
-                    <div class="psdude-info-box">
-                    <div class="psdude-info-box__icon">
-                        <img src="{{ asset('frontend/assets/images/safety.svg') }}" alt="Safety Programs" />
-                    </div>
-
-                    <h3>Safety<br />Programs</h3>
-                    <span class="psdude-info-box__line"></span>
-
-                    <p>Safety policies, programs<br />and employee acknowledgements</p>
-
-                    <a href="#" class="btn psdude-info-box__btn">
-                        View Programs
-                        <i class="fa fa-long-arrow-right"></i>
-                    </a>
-                    </div>
-
-                    <!-- Box 3 -->
-                    <div class="psdude-info-box">
-                    <div class="psdude-info-box__icon">
-                        <img src="{{ asset('frontend/assets/images/doc.svg') }}" alt="Incident Report Form" />
-                    </div>
-
-                    <h3>Incident Report<br />Form</h3>
-                    <span class="psdude-info-box__line"></span>
-
-                    <p>Report incidents and<br />submit documentation</p>
-
-                    <a href="#" class="btn psdude-info-box__btn psdude-info-box__btn--red">
-                        Submit Report
-                        <i class="fa fa-long-arrow-right"></i>
-                    </a>
-                    </div>
-
-                    <!-- Box 4 -->
-                    <div class="psdude-info-box">
-                    <div class="psdude-info-box__icon">
-                        <img src="{{ asset('frontend/assets/images/law.svg') }}" alt="Labor Poster Laws" />
-                    </div>
-
-                    <h3>Labor Poster<br />Laws</h3>
-                    <span class="psdude-info-box__line"></span>
-
-                    <p>Federal and state labor<br />law posters and notices</p>
-
-                    <a href="#" class="btn psdude-info-box__btn">
-                        View Posters
-                        <i class="fa fa-long-arrow-right"></i>
-                    </a>
-                    </div>
-
-                    <!-- Box 5 -->
-                    <div class="psdude-info-box">
-                    <div class="psdude-info-box__icon">
-                        <img src="{{ asset('frontend/assets/images/time.svg') }}" alt="Current Month Team Calendar" />
-                    </div>
-
-                    <h3>Current Month<br />Team Calendar</h3>
-                    <span class="psdude-info-box__line"></span>
-
-                    <p>View team schedule<br />and important dates</p>
-
-                    <a href="#" class="btn psdude-info-box__btn">
-                        View Calendar
-                        <i class="fa fa-long-arrow-right"></i>
-                    </a>
                     </div>
                 </div>
-                </div>
-            </div>
             </section>
 
             <section class="announcement-boxes-wrap">
@@ -147,7 +147,7 @@
                             </div>
                         </div>
 
-                        <a href="#" class="view-announcements">
+                        <a href="{{ route('frontend.employee_announcements') }}" class="view-announcements">
                             View All Announcements
                             <span class="arrow">
                             <i class="fa fa-long-arrow-right"></i>
@@ -155,63 +155,40 @@
                         </a>
                         </div>
 
-                        <!-- Announcement Item -->
-                        <div class="announcement-item">
-                        <div class="announcement-icon new-icon">NEW</div>
+                        <!-- Announcement Items (dynamic) -->
+                        @forelse($announcements as $announcement)
+                            @php
+                                $isNew = $announcement->published_at && $announcement->published_at->gt(now()->subDays(7));
+                            @endphp
+                            <div class="announcement-item">
+                            @if($isNew)
+                                <div class="announcement-icon new-icon">NEW</div>
+                            @else
+                                <div class="announcement-icon policy-icon">
+                                    <i class="fa fa-bullhorn"></i>
+                                </div>
+                            @endif
 
-                        <div class="announcement-info">
-                            <h4>
-                            Safety Training Update
-                            <span class="due-date">• Due by May 31, 2025</span>
-                            </h4>
+                            <div class="announcement-info">
+                                <h4>
+                                <a href="{{ route('frontend.employee_announcement', $announcement->slug) }}">{{ $announcement->title }}</a>
+                                </h4>
 
-                            <p>
-                            Mandatory safety training refresher due by May 31, 2025. Please complete the training at your earliest
-                            convenience.
-                            </p>
-                        </div>
+                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($announcement->body), 80) }}</p>
+                            </div>
 
-                        <div class="announcement-date">
-                            <i class="fa fa-calendar"></i>
-                            May 20, 2025
-                        </div>
-                        </div>
-
-                        <!-- Announcement Item -->
-                        <div class="announcement-item">
-                        <div class="announcement-icon holiday-icon">
-                            <i class="fa fa-star"></i>
-                        </div>
-
-                        <div class="announcement-info">
-                            <h4>Memorial Day Holiday</h4>
-
-                            <p>Our offices will be closed on Monday, May 26, 2025 in observance of Memorial Day.</p>
-                        </div>
-
-                        <div class="announcement-date">
-                            <i class="fa fa-calendar"></i>
-                            May 19, 2025
-                        </div>
-                        </div>
-
-                        <!-- Announcement Item -->
-                        <div class="announcement-item">
-                        <div class="announcement-icon policy-icon">
-                            <i class="fa fa-bullhorn"></i>
-                        </div>
-
-                        <div class="announcement-info">
-                            <h4>Updated Disciplinary Policy</h4>
-
-                            <p>Please review the updated Disciplinary Program Policy in the Employee Handbook section.</p>
-                        </div>
-
-                        <div class="announcement-date">
-                            <i class="fa fa-calendar"></i>
-                            May 18, 2025
-                        </div>
-                        </div>
+                            <div class="announcement-date">
+                                <i class="fa fa-calendar"></i>
+                                {{ optional($announcement->published_at)->format('M d, Y') ?? $announcement->created_at->format('M d, Y') }}
+                            </div>
+                            </div>
+                        @empty
+                            <div class="announcement-item">
+                            <div class="announcement-info">
+                                <p class="mb-0">No announcements at the moment. Please check back later.</p>
+                            </div>
+                            </div>
+                        @endforelse
                     </div>
 
                     <!-- Right: Safety Banner -->

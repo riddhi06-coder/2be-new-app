@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Models\IncidentReport;
 use App\Models\User;
 
@@ -144,7 +145,26 @@ class EmployeesController extends Controller
     /** Employee dashboard (guarded by the employee.auth middleware). */
     public function employee_dashboard()
     {
-        return view('frontend.employee.dashboard', ['employee' => Auth::user()]);
+        return view('frontend.employee.dashboard', [
+            'employee'      => Auth::user(),
+            'announcements' => Announcement::publishedLatest()->limit(3)->get(),
+        ]);
+    }
+
+    /** Full list of published announcements for employees. */
+    public function employee_announcements()
+    {
+        return view('frontend.employee.announcements', [
+            'announcements' => Announcement::publishedLatest()->paginate(10),
+        ]);
+    }
+
+    /** Read a single published announcement. */
+    public function employee_announcement(string $slug)
+    {
+        $announcement = Announcement::where('slug', $slug)->where('is_active', true)->firstOrFail();
+
+        return view('frontend.employee.announcement_show', ['announcement' => $announcement]);
     }
 
     /** Show the employee-facing incident report form. */

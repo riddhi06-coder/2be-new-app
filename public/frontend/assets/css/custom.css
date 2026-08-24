@@ -7,3 +7,41 @@
 .swal2-popup .swal2-title { font-size: 20px; }
 .swal2-popup .swal2-html-container { font-size: 14px; }
 .swal2-popup .swal2-actions .swal2-styled { font-size: 14px; padding: 9px 24px; }
+
+/* ---- Announcements (dynamic) ---- */
+.announcement-info h4 a { color: inherit; text-decoration: none; transition: color .15s ease; }
+.announcement-info h4 a:hover { color: #e73b3b; }
+
+/* Announcements listing pagination */
+.announcement-pagination { margin-top: 26px; display: flex; justify-content: center; }
+.announcement-pagination nav { display: inline-block; }
+.announcement-pagination .pagination { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0; flex-wrap: wrap; }
+.announcement-pagination .page-item .page-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 38px; height: 38px; padding: 0 12px; border-radius: 8px;
+    border: 1px solid #e3e3e3; color: #750406; background: #fff;
+    font-size: 14px; text-decoration: none;
+}
+.announcement-pagination .page-item.active .page-link { background: #750406; border-color: #750406; color: #fff; }
+.announcement-pagination .page-item.disabled .page-link { color: #bbb; background: #f7f7f7; cursor: not-allowed; }
+
+/* ---- Single announcement detail page ---- */
+.announcement-detail {
+    background: #fff; border-radius: 16px; padding: 34px 38px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.06); border: 1px solid #f0f0f0;
+}
+.announcement-back {
+    display: inline-flex; align-items: center; gap: 6px; color: #750406;
+    text-decoration: none; font-weight: 600; font-size: 14px; margin-bottom: 20px;
+}
+.announcement-back:hover { color: #e73b3b; }
+.announcement-detail__title { font-size: 28px; font-weight: 700; color: #1f2933; margin-bottom: 20px; }
+.announcement-detail__image { margin-bottom: 24px; }
+.announcement-detail__image img { width: 100%; max-height: 460px; object-fit: cover; border-radius: 12px; }
+.announcement-detail__body { color: #444; font-size: 15.5px; line-height: 1.75; }
+.announcement-detail__body img { max-width: 100%; height: auto; border-radius: 8px; }
+.announcement-detail__body h1,
+.announcement-detail__body h2,
+.announcement-detail__body h3 { color: #1f2933; margin: 18px 0 10px; }
+.announcement-detail__body ul,
+.announcement-detail__body ol { padding-left: 22px; margin-bottom: 14px; }

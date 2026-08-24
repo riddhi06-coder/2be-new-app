@@ -4,7 +4,7 @@
                 <nav class="navbar navbar-expand-lg">
                 <!-- Logo -->
                 <div class="logo">
-                    <a href="{{ route('frontend.index') }}">
+                    <a href="{{ route('frontend.employee_dashboard') }}">
                         <img src="{{ asset('frontend/assets/images/logo.webp') }}" class="img-responsive mb-2" alt="2BE Pumping Log">
                     </a>
                 </div>
