@@ -19,7 +19,12 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::where('is_active', true)->orderBy('name')->get();
+        // Employees are managed from the HR "Employees" section (which sends the
+        // welcome email) — so exclude the employee role from the Users form.
+        $roles = Role::where('is_active', true)
+            ->where('slug', '!=', 'employee')
+            ->orderBy('name')->get();
+
         return view('backend.users.create', compact('roles'));
     }
 
@@ -36,6 +41,9 @@ class UserController extends Controller
         if (! $role || ! $role->is_active) {
             return back()->withInput()->withErrors(['role_id' => 'Selected role is not active.']);
         }
+        if ($role->slug === 'employee') {
+            return back()->withInput()->withErrors(['role_id' => 'Please create employees from the Employees section so they receive their welcome email.']);
+        }
 
         User::create([
             'name'      => $validated['name'],
@@ -50,8 +58,11 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        // Show active roles + the user's current role (even if currently inactive) so the form doesn't break
-        $roles = Role::where('is_active', true)
+        // Active non-employee roles, plus the user's current role (so the form
+        // doesn't break even if their role is inactive or the employee role).
+        $roles = Role::where(function ($q) {
+                $q->where('is_active', true)->where('slug', '!=', 'employee');
+            })
             ->orWhere('id', $user->role_id)
             ->orderBy('name')->get();
 
@@ -66,6 +77,13 @@ class UserController extends Controller
             'password' => ['nullable', 'string', 'confirmed', PasswordRule::min(8)],
             'role_id'  => 'required|exists:roles,id',
         ]);
+
+        // Block switching a user into the employee role from the Users form,
+        // unless they already are one (so existing rows still save).
+        $newRole = Role::find($validated['role_id']);
+        if ($newRole && $newRole->slug === 'employee' && $user->role_id !== $newRole->id) {
+            return back()->withInput()->withErrors(['role_id' => 'Please manage employees from the Employees section.']);
+        }
 
         $user->name    = $validated['name'];
         $user->email   = $validated['email'];
