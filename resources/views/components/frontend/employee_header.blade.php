@@ -4,7 +4,7 @@
                 <nav class="navbar navbar-expand-lg">
                 <!-- Logo -->
                 <div class="logo">
-                    <a href="{{ route('frontend.employee_dashboard') }}">
+                    <a href="{{ route('frontend.employee_portal') }}">
                         <img src="{{ asset('frontend/assets/images/logo.webp') }}" class="img-responsive mb-2" alt="2BE Pumping Log">
                     </a>
                 </div>
@@ -13,50 +13,31 @@
                     <ul class="navbar-nav mx-auto">
                     <!-- Home -->
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html"> HOME </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_portal') }}"> HOME </a>
                     </li>
-                    <!-- Employee Handbook -->
+                    @auth
+                    <!-- Dashboard (logged-in only) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> EMPLOYEE HANDBOOK </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_dashboard') }}"> DASHBOARD </a>
                     </li>
-                    <!-- Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="safetyDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        >
-                        SAFETY PROGRAMS
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="safetyDropdown">
-                        <li>
-                            <a class="dropdown-item" href="#"> Safety Training </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"> Safety Documents </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"> Emergency Procedures </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#"> Safety Reports </a>
-                        </li>
-                        </ul>
+                    @endauth
+
+                    <!-- Documents -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"> DOCUMENT LIBRARY </a>
                     </li>
+                 
                     <!-- Incident Report -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('frontend.employee_incident_report') }}"> INCIDENT REPORT </a>
                     </li>
-                    <!-- Labor Poster Laws -->
+
+
+                    <!-- Announcements -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> LABOR POSTER LAWS </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_announcements') }}"> ANNOUNCEMENTS </a>
                     </li>
+                  
                     <!-- Team Calendar -->
                     <li class="nav-item">
                         <a class="nav-link" href="#"> TEAM CALENDAR </a>
@@ -65,7 +46,8 @@
                 </div>
                 <!-- Right Side -->
                 <div class="header-right">
-                    <!-- Employee Login -->
+                    @auth
+                    <!-- Logged-in: account dropdown -->
                     <div class="employee-dropdown dropdown">
                     <a
                         href="#"
@@ -78,20 +60,20 @@
                         </span>
                         <span class="employee-text">
                         <small> Welcome, </small>
-                        <strong> {{ auth()->check() ? auth()->user()->name : 'Employee' }} </strong>
+                        <strong> {{ auth()->user()->name }} </strong>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-user"></i>
-                            My Profile
+                        <a class="dropdown-item" href="{{ route('frontend.employee_dashboard') }}">
+                            <i class="fa fa-th-large"></i>
+                            My Dashboard
                         </a>
                         </li>
                         <li>
                         <a class="dropdown-item" href="#">
-                            <i class="fa fa-cog"></i>
-                            Settings
+                            <i class="fa fa-user"></i>
+                            My Profile
                         </a>
                         </li>
                         <li>
@@ -105,6 +87,13 @@
                         </li>
                     </ul>
                     </div>
+                    @else
+                    <!-- Logged-out: login button -->
+                    <a href="{{ route('frontend.employee_login') }}" class="employee-link employee-login-btn">
+                        <span class="user-icon"><i class="fa fa-sign-in"></i></span>
+                        <span class="employee-text"><strong>Employee Login</strong></span>
+                    </a>
+                    @endauth
                     <!-- Mobile Toggle -->
                     <button
                     class="navbar-toggler"

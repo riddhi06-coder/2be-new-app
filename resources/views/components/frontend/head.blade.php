@@ -6,4 +6,4 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/font-awesome.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/style.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/media.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/custom.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/custom.css') }}?v={{ filemtime(public_path('frontend/assets/css/custom.css')) }}">

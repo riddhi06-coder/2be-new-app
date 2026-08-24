@@ -142,12 +142,33 @@ class EmployeesController extends Controller
         return back()->withInput($request->only('email'))->with('error', $friendly);
     }
 
-    /** Employee dashboard (guarded by the employee.auth middleware). */
-    public function employee_dashboard()
+    /** Public portal landing page — the common dashboard, no login required. */
+    public function employee_portal()
     {
         return view('frontend.employee.dashboard', [
-            'employee'      => Auth::user(),
+            'employee'      => Auth::user(), // may be null when browsing logged-out
             'announcements' => Announcement::publishedLatest()->limit(3)->get(),
+        ]);
+    }
+
+    /** Personalised employee dashboard (guarded by the employee.auth middleware). */
+    public function employee_dashboard()
+    {
+        $user = Auth::user();
+
+        $base = IncidentReport::where('reported_by', $user->id);
+
+        return view('frontend.employee.home', [
+            'employee'      => $user,
+            'announcements' => Announcement::publishedLatest()->limit(3)->get(),
+            'myReports'     => (clone $base)->latest()->limit(5)->get(),
+            'myReportsAll'  => (clone $base)->with('photos')->latest()->get(),
+            'reportStats'   => [
+                'total'  => (clone $base)->count(),
+                'open'   => (clone $base)->where('status', 'open')->count(),
+                'review' => (clone $base)->where('status', 'under-review')->count(),
+                'closed' => (clone $base)->where('status', 'closed')->count(),
+            ],
         ]);
     }
 
