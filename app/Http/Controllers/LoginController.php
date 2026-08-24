@@ -42,7 +42,7 @@ class LoginController extends Controller
           ]);
 
         $credentials = $request->only('email', 'password');
-        $remember_me = $request->has('remember_token') ? true : false;
+        $remember_me = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember_me)) {
             // $roles = auth()->user()->role;

@@ -193,7 +193,11 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::post('/septic-systems/draft', [SepticController::class, 'save_draft'])->name('septic.draft');    
 
 
-    Route::get('/employee-login', [EmployeesController::class, 'employee_login'])->name('frontend.employee_login');
+    Route::get('/employee-login',      [EmployeesController::class, 'employee_login'])->name('frontend.employee_login');
+    Route::post('/employee-login',     [EmployeesController::class, 'authenticate'])->name('frontend.employee_authenticate');
+    Route::get('/employee-logout',     [EmployeesController::class, 'logout'])->name('frontend.employee_logout');
+    Route::get('/employee-dashboard',  [EmployeesController::class, 'employee_dashboard'])->name('frontend.employee_dashboard');
+    Route::get('/employee-forgot-password',  [EmployeesController::class, 'employee_forgot_password'])->name('frontend.employee_forgot_password');
 
 
 

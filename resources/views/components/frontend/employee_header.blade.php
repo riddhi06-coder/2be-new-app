@@ -78,7 +78,7 @@
                         </span>
                         <span class="employee-text">
                         <small> Welcome, </small>
-                        <strong> Employee </strong>
+                        <strong> {{ auth()->check() ? auth()->user()->name : 'Employee' }} </strong>
                         </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -98,7 +98,7 @@
                         <hr class="dropdown-divider" />
                         </li>
                         <li>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ route('frontend.employee_logout') }}">
                             <i class="fa fa-sign-out"></i>
                             Logout
                         </a>

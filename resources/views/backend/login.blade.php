@@ -41,7 +41,8 @@
 
                         <div class="form-group mb-0">
                         <div class="checkbox p-0">
-                        <input id="checkbox1" type="checkbox">
+                        <input id="checkbox1" type="checkbox" name="remember" value="1" {{ old('remember') ? 'checked' : '' }}>
+                        <label for="checkbox1">Remember me</label>
                         </div><a class="link" href="{{ route('admin.changepassword') }}">Forgot password?</a>
                             <div class="text-end mt-3">
                                 <button class="btn btn-primary btn-block w-100" type="submit">Sign in</button>
