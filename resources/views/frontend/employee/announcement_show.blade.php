@@ -9,18 +9,26 @@
 
         @include('components.frontend.employee_header')
 
+        @php
+            $date  = optional($announcement->published_at) ?: $announcement->created_at;
+            $isNew = $announcement->published_at && $announcement->published_at->gt(now()->subDays(7));
+        @endphp
+
             <section class="pumping-log">
                 <div class="container">
                     <div class="col-md-12">
                     <div class="pumping-log__content">
-                        <h1 class="pumping-log__title">
-                        <span class="pumping-log__brand">Announcement</span>
-                        </h1>
+                        <h1 class="pumping-log__title article-hero-title">{{ $announcement->title }}</h1>
 
-                        <p class="pumping-log__description">
-                        <i class="fa fa-calendar"></i>
-                        {{ optional($announcement->published_at)->format('F d, Y') ?? $announcement->created_at->format('F d, Y') }}
-                        </p>
+                        <div class="article-hero-meta">
+                            <span><i class="fa fa-calendar"></i> {{ $date->format('F d, Y') }}</span>
+                            @if($announcement->creator)
+                                <span class="dot"></span>
+                            @endif
+                            @if($isNew)
+                                <span class="article-hero-new">NEW</span>
+                            @endif
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -31,27 +39,27 @@
                 </svg>
             </section>
 
-            <section class="announcement-boxes-wrap">
+            <section class="article-page">
             <div class="container">
-                <div class="row">
-                <div class="col-md-12">
-                    <div class="announcement-detail">
-                        <a href="{{ route('frontend.employee_announcements') }}" class="announcement-back">
-                            <i class="fa fa-long-arrow-left"></i> Back to all announcements
-                        </a>
+                <div class="row justify-content-center">
+                <div class="col-lg-9">
 
-                        <h2 class="announcement-detail__title">{{ $announcement->title }}</h2>
+                    <a href="{{ route('frontend.employee_announcements') }}" class="article-back-link">
+                        <i class="fa fa-long-arrow-left"></i> All Announcements
+                    </a>
 
+                    <article class="article-post">
                         @if($announcement->image_path)
-                            <div class="announcement-detail__image">
+                            <div class="article-post__cover">
                                 <img src="{{ asset($announcement->image_path) }}" alt="{{ $announcement->title }}">
                             </div>
                         @endif
 
-                        <div class="announcement-detail__body">
+                        <div class="article-post__body">
                             {!! $announcement->body !!}
                         </div>
-                    </div>
+                    </article>
+
                 </div>
                 </div>
             </div>

@@ -14,8 +14,7 @@
                     <div class="col-md-12">
                     <div class="pumping-log__content">
                         <h1 class="pumping-log__title">
-                        <span class="pumping-log__brand">Company</span>
-                        Announcements
+                        <span class="pumping-log__brand">Announcements</span>
                         </h1>
 
                         <p class="pumping-log__description">
@@ -31,55 +30,65 @@
                 </svg>
             </section>
 
-            <section class="announcement-boxes-wrap">
+            <section class="blog-listing-wrap">
             <div class="container">
-                <div class="row">
-                <div class="col-md-12">
-                    <div class="announcement-box">
-                    <div class="announcement-content" style="width:100%;">
-                        @forelse($announcements as $announcement)
-                            @php
-                                $isNew = $announcement->published_at && $announcement->published_at->gt(now()->subDays(7));
-                            @endphp
-                            <div class="announcement-item">
-                            @if($isNew)
-                                <div class="announcement-icon new-icon">NEW</div>
-                            @else
-                                <div class="announcement-icon policy-icon">
-                                    <i class="fa fa-bullhorn"></i>
+                <div class="row g-4">
+                    @forelse($announcements as $announcement)
+                        @php
+                            $isNew = $announcement->published_at && $announcement->published_at->gt(now()->subDays(7));
+                            $date  = optional($announcement->published_at) ?: $announcement->created_at;
+                            $url   = route('frontend.employee_announcement', $announcement->slug);
+                        @endphp
+                        <div class="col-lg-4 col-md-6">
+                            <article class="blog-card">
+                                <a href="{{ $url }}" class="blog-card__media">
+                                    @if($announcement->image_path)
+                                        <img src="{{ asset($announcement->image_path) }}" alt="{{ $announcement->title }}">
+                                    @else
+                                        <div class="blog-card__placeholder">
+                                            <i class="fa fa-bullhorn"></i>
+                                        </div>
+                                    @endif
+                                    @if($isNew)
+                                        <span class="blog-card__ribbon">NEW</span>
+                                    @endif
+                                </a>
+
+                                <div class="blog-card__body">
+                                    <div class="blog-card__meta">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>{{ $date->format('M d, Y') }}</span>
+                                    </div>
+
+                                    <h3 class="blog-card__title">
+                                        <a href="{{ $url }}">{{ $announcement->title }}</a>
+                                    </h3>
+
+                                    <p class="blog-card__excerpt">
+                                        {{ \Illuminate\Support\Str::limit(strip_tags($announcement->body), 120) }}
+                                    </p>
+
+                                    <a href="{{ $url }}" class="blog-card__readmore">
+                                        Read More <i class="fa fa-long-arrow-right"></i>
+                                    </a>
                                 </div>
-                            @endif
-
-                            <div class="announcement-info">
-                                <h4>
-                                <a href="{{ route('frontend.employee_announcement', $announcement->slug) }}">{{ $announcement->title }}</a>
-                                </h4>
-
-                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($announcement->body), 220) }}</p>
+                            </article>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="blog-empty">
+                                <i class="fa fa-bullhorn"></i>
+                                <p>No announcements at the moment. Please check back later.</p>
                             </div>
-
-                            <div class="announcement-date">
-                                <i class="fa fa-calendar"></i>
-                                {{ optional($announcement->published_at)->format('M d, Y') ?? $announcement->created_at->format('M d, Y') }}
-                            </div>
-                            </div>
-                        @empty
-                            <div class="announcement-item">
-                            <div class="announcement-info">
-                                <p class="mb-0">No announcements at the moment. Please check back later.</p>
-                            </div>
-                            </div>
-                        @endforelse
-
-                        @if($announcements->hasPages())
-                            <div class="announcement-pagination">
-                                {{ $announcements->links('pagination::bootstrap-5') }}
-                            </div>
-                        @endif
-                    </div>
-                    </div>
+                        </div>
+                    @endforelse
                 </div>
-                </div>
+
+                @if($announcements->hasPages())
+                    <div class="announcement-pagination">
+                        {{ $announcements->links('pagination::bootstrap-5') }}
+                    </div>
+                @endif
             </div>
             </section>
 
