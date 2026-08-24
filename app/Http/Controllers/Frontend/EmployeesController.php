@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
+use App\Models\Document;
+use App\Models\DocumentCategory;
 use App\Models\IncidentReport;
 use App\Models\User;
 
@@ -288,6 +290,87 @@ class EmployeesController extends Controller
 
         return redirect()->route('frontend.employee_incident_report')
             ->with('message', 'Your incident report has been submitted successfully. Reference: '.$report->reference_no);
+    }
+
+    /**
+     * Document Library — categories split into Public (shared) and Personal spaces.
+     * Public docs are visible to everyone; personal docs only when logged in.
+     */
+    public function employee_documents()
+    {
+        $user = Auth::user(); // may be null (browsing logged-out)
+
+        $categories = DocumentCategory::where('is_active', true)
+            ->withCount([
+                'documents as public_count'   => fn ($q) => $q->where('is_public', true),
+                'documents as personal_count' => fn ($q) => $user
+                    ? $q->where('is_public', false)->where('user_id', $user->id)
+                    : $q->whereRaw('0 = 1'),
+            ])
+            ->orderBy('name')
+            ->get();
+
+        return view('frontend.employee.documents.index', [
+            'publicCategories'   => $categories->where('public_count', '>', 0)->values(),
+            'personalCategories' => $categories->where('personal_count', '>', 0)->values(),
+        ]);
+    }
+
+    /**
+     * Show the documents inside a category. The `space` query param scopes the
+     * view to what the user clicked: 'public' (shared only) or 'personal' (own only).
+     * Personal docs are only ever included for the logged-in owner.
+     */
+    public function employee_document_category(string $slug, ?string $space = null)
+    {
+        $user = Auth::user(); // $space is 'public' | 'personal' | null (from the URL)
+
+        $category = DocumentCategory::where('slug', $slug)->where('is_active', true)->firstOrFail();
+
+        $documents = $category->documents()
+            ->where(function ($q) use ($user) {
+                $q->where('is_public', true);
+                if ($user) {
+                    $q->orWhere('user_id', $user->id);
+                }
+            })
+            ->orderByDesc('id')
+            ->get();
+
+        $publicDocs   = $documents->where('is_public', true)->values();
+        $personalDocs = $documents->where('is_public', false)->values();
+
+        // Narrow to just the space the user came from.
+        if ($space === 'public') {
+            $personalDocs = collect();
+        } elseif ($space === 'personal') {
+            $publicDocs = collect();
+        }
+
+        return view('frontend.employee.documents.category', [
+            'category'     => $category,
+            'publicDocs'   => $publicDocs,
+            'personalDocs' => $personalDocs,
+            'space'        => $space,
+        ]);
+    }
+
+    /** Stream a document download. Public docs are open; personal docs need the owner logged in. */
+    public function employee_document_download(Document $document)
+    {
+        if (! $document->is_public) {
+            $user = Auth::user();
+            if (! $user || (int) $document->user_id !== (int) $user->id) {
+                abort(403, 'You do not have access to this document.');
+            }
+        }
+
+        $full = public_path($document->file_path);
+        if (! file_exists($full)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->download($full, $document->original_name ?: basename($document->file_path));
     }
 
     /** Log the employee out. */

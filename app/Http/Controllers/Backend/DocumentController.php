@@ -41,7 +41,7 @@ class DocumentController extends Controller
 
         $file = $request->file('file');
         // Read metadata BEFORE moving the file — after move() the temp file is gone.
-        $originalName = $file->getClientOriginalName();
+        $originalName = $this->cleanName($file->getClientOriginalName());
         $fileSize     = $file->getSize();
         $mimeType     = $file->getClientMimeType();
         $path         = $this->storeFile($file);
@@ -79,7 +79,7 @@ class DocumentController extends Controller
             $this->deleteFile($document->file_path);
             $file = $request->file('file');
             // Read metadata BEFORE moving the file — after move() the temp file is gone.
-            $originalName = $file->getClientOriginalName();
+            $originalName = $this->cleanName($file->getClientOriginalName());
             $fileSize     = $file->getSize();
             $mimeType     = $file->getClientMimeType();
             $document->file_path     = $this->storeFile($file);
@@ -135,10 +135,17 @@ class DocumentController extends Controller
         $base = preg_replace('/[^A-Za-z0-9_\-]/', '', $base);
         $base = $base !== '' ? $base : 'document';
 
-        $filename = $base.'_'.time().'.'.$file->getClientOriginalExtension();
+        // Append a timestamp + random suffix so identical filenames never collide.
+        $filename = $base.'_'.time().'_'.mt_rand(1000, 9999).'.'.$file->getClientOriginalExtension();
         $file->move($dir, $filename);
 
         return 'uploads/documents/'.$filename;
+    }
+
+    /** Clean a display filename: collapse whitespace to underscores (no spaces). */
+    private function cleanName(string $name): string
+    {
+        return preg_replace('/\s+/', '_', trim($name));
     }
 
     /** Delete a stored file from the public folder if it exists. */

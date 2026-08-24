@@ -24,7 +24,7 @@
 
                     <!-- Documents -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> DOCUMENT LIBRARY </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_documents') }}"> DOCUMENT LIBRARY </a>
                     </li>
                  
                     <!-- Incident Report -->

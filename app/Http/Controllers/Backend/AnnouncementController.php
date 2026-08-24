@@ -113,7 +113,8 @@ class AnnouncementController extends Controller
         $base = preg_replace('/[^A-Za-z0-9_\-]/', '', $base);
         $base = $base !== '' ? $base : 'announcement';
 
-        $filename = $base.'_'.time().'.'.$file->getClientOriginalExtension();
+        // Timestamp + random suffix so identical filenames never collide.
+        $filename = $base.'_'.time().'_'.mt_rand(1000, 9999).'.'.$file->getClientOriginalExtension();
         $file->move($dir, $filename);
 
         return 'uploads/announcements/'.$filename;

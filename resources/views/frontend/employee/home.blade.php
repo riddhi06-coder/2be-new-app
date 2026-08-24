@@ -50,6 +50,9 @@
                                    class="account-menu__link">
                                     <i class="fa fa-exclamation-triangle"></i> <span>My Incident Reports</span>
                                 </a>
+                                <a href="{{ route('frontend.employee_documents') }}" class="account-menu__link">
+                                    <i class="fa fa-folder"></i> <span>Document Library</span>
+                                </a>
                                 <a href="#" class="account-menu__link">
                                     <i class="fa fa-user"></i> <span>My Profile</span>
                                 </a>

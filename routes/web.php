@@ -206,6 +206,10 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::post('/employee-incident-report',     [EmployeesController::class, 'employee_incident_report_store'])->middleware('employee.auth')->name('frontend.employee_incident_report_store');
     Route::get('/employee-announcements',        [EmployeesController::class, 'employee_announcements'])->middleware('employee.auth')->name('frontend.employee_announcements');
     Route::get('/employee-announcements/{slug}', [EmployeesController::class, 'employee_announcement'])->middleware('employee.auth')->name('frontend.employee_announcement');
+    // Public: shared documents are viewable by anyone; personal docs require login (enforced in the controller).
+    Route::get('/document-library',                       [EmployeesController::class, 'employee_documents'])->name('frontend.employee_documents');
+    Route::get('/document-library/category/{slug}/{space?}', [EmployeesController::class, 'employee_document_category'])->whereIn('space', ['public', 'personal'])->name('frontend.employee_document_category');
+    Route::get('/document-library/download/{document}',   [EmployeesController::class, 'employee_document_download'])->name('frontend.employee_document_download');
 
 
 
