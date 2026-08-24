@@ -11,6 +11,7 @@ use App\Models\IncidentReport;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -443,6 +444,85 @@ class EmployeesController extends Controller
         });
 
         return response()->json($data);
+    }
+
+    /** Update the logged-in employee's profile (name, phone, avatar). Email stays fixed. */
+    public function employee_update_profile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'name'          => 'required|string|max:255',
+            'phone'         => 'nullable|string|max:20',
+            'avatar'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:'.config('uploads.image_max_kb'),
+            'remove_avatar' => 'nullable|boolean',
+        ], [
+            'avatar.image' => 'The profile picture must be an image (JPG, PNG or WEBP).',
+            'avatar.max'   => 'The profile picture may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
+        ]);
+
+        $user->name  = $validated['name'];
+        $user->phone = $validated['phone'] ?? null;
+
+        if ($request->boolean('remove_avatar') && ! $request->hasFile('avatar')) {
+            $this->deleteAvatar($user->avatar);
+            $user->avatar = null;
+        }
+
+        if ($request->hasFile('avatar')) {
+            $this->deleteAvatar($user->avatar);
+            $user->avatar = $this->storeAvatar($request->file('avatar'));
+        }
+
+        $user->save();
+
+        return redirect()->to(route('frontend.employee_dashboard').'#profile')
+            ->with('message', 'Your profile has been updated successfully.');
+    }
+
+    /** Change the logged-in employee's password (verifying the current one). */
+    public function employee_change_password(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password:web'],
+            'password'         => ['required', 'confirmed', PasswordRule::min(8)],
+        ], [
+            'current_password.required'          => 'Please enter your current password.',
+            'current_password.current_password'  => 'Your current password is incorrect.',
+        ]);
+
+        $user = Auth::user();
+        $user->password = Hash::make($request->password);
+        $user->setRememberToken(Str::random(60));
+        $user->save();
+
+        // Keep the session hash in sync so EmployeeAuth doesn't log us out mid-request.
+        $request->session()->put('employee_password_hash', $user->password);
+
+        return redirect()->to(route('frontend.employee_dashboard').'#profile')
+            ->with('message', 'Your password has been changed successfully.');
+    }
+
+    /** Move an uploaded avatar into public/uploads/avatars with a safe, unique name. */
+    private function storeAvatar(UploadedFile $file): string
+    {
+        $dir = public_path('uploads/avatars');
+        if (! is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'avatar';
+        $filename = $base.'_'.time().'_'.mt_rand(1000, 9999).'.'.$file->getClientOriginalExtension();
+        $file->move($dir, $filename);
+
+        return 'uploads/avatars/'.$filename;
+    }
+
+    private function deleteAvatar(?string $path): void
+    {
+        if ($path && file_exists(public_path($path))) {
+            @unlink(public_path($path));
+        }
     }
 
     /** Log the employee out. */

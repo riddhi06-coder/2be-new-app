@@ -198,6 +198,8 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/employee-logout',     [EmployeesController::class, 'logout'])->name('frontend.employee_logout');
     Route::get('/employee-portal',     [EmployeesController::class, 'employee_portal'])->name('frontend.employee_portal');
     Route::get('/employee-dashboard',  [EmployeesController::class, 'employee_dashboard'])->middleware('employee.auth')->name('frontend.employee_dashboard');
+    Route::post('/employee-profile',   [EmployeesController::class, 'employee_update_profile'])->middleware('employee.auth')->name('frontend.employee_update_profile');
+    Route::post('/employee-password',  [EmployeesController::class, 'employee_change_password'])->middleware('employee.auth')->name('frontend.employee_change_password');
     Route::get('/employee-forgot-password',   [EmployeesController::class, 'employee_forgot_password'])->name('frontend.employee_forgot_password');
     Route::post('/employee-forgot-password',  [EmployeesController::class, 'send_reset_link'])->name('frontend.employee_send_reset_link');
     Route::get('/employee-reset-password/{token}', [EmployeesController::class, 'employee_reset_password'])->name('frontend.employee_reset_password');

@@ -23,6 +23,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'avatar',
         'password',
         'role_id',
         'is_active',
@@ -58,6 +60,12 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /** Public URL of the uploaded avatar, or null if none set. */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar ? asset($this->avatar) : null;
     }
 
     public function deletedBy(): BelongsTo

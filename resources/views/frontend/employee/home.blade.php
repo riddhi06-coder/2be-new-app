@@ -34,7 +34,13 @@
                     <div class="col-lg-4 col-xl-3">
                         <div class="account-sidebar">
                             <div class="account-sidebar__profile">
-                                <div class="account-avatar"><i class="fa fa-user"></i></div>
+                                <div class="account-avatar">
+                                    @if($employee->avatar_url)
+                                        <img src="{{ $employee->avatar_url }}" alt="{{ $employee->name }}">
+                                    @else
+                                        <i class="fa fa-user"></i>
+                                    @endif
+                                </div>
                                 <h4>{{ $employee->name }}</h4>
                                 <p>{{ $employee->email }}</p>
                             </div>
@@ -53,7 +59,7 @@
                                 <a href="{{ route('frontend.employee_documents') }}" class="account-menu__link">
                                     <i class="fa fa-folder"></i> <span>Document Library</span>
                                 </a>
-                                <a href="#" class="account-menu__link">
+                                <a href="#tab-profile" data-emp-tab="profile" class="account-menu__link">
                                     <i class="fa fa-user"></i> <span>My Profile</span>
                                 </a>
                                 <a href="{{ route('frontend.employee_logout') }}" class="account-menu__link account-menu__link--logout">
@@ -283,6 +289,110 @@
                             </div>
                         </div><!-- /#tab-reports -->
 
+                        <!-- ============ Tab: My Profile ============ -->
+                        <div class="emp-tab-pane d-none" id="tab-profile">
+
+                            <!-- Account details -->
+                            <div class="emp-panel">
+                                <div class="emp-panel__head">
+                                    <h3><i class="fa fa-user-circle-o"></i> Account Details</h3>
+                                </div>
+                                <div class="emp-panel__body">
+                                    <form action="{{ route('frontend.employee_update_profile') }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+
+                                        <div class="prof-avatar-row">
+                                            <div class="prof-avatar" id="profAvatarPreview">
+                                                @if($employee->avatar_url)
+                                                    <img src="{{ $employee->avatar_url }}" alt="{{ $employee->name }}">
+                                                @else
+                                                    <i class="fa fa-user"></i>
+                                                @endif
+                                            </div>
+                                            <div class="prof-avatar-actions">
+                                                <label class="prof-file-btn">
+                                                    <i class="fa fa-camera"></i> Change Photo
+                                                    <input type="file" name="avatar" accept=".jpg,.jpeg,.png,.webp" id="profAvatarInput" hidden>
+                                                </label>
+                                                @if($employee->avatar_url)
+                                                    <label class="prof-remove"><input type="checkbox" name="remove_avatar" value="1"> Remove photo</label>
+                                                @endif
+                                                <p class="prof-hint">JPG, PNG or WEBP &mdash; max {{ round(config('uploads.image_max_kb') / 1024) }} MB.</p>
+                                                @error('avatar')<span class="prof-error">{{ $message }}</span>@enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="prof-label">Full Name</label>
+                                                <input type="text" name="name" class="prof-input" value="{{ old('name', $employee->name) }}" required>
+                                                @error('name')<span class="prof-error">{{ $message }}</span>@enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="prof-label">Email <span class="prof-lock"><i class="fa fa-lock"></i> read-only</span></label>
+                                                <input type="email" class="prof-input" value="{{ $employee->email }}" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="prof-label">Mobile Number</label>
+                                                <input type="text" name="phone" class="prof-input" value="{{ old('phone', $employee->phone) }}" placeholder="Enter mobile number">
+                                                @error('phone')<span class="prof-error">{{ $message }}</span>@enderror
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="prof-label">Role</label>
+                                                <input type="text" class="prof-input" value="{{ $employee->role->name ?? 'Employee' }}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="prof-actions">
+                                            <button type="submit" class="prof-save"><i class="fa fa-check"></i> Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Change password -->
+                            <div class="emp-panel">
+                                <div class="emp-panel__head">
+                                    <h3><i class="fa fa-lock"></i> Change Password</h3>
+                                </div>
+                                <div class="emp-panel__body">
+                                    <form action="{{ route('frontend.employee_change_password') }}" method="POST">
+                                        @csrf
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="prof-label">Current Password</label>
+                                                <div class="prof-pass">
+                                                    <input type="password" name="current_password" class="prof-input" id="pwCurrent" required>
+                                                    <button type="button" class="prof-eye" data-target="pwCurrent"><i class="fa fa-eye"></i></button>
+                                                </div>
+                                                @error('current_password')<span class="prof-error">{{ $message }}</span>@enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="prof-label">New Password</label>
+                                                <div class="prof-pass">
+                                                    <input type="password" name="password" class="prof-input" id="pwNew" required>
+                                                    <button type="button" class="prof-eye" data-target="pwNew"><i class="fa fa-eye"></i></button>
+                                                </div>
+                                                @error('password')<span class="prof-error">{{ $message }}</span>@enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="prof-label">Confirm New Password</label>
+                                                <div class="prof-pass">
+                                                    <input type="password" name="password_confirmation" class="prof-input" id="pwConfirm" required>
+                                                    <button type="button" class="prof-eye" data-target="pwConfirm"><i class="fa fa-eye"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="prof-hint">Password must be at least 8 characters.</p>
+                                        <div class="prof-actions">
+                                            <button type="submit" class="prof-save"><i class="fa fa-key"></i> Update Password</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div><!-- /#tab-profile -->
+
                     </div>
                 </div>
             </div>
@@ -308,15 +418,21 @@
                     e.preventDefault();
                     var tab = this.getAttribute('data-emp-tab');
                     activate(tab);
+                    var hashMap = { reports: 'my-reports', profile: 'profile', dashboard: 'dashboard' };
                     if (history.replaceState) {
-                        history.replaceState(null, '', '#' + (tab === 'reports' ? 'my-reports' : 'dashboard'));
+                        history.replaceState(null, '', '#' + (hashMap[tab] || 'dashboard'));
                     }
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
 
-            // Deep-link (e.g. arriving at .../employee-dashboard#my-reports)
+            // Deep-link (e.g. arriving at .../employee-dashboard#my-reports or #profile)
             if (location.hash === '#my-reports') { activate('reports'); }
+            else if (location.hash === '#profile') { activate('profile'); }
+            @if($errors->any())
+            // Validation errors belong to the profile/password forms — open that tab.
+            activate('profile');
+            @endif
 
             // Filter chips on the reports tab
             var chips   = document.querySelectorAll('.emp-filter__chip');
@@ -343,6 +459,32 @@
                     var card = this.closest('.emp-rcard');
                     var isOpen = card.classList.toggle('is-expanded');
                     this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            });
+
+            // Profile: live avatar preview
+            var avatarInput = document.getElementById('profAvatarInput');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', function () {
+                    var file = this.files && this.files[0];
+                    if (!file) return;
+                    var box = document.getElementById('profAvatarPreview');
+                    var url = URL.createObjectURL(file);
+                    box.innerHTML = '<img src="' + url + '" alt="preview">';
+                    // Uncheck "remove photo" if a new one is chosen
+                    var rm = document.querySelector('input[name="remove_avatar"]');
+                    if (rm) rm.checked = false;
+                });
+            }
+
+            // Profile: show/hide password toggles
+            document.querySelectorAll('.prof-eye').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var input = document.getElementById(this.getAttribute('data-target'));
+                    if (!input) return;
+                    var show = input.type === 'password';
+                    input.type = show ? 'text' : 'password';
+                    this.querySelector('i').className = show ? 'fa fa-eye-slash' : 'fa fa-eye';
                 });
             });
         })();
