@@ -45,7 +45,12 @@ class LoginController extends Controller
         $remember_me = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember_me)) {
-            // $roles = auth()->user()->role;
+            // Employees are not allowed into the admin panel — they use the employee portal.
+            if (Auth::user()->hasRole('employee')) {
+                Auth::logout();
+                return redirect()->route('admin.login')->with('message', 'Employees must sign in through the Employee Portal.');
+            }
+
             $request->session()->regenerate();
             return redirect()->route('admin.dashboard')->with('message', 'You are logged-in Successfully.');
         }

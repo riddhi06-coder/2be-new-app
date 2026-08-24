@@ -17,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
         // Per-route permission gate: ->middleware('permission:roles.view')
         $middleware->alias([
-            'permission' => \App\Http\Middleware\CheckPermission::class,
+            'permission'    => \App\Http\Middleware\CheckPermission::class,
+            'employee.auth' => \App\Http\Middleware\EmployeeAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

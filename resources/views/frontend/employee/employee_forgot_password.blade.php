@@ -31,7 +31,8 @@
                 send you a link to reset your password.
               </p>
 
-              <form>
+              <form action="{{ route('frontend.employee_send_reset_link') }}" method="POST">
+                @csrf
 
                 <!-- Email -->
                 <div class="pumping-forget-password-group">
@@ -42,7 +43,10 @@
                       class="form-control"
                       type="email"
                       id="pumping-email"
+                      name="email"
+                      value="{{ old('email') }}"
                       placeholder="Enter your email address"
+                      required
                     />
                   </div>
                 </div>
@@ -111,6 +115,23 @@
         @include('components.frontend.footer')
 
         @include('components.frontend.main-js')
+
+        <script>
+            (function () {
+                var form = document.querySelector('.pumping-forget-password-content form');
+                if (form) {
+                    form.addEventListener('submit', function () {
+                        var btn = form.querySelector('button[type="submit"]');
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.style.opacity = '0.75';
+                            btn.style.cursor = 'not-allowed';
+                            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+                        }
+                    });
+                }
+            })();
+        </script>
 
     </body>
 
