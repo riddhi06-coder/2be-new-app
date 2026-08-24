@@ -51,7 +51,7 @@
                     </li>
                     <!-- Incident Report -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> INCIDENT REPORT </a>
+                        <a class="nav-link" href="{{ route('frontend.employee_incident_report') }}"> INCIDENT REPORT </a>
                     </li>
                     <!-- Labor Poster Laws -->
                     <li class="nav-item">

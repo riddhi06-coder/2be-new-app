@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\IncidentReport;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class EmployeesController extends Controller
@@ -143,6 +145,108 @@ class EmployeesController extends Controller
     public function employee_dashboard()
     {
         return view('frontend.employee.dashboard', ['employee' => Auth::user()]);
+    }
+
+    /** Show the employee-facing incident report form. */
+    public function employee_incident_report()
+    {
+        return view('frontend.employee.employee_incident_report', [
+            'categories' => IncidentReport::CATEGORIES,
+            'severities' => IncidentReport::SEVERITIES,
+            'employees'  => $this->activeEmployees(),
+        ]);
+    }
+
+    /** Active employees (excluding the current user) for the "employee involved" dropdown. */
+    private function activeEmployees()
+    {
+        return User::whereHas('role', fn ($q) => $q->where('slug', 'employee'))
+            ->where('is_active', true)
+            ->where('id', '!=', Auth::id())
+            ->orderBy('name')
+            ->get();
+    }
+
+    /** Save an incident report submitted by the employee. */
+    public function employee_incident_report_store(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'employee_id'        => 'nullable|exists:users,id',
+            'incident_date'      => 'required|date|before_or_equal:today',
+            'incident_time'      => 'nullable|date_format:H:i',
+            'incident_location'  => 'required|string|min:3|max:255',
+            'category'           => ['required', Rule::in(array_keys(IncidentReport::CATEGORIES))],
+            'severity'           => ['required', Rule::in(array_keys(IncidentReport::SEVERITIES))],
+            'description'        => 'required|string|min:10',
+            'immediate_action'   => 'nullable|string',
+            'witnesses'          => 'nullable|string|max:255',
+            'incident_photos'    => 'nullable|array|max:6',
+            'incident_photos.*'  => 'image|mimes:jpg,jpeg,png,gif,webp|max:'.config('uploads.image_max_kb'),
+        ], [
+            'incident_date.before_or_equal' => 'The incident date cannot be in the future.',
+            'incident_location.min'         => 'Location must be at least 3 characters.',
+            'description.min'               => 'Description must be at least 10 characters.',
+            'incident_photos.max'           => 'You can upload up to 6 photos at a time.',
+            'incident_photos.*.image'       => 'Each attachment must be an image (JPG, PNG, GIF or WEBP).',
+            'incident_photos.*.max'         => 'Each image may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
+        ]);
+
+        // reported_by = the employee filing the report (always the logged-in user).
+        // employee_id = the employee actually involved — defaults to the reporter,
+        // but they can pick a colleague from the dropdown. Both are real user FKs,
+        // so the full employee record (name, email, role) is captured either way.
+        // source = 'employee' flags this as a portal submission (vs. admin-created).
+        $involvedId = $validated['employee_id'] ?? $user->id;
+
+        $report = IncidentReport::create([
+            'reported_by'      => $user->id,
+            'employee_id'      => $involvedId,
+            'reporter_name'    => $user->name,
+            'incident_date'    => $validated['incident_date'],
+            'incident_time'    => $validated['incident_time'] ?? null,
+            'location'         => $validated['incident_location'],
+            'category'         => $validated['category'],
+            'severity'         => $validated['severity'],
+            'description'      => $validated['description'],
+            'immediate_action' => $validated['immediate_action'] ?? null,
+            'witnesses'        => $validated['witnesses'] ?? null,
+            'status'           => 'open',
+            'source'           => 'employee',
+            'created_by'       => $user->id,
+        ]);
+
+        $report->reference_no = 'IR-'.$report->created_at->format('Y').'-'.str_pad((string) $report->id, 4, '0', STR_PAD_LEFT);
+        $report->save();
+
+        // Store any uploaded photos.
+        if ($request->hasFile('incident_photos')) {
+            $dir = public_path('uploads/incident-reports');
+            if (! is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            foreach ($request->file('incident_photos') as $file) {
+                if (! $file->isValid()) {
+                    continue;
+                }
+                $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'photo';
+                $original = $file->getClientOriginalName();
+                $size     = $file->getSize();
+                $mime     = $file->getClientMimeType();
+                $filename = $base.'_'.time().'_'.mt_rand(100, 999).'.'.$file->getClientOriginalExtension();
+                $file->move($dir, $filename);
+                $report->photos()->create([
+                    'file_path'     => 'uploads/incident-reports/'.$filename,
+                    'original_name' => $original,
+                    'file_size'     => $size,
+                    'mime_type'     => $mime,
+                ]);
+            }
+        }
+
+        return redirect()->route('frontend.employee_incident_report')
+            ->with('message', 'Your incident report has been submitted successfully. Reference: '.$report->reference_no);
     }
 
     /** Log the employee out. */

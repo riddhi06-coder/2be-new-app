@@ -29,7 +29,8 @@
                         <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
                             <div>
                                 <span class="badge {{ $report->severity_badge }} me-1">{{ $report->severity_label }}</span>
-                                <span class="badge {{ $report->status_badge }}">{{ $report->status_label }}</span>
+                                <span class="badge {{ $report->status_badge }} me-1">{{ $report->status_label }}</span>
+                                <span class="badge {{ $report->source_badge }}">{{ $report->source_label }}</span>
                             </div>
                             <div>
                                 @if($canManage && auth()->user()->hasPermission('incident-reports.edit'))

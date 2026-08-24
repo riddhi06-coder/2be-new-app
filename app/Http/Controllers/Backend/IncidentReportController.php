@@ -72,6 +72,7 @@ class IncidentReportController extends Controller
             'immediate_action' => $validated['immediate_action'] ?? null,
             'witnesses'        => $validated['witnesses'] ?? null,
             'status'           => 'open',
+            'source'           => 'admin',
             'created_by'       => $request->user()->id,
         ]);
 

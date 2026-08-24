@@ -28,6 +28,32 @@
                     <div class="card-body">
                         <form action="{{ route('admin.incident-reports.update', $report) }}" method="POST" enctype="multipart/form-data" class="theme-form">
                             @csrf @method('PUT')
+
+                            {{-- Review comes first: changing the status is the most important action here --}}
+                            <div class="incident-review-block">
+                                <h6 class="mb-3"><i class="fa fa-gavel me-1"></i> Review &amp; Status</h6>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                                        <select name="status" class="form-control @error('status') is-invalid @enderror" required>
+                                            @foreach(\App\Models\IncidentReport::STATUSES as $val => $label)
+                                                <option value="{{ $val }}" {{ old('status', $report->status) === $val ? 'selected' : '' }}>{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label class="form-label">Current Source</label>
+                                        <input type="text" class="form-control" value="{{ $report->source_label }}" readonly>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">Review Notes</label>
+                                        <textarea name="review_notes" class="form-control ckeditor" rows="3">{{ old('review_notes', $report->review_notes) }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="mb-3"><i class="fa fa-file-text-o me-1"></i> Incident Details</h6>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Reporter Name <span class="text-danger">*</span></label>
@@ -93,24 +119,6 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Witnesses</label>
                                     <input type="text" name="witnesses" class="form-control" value="{{ old('witnesses', $report->witnesses) }}">
-                                </div>
-                            </div>
-
-                            <hr>
-                            <h6 class="mb-3">Review</h6>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Status <span class="text-danger">*</span></label>
-                                    <select name="status" class="form-control @error('status') is-invalid @enderror" required>
-                                        @foreach(\App\Models\IncidentReport::STATUSES as $val => $label)
-                                            <option value="{{ $val }}" {{ old('status', $report->status) === $val ? 'selected' : '' }}>{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Review Notes</label>
-                                    <textarea name="review_notes" class="form-control ckeditor" rows="3">{{ old('review_notes', $report->review_notes) }}</textarea>
                                 </div>
                             </div>
 

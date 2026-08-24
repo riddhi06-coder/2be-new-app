@@ -147,3 +147,49 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 .cal-legend { display: flex; flex-wrap: wrap; gap: 14px; padding: 10px 14px; background: #f7faf8; border: 1px solid #e8eef0; border-radius: 8px; margin-bottom: 16px; }
 .cal-legend .cal-legend-item { display: inline-flex; align-items: center; font-size: 0.8rem; color: #4a5a51; }
 .cal-legend-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; }
+
+/* =========================================================================
+   Form controls: make typed/filled values clearly readable
+   (theme default renders filled input text too light)
+   ========================================================================= */
+.theme-form .form-control,
+.theme-form .form-select,
+.theme-form textarea.form-control,
+.card-body .form-control,
+.card-body .form-select {
+    color: #1f2933 !important;
+    font-weight: 500;
+}
+.theme-form .form-control::placeholder,
+.card-body .form-control::placeholder {
+    color: #98a2b3 !important;
+    font-weight: 400;
+}
+/* Read-only fields stay legible but visually distinct */
+.theme-form .form-control[readonly],
+.card-body .form-control[readonly] {
+    background-color: #f6f8fa;
+    color: #1f2933 !important;
+}
+
+/* Section header for the review block on the incident edit form */
+.incident-review-block {
+    background: #fff7f7;
+    border: 1px solid #f3d6d6;
+    border-radius: 10px;
+    padding: 18px 18px 2px;
+    margin-bottom: 22px;
+}
+.incident-review-block > h6 { color: #750406; font-weight: 600; }
+
+/* Grouped-by-source header rows in the incident reports table */
+tr.dt-group-row td {
+    background: #0d5c46 !important;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 9px 14px !important;
+}
+tr.dt-group-row td i { opacity: 0.85; }

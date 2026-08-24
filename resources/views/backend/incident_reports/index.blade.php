@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="basic-1" class="display table table-hover align-middle">
+                            <table id="incidentReportsTable" class="display table table-hover align-middle">
                                 <thead>
                                     <tr>
                                         <th>Ref #</th>
@@ -33,17 +33,19 @@
                                         <th>Category</th>
                                         <th>Severity</th>
                                         <th>Status</th>
+                                        <th>Source</th>
                                         <th class="text-end" style="min-width:180px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($reports as $r)
+                                    @foreach($reports as $r)
                                         <tr>
                                             <td>{{ $r->reference_no }}</td>
                                             <td>{{ optional($r->incident_date)->format('d M Y') }}</td>
                                             <td>{{ $r->category_label }}</td>
                                             <td><span class="badge {{ $r->severity_badge }}">{{ $r->severity_label }}</span></td>
                                             <td><span class="badge {{ $r->status_badge }}">{{ $r->status_label }}</span></td>
+                                            <td data-order="{{ $r->source_label }}"><span class="badge {{ $r->source_badge }}">{{ $r->source_label }}</span></td>
                                             <td class="text-end">
                                                 <div class="d-flex gap-1 justify-content-end">
                                                     @if(auth()->user()->hasPermission('incident-reports.edit'))
@@ -61,9 +63,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr><td colspan="6" class="text-center text-muted py-4">No incident reports yet.</td></tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -78,5 +78,41 @@
 </div>
 
 @include('components.backend.main-js')
+<script>
+jQuery(function ($) {
+    var $table = $('#incidentReportsTable');
+    if (!$table.length || !$.fn.DataTable) { return; }
+
+    var SOURCE_COL = 5; // 0-based index of the Source column
+
+    $table.DataTable({
+        order: [[SOURCE_COL, 'asc']],
+        columnDefs: [
+            { targets: SOURCE_COL, visible: false }, // hidden — shown as a group header instead
+            { targets: -1, orderable: false }         // Actions column
+        ],
+        language: { emptyTable: 'No incident reports yet.' },
+        // Insert a header row above each new source group.
+        drawCallback: function () {
+            var api     = this.api();
+            var rows    = api.rows({ page: 'current' }).nodes();
+            var colspan = api.columns(':visible').count();
+            var last    = null;
+
+            api.column(SOURCE_COL, { page: 'current' }).data().each(function (group, i) {
+                var label = $('<div>').html(group).text().trim(); // strip the badge markup
+                if (last !== label) {
+                    $(rows).eq(i).before(
+                        '<tr class="dt-group-row"><td colspan="' + colspan + '">' +
+                            '<i class="fa fa-folder-open me-1"></i>' + label +
+                        '</td></tr>'
+                    );
+                    last = label;
+                }
+            });
+        }
+    });
+});
+</script>
 </body>
 </html>

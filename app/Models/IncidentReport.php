@@ -26,6 +26,7 @@ class IncidentReport extends Model
         'immediate_action',
         'witnesses',
         'status',
+        'source',
         'review_notes',
         'reviewed_by',
         'reviewed_at',
@@ -58,6 +59,12 @@ class IncidentReport extends Model
         'open'         => 'Open',
         'under-review' => 'Under Review',
         'closed'       => 'Closed',
+    ];
+
+    /** Where the report originated. */
+    public const SOURCES = [
+        'employee' => 'Employee Portal',
+        'admin'    => 'Backend (Admin)',
     ];
 
     public function reporter(): BelongsTo
@@ -118,5 +125,19 @@ class IncidentReport extends Model
             'moderate' => 'bg-warning text-dark',
             'serious'  => 'bg-danger',
         ][$this->severity] ?? 'bg-secondary';
+    }
+
+    public function getSourceLabelAttribute(): string
+    {
+        return self::SOURCES[$this->source] ?? ucfirst((string) $this->source);
+    }
+
+    /** Bootstrap badge class for the report source. */
+    public function getSourceBadgeAttribute(): string
+    {
+        return [
+            'employee' => 'bg-primary',
+            'admin'    => 'bg-secondary',
+        ][$this->source] ?? 'bg-secondary';
     }
 }
