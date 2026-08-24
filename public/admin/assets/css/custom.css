@@ -69,6 +69,11 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 .perm-matrix th.sec-col { min-width: 140px; }
 
 /* ---- File / image preview helpers ---- */
+/* Keep the Preview (eye) icon visible at rest — the theme leaves bare <button>
+   outline icons blank, so it only appeared on hover. Force the resting colour. */
+.preview-btn { color: #FE6A49 !important; }
+.preview-btn:hover, .preview-btn:focus, .preview-btn:active { color: #fff !important; }
+.preview-btn i { color: inherit !important; }
 .preview-modal-body { min-height: 70vh; background: #f4f4f4; }
 .preview-img-modal-body { background: #f4f4f4; }
 .thumb-52 { width: 52px; height: 52px; object-fit: cover; border-radius: 6px; cursor: pointer; }
