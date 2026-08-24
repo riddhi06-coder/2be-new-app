@@ -207,16 +207,16 @@
 
 
                 @if($can('calendar.view'))
-                <li class="sidebar-list {{ request()->routeIs('admin.calendar.*') ? 'active' : '' }}">
+                <li class="sidebar-list {{ request()->routeIs('admin.community-calendar.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
-                  <a class="sidebar-link" href="{{ route('admin.calendar.index') }}">
+                  <a class="sidebar-link" href="{{ route('admin.community-calendar.index') }}">
                     <svg class="stroke-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-calendar') }}"></use>
                     </svg>
                     <svg class="fill-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-calender') }}"></use>
                     </svg>
-                    <span>Team Calendar</span>
+                    <span>Community Calendar</span>
                   </a>
                 </li>
                 @endif

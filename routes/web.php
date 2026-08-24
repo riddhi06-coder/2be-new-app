@@ -160,13 +160,13 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
 
 
     // ==================== Career Portal — Team Calendar ====================
-    Route::get('calendar',                  [CalendarEventController::class, 'index'])->middleware('permission:calendar.view')->name('admin.calendar.index');
-    Route::get('calendar/events',           [CalendarEventController::class, 'events'])->middleware('permission:calendar.view')->name('admin.calendar.events');
-    Route::get('calendar/create',           [CalendarEventController::class, 'create'])->middleware('permission:calendar.create')->name('admin.calendar.create');
-    Route::post('calendar',                 [CalendarEventController::class, 'store'])->middleware('permission:calendar.create')->name('admin.calendar.store');
-    Route::get('calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.calendar.edit');
-    Route::put('calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.calendar.update');
-    Route::delete('calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.calendar.destroy');
+    Route::get('community-calendar',                  [CalendarEventController::class, 'index'])->middleware('permission:calendar.view')->name('admin.community-calendar.index');
+    Route::get('community-calendar/events',           [CalendarEventController::class, 'events'])->middleware('permission:calendar.view')->name('admin.community-calendar.events');
+    Route::get('community-calendar/create',           [CalendarEventController::class, 'create'])->middleware('permission:calendar.create')->name('admin.community-calendar.create');
+    Route::post('community-calendar',                 [CalendarEventController::class, 'store'])->middleware('permission:calendar.create')->name('admin.community-calendar.store');
+    Route::get('community-calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.community-calendar.edit');
+    Route::put('community-calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.community-calendar.update');
+    Route::delete('community-calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.community-calendar.destroy');
 });
 
 

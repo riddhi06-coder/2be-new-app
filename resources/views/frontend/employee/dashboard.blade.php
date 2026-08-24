@@ -109,10 +109,10 @@
                         <!-- Box 5 -->
                         <div class="psdude-info-box">
                         <div class="psdude-info-box__icon">
-                            <img src="{{ asset('frontend/assets/images/time.svg') }}" alt="Current Month Team Calendar" />
+                            <img src="{{ asset('frontend/assets/images/time.svg') }}" alt="Current Month Community Calendar" />
                         </div>
 
-                        <h3>Current Month<br />Team Calendar</h3>
+                        <h3>Current Month<br />Community Calendar</h3>
                         <span class="psdude-info-box__line"></span>
 
                         <p>View team schedule<br />and important dates</p>

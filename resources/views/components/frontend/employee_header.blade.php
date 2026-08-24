@@ -27,10 +27,12 @@
                         <a class="nav-link" href="{{ route('frontend.employee_documents') }}"> DOCUMENT LIBRARY </a>
                     </li>
                  
-                    <!-- Incident Report -->
+                    @auth
+                    <!-- Incident Report (logged-in only) -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('frontend.employee_incident_report') }}"> INCIDENT REPORT </a>
                     </li>
+                    @endauth
 
 
                     <!-- Announcements -->
@@ -38,9 +40,9 @@
                         <a class="nav-link" href="{{ route('frontend.employee_announcements') }}"> ANNOUNCEMENTS </a>
                     </li>
                   
-                    <!-- Team Calendar -->
+                    <!-- Community Calendar -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> TEAM CALENDAR </a>
+                        <a class="nav-link" href="#"> COMMUNITY CALENDAR </a>
                     </li>
                     </ul>
                 </div>

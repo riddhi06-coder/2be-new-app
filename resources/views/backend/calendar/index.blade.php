@@ -12,10 +12,10 @@
     <div class="container-fluid">
         <div class="page-title">
             <div class="row">
-                <div class="col-6"><h3>Team Calendar</h3></div>
+                <div class="col-6"><h3>Community Calendar</h3></div>
                 <div class="col-6 text-end">
                     @if(auth()->user()->hasPermission('calendar.create'))
-                        <a href="{{ route('admin.calendar.create') }}" class="btn btn-primary">+ New Event</a>
+                        <a href="{{ route('admin.community-calendar.create') }}" class="btn btn-primary">+ New Event</a>
                     @endif
                 </div>
             </div>
@@ -87,10 +87,10 @@
                                             <td class="text-end">
                                                 <div class="d-flex gap-1 justify-content-end">
                                                     @if(auth()->user()->hasPermission('calendar.edit'))
-                                                        <a href="{{ route('admin.calendar.edit', $e) }}" class="btn btn-sm btn-primary">Edit</a>
+                                                        <a href="{{ route('admin.community-calendar.edit', $e) }}" class="btn btn-sm btn-primary">Edit</a>
                                                     @endif
                                                     @if(auth()->user()->hasPermission('calendar.delete'))
-                                                        <form action="{{ route('admin.calendar.destroy', $e) }}" method="POST" class="m-0" onsubmit="return confirm('Delete this event?')">
+                                                        <form action="{{ route('admin.community-calendar.destroy', $e) }}" method="POST" class="m-0" onsubmit="return confirm('Delete this event?')">
                                                             @csrf @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                                         </form>
@@ -138,7 +138,7 @@
             eventDisplay: 'block',
             displayEventTime: true,
             eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
-            events: '{{ route('admin.calendar.events') }}',
+            events: '{{ route('admin.community-calendar.events') }}',
             // Keep the month picker in sync with whatever month is being viewed.
             datesSet: function () {
                 if (picker) {
@@ -154,7 +154,7 @@
             },
             dateClick: function (info) {
                 if (canCreate) {
-                    window.location = '{{ route('admin.calendar.create') }}?date=' + info.dateStr;
+                    window.location = '{{ route('admin.community-calendar.create') }}?date=' + info.dateStr;
                 }
             }
         });

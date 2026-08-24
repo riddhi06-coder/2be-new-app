@@ -310,7 +310,7 @@
                   $hrCards[] = ['route' => route('admin.incident-reports.index'), 'icon' => 'fa-exclamation-triangle', 'color' => '#dc3545', 'label' => 'Incident Reports', 'count' => \App\Models\IncidentReport::count(), 'meta' => \App\Models\IncidentReport::where('status', 'open')->count().' open'];
               }
               if ($u->hasPermission('calendar.view')) {
-                  $hrCards[] = ['route' => route('admin.calendar.index'), 'icon' => 'fa-calendar', 'color' => '#7c3aed', 'label' => 'Team Calendar', 'count' => \App\Models\CalendarEvent::where('is_active', true)->count(), 'meta' => 'events scheduled'];
+                  $hrCards[] = ['route' => route('admin.community-calendar.index'), 'icon' => 'fa-calendar', 'color' => '#7c3aed', 'label' => 'Community Calendar', 'count' => \App\Models\CalendarEvent::where('is_active', true)->count(), 'meta' => 'events scheduled'];
               }
           @endphp
 

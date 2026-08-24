@@ -66,7 +66,7 @@ class CalendarEventController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
-        return redirect()->route('admin.calendar.index')->with('message', 'Event added successfully.');
+        return redirect()->route('admin.community-calendar.index')->with('message', 'Event added successfully.');
     }
 
     public function edit(CalendarEvent $calendar)
@@ -83,13 +83,13 @@ class CalendarEventController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return redirect()->route('admin.calendar.index')->with('message', 'Event updated successfully.');
+        return redirect()->route('admin.community-calendar.index')->with('message', 'Event updated successfully.');
     }
 
     public function destroy(CalendarEvent $calendar)
     {
         $calendar->delete();
-        return redirect()->route('admin.calendar.index')->with('message', 'Event deleted successfully.');
+        return redirect()->route('admin.community-calendar.index')->with('message', 'Event deleted successfully.');
     }
 
     private function validateEvent(Request $request): array
