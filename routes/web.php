@@ -20,7 +20,7 @@ use App\Http\Controllers\Backend\CalendarEventController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
 use App\Http\Controllers\Frontend\SepticController;
-
+use App\Http\Controllers\Frontend\EmployeesController;
 
 // =========================================================================== Backend Routes
 
@@ -191,4 +191,10 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/septic-systems', [SepticController::class, 'septic_systems'])->name('frontend.septic_systems');
     Route::post('/septic-systems', [SepticController::class, 'store_septic'])->name('septic.store');
     Route::post('/septic-systems/draft', [SepticController::class, 'save_draft'])->name('septic.draft');    
+
+
+    Route::get('/employee-login', [EmployeesController::class, 'employee_login'])->name('frontend.employee_login');
+
+
+
 });

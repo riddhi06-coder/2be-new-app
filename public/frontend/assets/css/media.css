@@ -12,10 +12,219 @@
 }
 
 @media (max-width:1200px){
+ .navigation .container-fluid {
+        padding: 0 15px;
+    }
 
+    .logo img {
+        width: 180px;
+    }
+
+    .nav-menu .nav-link {
+        font-size: 10px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .employee-dropdown {
+        padding-left: 15px;
+    }
+
+    .employee-text small {
+        font-size: 10px;
+    }
+
+    .employee-text strong {
+        font-size: 11px;
+    }
 }
 
 @media (max-width:991px){
+  .pumping-log-boxes-wrap .psdude-info-boxes {
+        flex-wrap: wrap;
+    }
+
+    .pumping-log-boxes-wrap .psdude-info-box {
+        flex: 0 0 calc(33.333% - 8px);
+    }
+    .navigation .container-fluid {
+        padding: 0 15px;
+    }
+
+
+    /* Header first row */
+
+    .navigation .navbar {
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+
+    /* Logo */
+
+    .logo {
+        flex: 0 1 auto;
+    }
+
+    .logo img {
+        width: 175px;
+    }
+
+
+    /* Right side */
+
+    .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+    }
+
+
+    /* Employee */
+
+    .employee-dropdown {
+        border-left: none;
+        padding-left: 0;
+    }
+
+    .employee-text {
+        display: none;
+    }
+
+    .employee-link::after {
+        display: none;
+    }
+
+    .user-icon {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+        font-size: 17px;
+    }
+
+
+    /* Hamburger */
+
+    .navbar-toggler {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 42px;
+        height: 38px;
+        padding: 0;
+    }
+
+
+    /* ====================================
+       MOBILE COLLAPSE - SMOOTH
+    ==================================== */
+
+    .nav-menu {
+        flex-basis: 100%;
+        width: 100%;
+        order: 3;
+
+        margin-top: 8px;
+        background: #ffffff;
+        border-top: 1px solid #e5e5e5;
+    }
+
+
+    /*
+       IMPORTANT:
+       Do NOT use:
+
+       .nav-menu:not(.show) {
+           display: none;
+       }
+
+       .nav-menu.show {
+           display: block;
+       }
+
+       Bootstrap handles these automatically.
+    */
+
+
+    /* Mobile navigation */
+
+    .nav-menu .navbar-nav {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-menu .nav-item {
+        width: 100%;
+    }
+
+    .nav-menu .nav-link {
+        width: 100%;
+        padding: 14px 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+    /* Active line on left */
+
+    .nav-menu .nav-link.active::after {
+        left: 0;
+        right: auto;
+        bottom: 0;
+        width: 4px;
+        height: 100%;
+    }
+
+
+    /* ====================================
+       MOBILE DROPDOWN
+    ==================================== */
+
+    .nav-menu .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: 100%;
+
+        min-width: 100%;
+        margin: 0;
+
+        padding: 0;
+
+        border: none;
+        border-radius: 0;
+
+        box-shadow: none;
+
+        background: #f7f8fa;
+    }
+
+
+    .nav-menu .dropdown-item {
+        padding: 13px 15px 13px 35px;
+        font-size: 13px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+
+    /* Rotate dropdown arrow */
+
+    .nav-menu .dropdown-toggle::after {
+        float: right;
+        margin-top: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .nav-menu .dropdown-toggle.show::after {
+        transform: rotate(180deg);
+    }
+
 .log-box {
     width: 100%;
 }
@@ -62,6 +271,87 @@
 }
 
 @media (max-width:768px){
+    .incident-form-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .form-buttons {
+        width: 100%;
+    }
+
+    .form-buttons .btn {
+        flex: 1;
+    }
+  .pumping-forget-password--wrap {
+    padding: 25px 12px;
+    align-items: flex-start;
+  }
+
+  .pumping-forget-password--wrap
+  .pumping-forget-password-content {
+    padding: 30px 20px 25px;
+  }
+
+  .pumping-forget-password--wrap h2 {
+    font-size: 23px;
+  }
+
+  .pumping-forget-password--wrap
+  .pumping-forget-password-icon {
+    width: 76px;
+    height: 76px;
+  }
+
+  .pumping-forget-password--wrap
+  .pumping-forget-password-security {
+    padding: 15px;
+  }
+
+  .pumping-forget-password--wrap
+  .pumping-forget-password-subtitle {
+    font-size: 13px;
+  }
+
+  .pumping-forget-password--wrap
+  .pumping-forget-password-security p {
+    font-size: 10px;
+  }
+    .pumping-login {
+        padding: 20px 10px;
+
+        background-position: left center;
+    }
+
+
+    .pumping-login .pumping-login-box {
+        padding: 30px 20px;
+    }
+
+
+    .pumping-login .pumping-login-content h2 {
+        font-size: 21px;
+    }
+   .announcement-boxes-wrap .announcement-box {
+        flex-direction: column;
+    }
+
+    .announcement-boxes-wrap .announcement-content,
+    .announcement-boxes-wrap .safety-banner {
+        width: 100%;
+    }
+
+    .announcement-boxes-wrap .announcement-date {
+        display: none;
+    }
+
+    .announcement-boxes-wrap .safety-banner {
+        min-height: 220px;
+    }
+    .pumping-log-boxes-wrap .psdude-info-box {
+        flex: 0 0 calc(50% - 6px);
+    }
 .inspection-form-wrap {
     flex-direction: column;
     width: 100%;
@@ -82,6 +372,37 @@
 .stepper {
     max-width: 100%;
 }
+.navigation .container-fluid {
+        padding: 0 12px;
+    }
+
+    .navigation .navbar {
+        min-height: 65px;
+    }
+
+    .logo img {
+        width: 145px;
+    }
+
+    .header-right {
+        gap: 7px;
+    }
+
+    .user-icon {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        font-size: 15px;
+    }
+
+    .navbar-toggler {
+        width: 38px;
+        height: 34px;
+    }
+
+    .navbar-toggler i {
+        font-size: 18px;
+    }
 }
 
 @media (max-width:640px){
@@ -121,6 +442,13 @@
 }
 
 @media (max-width:480px){
+   .pumping-log-boxes-wrap .psdude-info-boxes {
+        gap: 15px;
+    }
+
+    .pumping-log-boxes-wrap .psdude-info-box {
+        flex: 0 0 100%;
+    }
 .inspection-text {
         flex: 1;
     }
@@ -152,6 +480,16 @@
     font-weight: 400;
 }
 
+    .logo img {
+        width: 120px;
+    }
+
+    .header-right {
+        gap: 5px;
+    }
+
+}
+
 @media (max-width:360px){
 .log-box h2 {
     font-size: 24px;
@@ -165,4 +503,5 @@
     .single-inspection-form img {
     width: 50px;
 }
+
 }

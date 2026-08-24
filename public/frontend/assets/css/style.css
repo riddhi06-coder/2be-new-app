@@ -331,7 +331,7 @@ footer{
     margin-bottom: 10px;
 }
 textarea.form-control {
-    height: 56px;
+    height: 80px;
 }
 .form-select {
     height: 54px;
@@ -577,68 +577,1910 @@ label{
 .color-blue{
     color: #0004fe;
 }
+/* ========================================
+   MAIN NAVIGATION
+======================================== */
+
+.navigation {
+    width: 100%;
+    background: #f7f8fa;
+    border-bottom: 4px solid #e2e5eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.navigation .container-fluid {
+    padding: 0 25px;
+}
+
+.navigation .navbar {
+    min-height: 90px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
 
 
+/* ========================================
+   LOGO
+======================================== */
+
+.logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.logo a {
+    display: block;
+}
+
+.logo img {
+    width: 100px;
+    height: auto;
+    display: block;
+}
 
 
+/* ========================================
+   DESKTOP NAVIGATION
+======================================== */
 
+.nav-menu {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
 
-.success-wrap {
-    min-height: calc(92vh - 92px); 
+.nav-menu .navbar-nav {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f0f7ff, #dbefff);
-    padding: 20px;
 }
 
-.success-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 50px 35px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-    text-align: center;
-    max-width: 480px;
-    margin: auto;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.nav-menu .nav-link {
+    position: relative;
+    padding: 35px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #292929;
+    white-space: nowrap;
+    transition: color 0.3s ease;
 }
 
-.success-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+.nav-menu .nav-link:hover {
+    color: #234cc8;
 }
 
-.success-icon {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 25px;
+.nav-menu .nav-link.active {
+    color: #234cc8;
+    font-weight: 600;
+}
+
+
+/* Active Line */
+
+.nav-menu .nav-link.active::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 14px;
+    height: 3px;
+    background: #234cc8;
+    border-radius: 5px;
+}
+
+
+/* ========================================
+   NAVIGATION DROPDOWN
+======================================== */
+
+.nav-menu .dropdown-menu {
+    min-width: 210px;
+    padding: 8px 0;
+    margin-top: 0;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.nav-menu .dropdown-item {
+    padding: 7px 18px;
+    font-size: 15px;
+    color: #333;
+    transition: 0.2s ease;
+}
+
+.nav-menu .dropdown-item:hover {
+    background: #f4f6fb;
+    color: #234cc8;
+}
+
+
+/* ========================================
+   RIGHT SIDE
+======================================== */
+
+.header-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+
+/* ========================================
+   EMPLOYEE LOGIN
+======================================== */
+
+.employee-dropdown {
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #d8dce3;
+    padding-left: 25px;
+}
+
+.employee-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.employee-link:hover {
+    color: #234cc8;
+}
+
+.employee-link::after {
+    margin-left: 8px;
+}
+
+.user-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+
+    border: 2px solid #234cc8;
     border-radius: 50%;
-    background: #e0f0ff;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: pop-in 0.6s ease;
+
+    color: #234cc8;
+    font-size: 19px;
 }
 
-.success-icon img {
+.employee-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.employee-text small {
+    font-size: 13px;
+    color: #555;
+}
+
+.employee-text strong {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    font-family: 'SofiaSans-Bold';
+}
+
+
+/* ========================================
+   EMPLOYEE DROPDOWN
+======================================== */
+
+.employee-dropdown .dropdown-menu {
+    min-width: 180px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.employee-dropdown .dropdown-item {
+    padding: 10px 18px;
+    font-size: 14px;
+}
+
+.employee-dropdown .dropdown-item i {
+    width: 22px;
+    color: #234cc8;
+}
+
+
+/* ========================================
+   HAMBURGER BUTTON
+======================================== */
+
+.navbar-toggler {
+    display: none;
+    border: 1px solid #234cc8;
+    border-radius: 4px;
+    color: #234cc8;
+    padding: 6px 10px;
+    box-shadow: none !important;
+}
+
+.navbar-toggler i {
+    font-size: 21px;
+}
+
+
+/* ========================================
+   LARGE TABLET / SMALL DESKTOP
+======================================== */
+
+
+    .pumping-log {
+      position: relative;
+      isolation: isolate;
+
+      display: flex;
+      align-items: center;
+
+      padding: 80px 0px 130px 0;
+
+    background-image: linear-gradient(90deg, #0004fe 0%, #0004feb8 45%, #0004fe0f 100%), url(../images/bg-img.webp);
+
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+
+    /* Dark / blue overlay */
+    .pumping-log::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      z-index: -1;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(5, 23, 70, 0.5),
+          rgba(10, 55, 145, 0.08)
+        );
+    }
+
+
+    /* Curved bottom shape */
+    /*.pumping-log::after {
+      content: "";
+    position: absolute;
+    left: -10%;
+    bottom: -42px;
+    width: 120%;
+    height: 75px;
+    background: #f5f6f8;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    transform: rotate(1.5deg);
+    transform-origin: center;
+    z-index: 2;
+    pointer-events: none;
+    }*/
+
+.shape-one{
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    transform: rotate(180deg);
+}
+.shape-one path.elementor-shape-fill {
+    fill: #fff;
+}
+    /* ==============================
+       Content
+    ============================== */
+
+    .pumping-log__content {
+      position: relative;
+      z-index: 1;
+
+
+      color: #ffffff;
+    }
+
+
+    /* Red accent line using pseudo */
+    .pumping-log__content::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 2px;
+    margin-bottom: 6px;
+    background: #ff2020;
+    }
+
+
+    .pumping-log__welcome {
+      margin: 0 0 2px;
+
+      font-size: 24px;
+      font-weight: 400;
+
+      color: #e8ebf2;
+    }
+
+
+    .pumping-log__title {
+      margin: 0 0 10px;
+      font-size: 46px;
+      font-weight: 500;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+
+    .pumping-log__brand {
+      color: #ff1d1d;
+    }
+
+
+    .pumping-log__description {
+      margin: 0;
+
+      line-height: 1.6;
+
+      color: #d9deea;
+    }
+
+/* =========================================
+   Pumping Log Info Boxes
+========================================= */
+
+.pumping-log-boxes-wrap {
+    padding: 80px 0;
+}
+
+.pumping-log-boxes-wrap .psdude-info-boxes {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.pumping-log-boxes-wrap .psdude-info-box {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 225px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 25px 20px 20px;
+    text-align: center;
+
+    background: #fff;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Icon */
+.pumping-log-boxes-wrap .psdude-info-box__icon {
     width: 80px;
     height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    background-color: #c6e7f8;
+    border-radius: 50%;
+    padding: 16px;
 }
 
-@keyframes pop-in {
-    0% { transform: scale(0); opacity: 0; }
-    70% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); }
+.pumping-log-boxes-wrap .psdude-info-box__icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    width: 60px;
 }
 
-.success-card h1 {
-    font-size: 32px;
+/* Heading */
+.pumping-log-boxes-wrap .psdude-info-box h3 {
+    margin: 0;
+    color: #1d2b4f;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 700;
+}
+
+/* Small blue line */
+.pumping-log-boxes-wrap .psdude-info-box__line {
+    display: block;
+
+    width: 18px;
+    height: 2px;
+
+    margin: 8px 0 8px;
+
+    background: #244aa5;
+    border-radius: 5px;
+}
+
+/* Description */
+.pumping-log-boxes-wrap .psdude-info-box p {
+    margin: 0;
+    min-height: 38px;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 20px;
+}
+
+/* Button */
+.pumping-log-boxes-wrap .psdude-info-box__btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    transition: 0.3s ease;
+}
+
+.pumping-log-boxes-wrap .psdude-info-box__btn:hover {
+    background: #102d73;
+    color: #fff;
+}
+
+.pumping-log-boxes-wrap .psdude-info-box__btn span {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* Red incident button */
+.pumping-log-boxes-wrap .psdude-info-box__btn--red {
+    background: #ed0c18;
+    border-color: #ed0c18;
+}
+
+.pumping-log-boxes-wrap .psdude-info-box__btn--red:hover {
+    background: #c90913;
+}
+.announcement-boxes-wrap{
+    padding: 0 0 80px 0;
+}
+
+.announcement-boxes-wrap .announcement-box {
+    display: flex;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Left Content */
+.announcement-boxes-wrap .announcement-content {
+    width: 72%;
+    padding: 10px 18px 12px;
+}
+
+/* Header */
+.announcement-boxes-wrap .announcement-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0 12px;
+    border-bottom: 1px solid #e9edf2;
+}
+
+.announcement-boxes-wrap .announcement-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.announcement-boxes-wrap .header-icon {
+    width: 55px;
+    height: 55px;
+    font-size: 14px;
+    background: #fff1f1;
+    color: #e51c23;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.announcement-boxes-wrap .header-icon i{
+    font-size: 18px;
+}
+.announcement-boxes-wrap .announcement-title h3 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    color: #28364a;
+}
+
+.announcement-boxes-wrap .announcement-title p {
+    margin: 3px 0 0;
+    color: #7d8794;
+}
+
+.announcement-boxes-wrap .view-announcements {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #274a82;
+    font-weight: 600;
+    font-family: 'SofiaSans-Bold';
+}
+
+.announcement-boxes-wrap .arrow {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #dfe5ec;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Announcement Items */
+.announcement-boxes-wrap .announcement-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eef1f4;
+}
+
+.announcement-boxes-wrap .announcement-item:last-child {
+    border-bottom: 0;
+}
+
+.announcement-boxes-wrap .announcement-icon {
+    width: 55px;
+    height: 55px;
+    min-width: 55px;
+    border-radius: 50%;
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.announcement-boxes-wrap .new-icon {
+    background: #e62029;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.announcement-boxes-wrap .holiday-icon,
+.announcement-boxes-wrap .policy-icon {
+    background: #0004fe;
+    color: #fff;
+}
+
+.announcement-boxes-wrap .announcement-info {
+    flex: 1;
+}
+
+.announcement-boxes-wrap .announcement-info h4 {
+    margin: 0 0 3px;
+    color: #303d4f;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.announcement-boxes-wrap .due-date {
+    color: #e42029;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.announcement-boxes-wrap .announcement-info p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.announcement-boxes-wrap .announcement-date {
+    width: 15%;
+    font-size: 14px;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.announcement-boxes-wrap .announcement-date i {
+    color: #294a7d;
+    margin-right: 6px;
+}
+
+/* Right Safety Section */
+.announcement-boxes-wrap .safety-banner {
+    width: 28%;
+    min-height: 175px;
+    position: relative;
+    background: url("../images/safety-worker.webp") center / cover no-repeat;
+}
+
+.announcement-boxes-wrap .safety-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.96),
+        rgba(255, 255, 255, 0.15)
+    );
+}
+
+.announcement-boxes-wrap .safety-content {
+    position: relative;
+    z-index: 2;
+    padding: 43px 20px;
+}
+
+.announcement-boxes-wrap .safety-content h3 {
+    margin: 0;
+    color: #26354a;
+    font-size: 26px;
+    line-height: 1.35;
+    font-weight: 700;
+}
+
+.announcement-boxes-wrap .safety-content h3 span {
+    color: #df1f2b;
+}
+
+.announcement-boxes-wrap .red-line {
+    width: 14px;
+    height: 2px;
+    background: #df1f2b;
+    margin: 10px 0 12px;
+}
+
+.announcement-boxes-wrap .safety-content p {
+    margin: 0;
+    line-height: 1.5;
+    color: #556171;
+}
+
+/* =========================================
+   PUMPING LOGIN
+   All styles scoped inside parent class
+========================================= */
+
+.pumping-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 40px 0;
+
+    /* Use your uploaded image here */
+    background-image: url("../images/login.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+
+/* Optional overlay */
+
+.pumping-login::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(14 39 100 / 76%);
+}
+
+
+.pumping-login .container {
+    position: relative;
+    z-index: 2;
+}
+
+
+.pumping-login .col-md-12 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Login Box */
+
+.pumping-login .pumping-login-box {
+    width: 100%;
+    max-width: 460px;
+
+    background: rgba(255, 255, 255, 0.96);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.15);
+
+    padding: 35px 26px 30px;
+}
+
+
+/* Heading */
+
+.pumping-login .pumping-login-content h2 {
+    color: #263750;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    text-align: center;
+
+    margin: 0 0 10px;
+}
+
+
+/* Red Line */
+
+.pumping-login .pumping-login-line {
+    width: 28px;
+    height: 2px;
+
+    background: #e73b3b;
+
+    margin: 0 auto 14px;
+}
+
+
+/* Subtitle */
+
+.pumping-login .pumping-login-subtitle {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+/* Form Group */
+
+.pumping-login .pumping-login-group {
+    margin-bottom: 18px;
+}
+
+
+.pumping-login .pumping-login-group label {
+    display: block;
+    font-size: 16px;
+}
+
+
+/* Input */
+
+.pumping-login .pumping-login-input {
+    position: relative;
+}
+
+
+
+
+
+.pumping-login .pumping-login-input input {
+/*    width: 100%;
+    height: 48px;
+
+    border: 1px solid #d6dce5;
+    border-radius: 7px;
+
+
+    outline: none;
+
+    color: #34435a;
+
+    font-size: 12px;
+
+    background: #fff;
+
+    transition: all 0.3s ease;*/
+}
+
+
+.pumping-login .pumping-login-input input:focus {
+    border-color: #2747c7;
+
+    box-shadow: 0 0 0 3px rgba(39, 71, 199, 0.08);
+}
+
+
+.pumping-login .pumping-login-input input::placeholder {
+    color: #9aa2af;
+}
+
+
+/* Password Eye */
+
+.pumping-login .pumping-login-eye {
+    position: absolute;
+
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #7b8596;
+
+    cursor: pointer;
+
+    z-index: 3;
+}
+
+
+/* Remember / Forgot */
+
+.pumping-login .pumping-login-options {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 2px 0 20px;
+
+    font-size: 11px;
+}
+
+
+.pumping-login .pumping-login-remember {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #3d4b61;
+
+    cursor: pointer;
+}
+
+
+.pumping-login .pumping-login-remember input {
+    width: 14px;
+    height: 14px;
+
+    cursor: pointer;
+}
+
+
+.pumping-login .pumping-login-options a {
+    color: #2846b8;
+
+    font-weight: 500;
+
+    font-size: 14px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+
+.pumping-login .pumping-login-options a:hover {
+    color: #e73b3b;
+}
+
+
+/* Sign In Button */
+
+.pumping-login .pumping-login-signin {
+/*    width: 100%;
+    height: 46px;
+
+    border: none;
+    border-radius: 5px;
+
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+        90deg,
+        #2948c7,
+        #1935b6
+    );
+
+    box-shadow:
+        0 8px 18px rgba(32, 60, 180, 0.20);
+
+    transition: all 0.3s ease;*/
+}
+
+
+.pumping-login .pumping-login-signin i {
+    margin-right: 7px;
+}
+
+
+.pumping-login .pumping-login-signin:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(32, 60, 180, 0.30);
+}
+
+
+/* OR Divider */
+
+.pumping-login .pumping-login-or {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #7a8493;
+
+    font-size: 16px;
+
+    margin: 10px 0;
+}
+
+
+.pumping-login .pumping-login-or::before,
+.pumping-login .pumping-login-or::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #dfe3e9;
+}
+
+
+/* Guest Button */
+
+.pumping-login .pumping-login-guest {
+/*    width: 100%;
+    height: 40px;
+
+    background: transparent;
+
+    border: 1px solid #6980d5;
+    border-radius: 5px;
+
+    color: #2744b8;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;*/
+}
+
+
+.pumping-login .pumping-login-guest i {
+    margin-right: 7px;
+}
+
+
+.pumping-login .pumping-login-guest:hover {
+    background: #edf1ff;
+}
+
+
+/* Security Section */
+
+.pumping-login .pumping-login-security {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    color: #344157;
+    background-color: #c6e7f8;
+    border: 1px solid #74c2ea;
+    padding: 5px 5px;
+    border-radius: 10px;
+}
+
+
+.pumping-login .pumping-login-shield {
+    color: #e73b3b;
+
+    font-size: 20px;
+}
+
+
+.pumping-login .pumping-login-security strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+
+.pumping-login .pumping-login-security span {
+    display: block;
+    font-size: 12px;
+    color: #4d596c;
+    line-height: 1;
+}
+
+
+/* =========================================
+   Responsive
+========================================= */
+/* =========================================
+   FORGOT PASSWORD SECTION
+========================================= */
+
+.pumping-forget-password--wrap {
+  min-height: 100vh;
+  padding: 40px 15px 55px;
+  background-color: #f8f9fc;
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(38, 74, 160, 0.12) 1px,
+      transparent 1px
+    );
+  background-size: 8px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Bootstrap container alignment */
+
+.pumping-forget-password--wrap .container {
+  max-width: 650px;
+  width: 100%;
+}
+
+
+.pumping-forget-password--wrap .col-md-12 {
+  padding: 0;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-box {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e5e8ef;
+  border-radius: 14px;
+  box-shadow:
+    0 12px 35px rgba(31, 55, 100, 0.10);
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-content {
+  padding: 38px 34px 28px;
+  text-align: center;
+}
+
+
+/* =========================================
+   TOP ICON
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: #c5e8f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-icon img {
+  width: 50px;
+  height: 50px;
+  fill: none;
+  stroke: #1743ad;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.pumping-forget-password--wrap h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #243047;
+  line-height: 1.3;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-line {
+    width: 24px;
+    height: 2px;
+    margin: 8px auto 10px;
+    background: #ef4d4d;
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-subtitle {
+  margin: 0 0 28px;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-group label {
+
+}
+
+
+/* Input Wrapper */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-input {
+  position: relative;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-input .form-control {
+
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-input .form-control::placeholder {
+  color: #9aa4b2;
+  opacity: 1;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-input .form-control:focus {
+  border-color: #1f46b8;
+  box-shadow: 0 0 0 3px rgba(31, 70, 184, 0.08);
+}
+
+
+/* Email Icon */
+
+.pumping-forget-password--wrap
+.pumping-email-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+
+  transform: translateY(-50%);
+
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-email-icon svg {
+  width: 17px;
+  height: 17px;
+
+  fill: none;
+  stroke: #6f7b8e;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================
+   SUBMIT BUTTON
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-submit:hover {
+  background: #102f91;
+  box-shadow: 0 7px 18px rgba(23, 62, 175, 0.25);
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-submit:active {
+  transform: translateY(1px);
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-submit svg {
+  width: 16px;
+  height: 16px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================
+   OR DIVIDER
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin: 10px 0;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-divider span {
+  flex: 1;
+  height: 1px;
+  background: #e1e5ec;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-divider small {
+  color: #8b94a3;
+  font-size: 16px;
+}
+
+
+/* =========================================
+   BACK TO LOGIN BUTTON
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-back {
+  width: 100%;
+
+  border: 1px solid #3158c4 !important;
+  color: #0004fe !important;
+  background: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  transition: all 0.25s ease;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-back:hover {
+  color: #ffffff !important;
+  background: #0004fe;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-back svg {
+  width: 17px;
+  height: 17px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================
+   SECURITY NOTE
+========================================= */
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security {
+  width: 100%;
+  max-width: 500px;
+
+  margin: 15px auto 0;
+  padding: 18px 20px;
+
+  background: #f4f7fc;
+  border: 1px solid #dce3ef;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security-icon {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security-icon svg {
+  width: 22px;
+  height: 22px;
+
+  fill: none;
+  stroke: #0004fe;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security-content {
+  text-align: left;
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security strong {
+    display: block;
+    margin-bottom: 0;
+    color: #0004fe;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'SofiaSans-Bold';
+}
+
+
+.pumping-forget-password--wrap
+.pumping-forget-password-security p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+.pumping-incident-report-wrap{
+
+}
+.pumping-incident-report-wrap {
+    background: #f7f8fc;
+    padding: 30px 0;
+}
+
+.incident-report-box {
+    background: #ffffff;
+    border: 1px solid #edf0f5;
+    border-radius: 8px;
+    padding: 50px 60px 30px 60px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.incident-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.incident-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #16479e;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.incident-title h4 {
+    font-size: 26px;
+    font-weight: 600;
+    font-family: 'SofiaSans-Bold';
+    margin: 0;
+}
+
+.form-group {
     margin-bottom: 15px;
 }
 
-.success-card p {
-    color: #555;
-    font-size: 18px;
+.form-group label {
+
+}
+
+.form-group label span {
+    color: #e51b23;
+}
+
+.form-control {
+
+}
+
+textarea.form-control {
+
+}
+
+.form-control:focus {
+    border-color: #16479e;
+    box-shadow: none;
+}
+
+/* Upload Photos */
+.upload-photo-box {
+    position: relative;
+    height: 100px;
+    border: 1px dashed #8bb0f0;
+    border-radius: 5px;
+    background: #fafcff;
+    text-align: center;
+    overflow: hidden;
+}
+
+.upload-photo-box input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.upload-content {
+    padding-top: 15px;
+}
+
+.upload-content i {
+    display: block;
+    font-size: 25px;
+    color: #1655c0;
+    margin-bottom: 4px;
+}
+
+.upload-content strong {
+    display: block;
+    font-size: 15px;
+    color: #374151;
+}
+
+.upload-content p {
+    font-size: 12px;
+    color: #1d4ea5;
+    margin: 3px 0;
+}
+
+.upload-content small {
+    font-size: 8px;
+    color: #9ca3af;
+}
+
+/* Footer */
+.incident-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 5px;
+}
+
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* =========================================
+   MY DOCUMENTS SECTION
+========================================= */
+
+.pumping-document-wrap {
+    padding: 32px 0 70px;
+    background: #f7f8fc;
+}
+
+.pumping-document-wrap * {
+    box-sizing: border-box;
+}
+
+.pumping-document-wrap .pumping-document-box {
+    background: #ffffff;
+    border: 1px solid #e4e8f0;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(20, 44, 90, 0.08);
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.pumping-document-wrap .pumping-document-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
     margin-bottom: 30px;
+}
+
+.pumping-document-wrap .pumping-document-head h2 {
+    margin: 0 0 6px;
+    color: #172a4d;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.pumping-document-wrap .pumping-document-head p {
+    margin: 0;
+    color: #62708a;
+    font-size: 16px;
+}
+
+
+/* =========================================
+   SEARCH + VIEW BUTTONS
+========================================= */
+
+.pumping-document-wrap .pumping-document-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pumping-document-wrap .pumping-search-box {
+    width: 320px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.pumping-document-wrap .pumping-search-box input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d9dfeb;
+    border-radius: 10px;
+    padding: 0 18px 0 48px;
+    color: #33425c;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.pumping-document-wrap .pumping-search-box input:focus {
+    border-color: #2455c3;
+    box-shadow: 0 0 0 3px rgba(36, 85, 195, 0.08);
+}
+
+.pumping-document-wrap .pumping-search-icon {
+    position: absolute;
+    left: 17px;
+    z-index: 2;
+    color: #5b6b85;
+    font-size: 18px;
+}
+
+
+/* =========================================
+   DOCUMENT GRID
+========================================= */
+
+.pumping-document-wrap .pumping-document-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 26px;
+}
+
+
+/* =========================================
+   FOLDER CARD
+========================================= */
+
+.pumping-document-wrap .pumping-folder-card {
+    min-height: 175px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid #dfe5ee;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(19, 44, 87, 0.03);
+    transition: all 0.3s ease;
+}
+
+.pumping-document-wrap .pumping-folder-card:hover {
+    transform: translateY(-3px);
+    border-color: #a9bce8;
+    box-shadow: 0 10px 25px rgba(24, 67, 145, 0.1);
+}
+
+.pumping-document-wrap .pumping-folder-image {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #edf2fb, #dce4f3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 28px;
+}
+
+.pumping-document-wrap .pumping-folder-image img {
+    width: 55px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.pumping-document-wrap .pumping-folder-content {
+    padding-right: 35px;
+}
+
+.pumping-document-wrap .pumping-folder-content h3 {
+    margin: 0 0 0px;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.pumping-document-wrap .pumping-folder-content p {
+    margin: 0 0 20px;
+    color: #5f6d84;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.pumping-document-wrap .pumping-file-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #1747b8;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.pumping-document-wrap .pumping-file-count i {
+    font-size: 16px;
+}
+
+.pumping-document-wrap .pumping-folder-arrow {
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #52627c;
+    font-size: 30px;
+}
+
+
+/* =========================================
+   PRIVACY BOX
+========================================= */
+
+.pumping-document-wrap .pumping-privacy-box {
+    margin-top: 35px;
+    padding: 20px 28px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #f3f6fc, #e8edf7);
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.pumping-document-wrap .pumping-privacy-icon {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    margin-right: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2955c8;
+    border-radius: 50%;
+    color: #1e50c5;
+    font-size: 32px;
+}
+
+.pumping-document-wrap .pumping-privacy-content h3 {
+    margin: 0 0 0px;
+    color: #1e478f;
+    font-size: 26px;
+}
+
+.pumping-document-wrap .pumping-privacy-content p {
+    margin: 0;
+    color: #5e6b80;
+    font-size: 15px;
+}
+
+.pumping-document-wrap .pumping-lock-icon {
+    margin-left: auto;
+    padding-right: 10px;
+    color: #b4c2dc;
+    font-size: 55px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 991px) {
+
+    .pumping-document-wrap .pumping-document-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pumping-document-wrap .pumping-document-actions {
+        width: 100%;
+    }
+
+    .pumping-document-wrap .pumping-search-box {
+        width: 100%;
+    }
+
+    .pumping-document-wrap .pumping-document-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .pumping-document-wrap {
+        padding: 20px 0 40px;
+    }
+
+    .pumping-document-wrap .pumping-document-box {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+
+    .pumping-document-wrap .pumping-document-head h2 {
+        font-size: 22px;
+    }
+
+    .pumping-document-wrap .pumping-folder-card {
+        min-height: auto;
+        padding: 20px;
+    }
+
+    .pumping-document-wrap .pumping-folder-image {
+        width: 85px;
+        height: 85px;
+        min-width: 85px;
+        margin-right: 18px;
+    }
+
+    .pumping-document-wrap .pumping-folder-image img {
+        width: 55px;
+    }
+
+    .pumping-document-wrap .pumping-folder-content h3 {
+        font-size: 18px;
+    }
+
+    .pumping-document-wrap .pumping-folder-content p {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .pumping-document-wrap .pumping-folder-arrow {
+        right: 15px;
+    }
+
+    .pumping-document-wrap .pumping-privacy-box {
+        padding: 20px;
+    }
+
+    .pumping-document-wrap .pumping-privacy-icon {
+        width: 55px;
+        height: 55px;
+        min-width: 55px;
+        margin-right: 15px;
+        font-size: 24px;
+    }
+
+    .pumping-document-wrap .pumping-lock-icon {
+        display: none;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .pumping-document-wrap .pumping-document-actions {
+        flex-wrap: wrap;
+    }
+
+    .pumping-document-wrap .pumping-search-box {
+        width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .pumping-document-wrap .pumping-folder-card {
+        align-items: flex-start;
+    }
+
+    .pumping-document-wrap .pumping-folder-image {
+        width: 65px;
+        height: 65px;
+        min-width: 65px;
+        margin-right: 14px;
+    }
+
+    .pumping-document-wrap .pumping-folder-image img {
+        width: 43px;
+    }
+
+    .pumping-document-wrap .pumping-folder-content {
+        padding-right: 15px;
+    }
+
+    .pumping-document-wrap .pumping-folder-content h3 {
+        font-size: 16px;
+    }
 }
