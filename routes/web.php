@@ -206,6 +206,7 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::post('/employee-reset-password',   [EmployeesController::class, 'update_password'])->name('frontend.employee_update_password');
     Route::get('/employee-incident-report',      [EmployeesController::class, 'employee_incident_report'])->middleware('employee.auth')->name('frontend.employee_incident_report');
     Route::post('/employee-incident-report',     [EmployeesController::class, 'employee_incident_report_store'])->middleware('employee.auth')->name('frontend.employee_incident_report_store');
+    Route::get('/employee-incident-report/thank-you', [EmployeesController::class, 'employee_incident_report_thankyou'])->middleware('employee.auth')->name('frontend.employee_incident_report_thankyou');
     // Public: announcements are viewable by everyone (no login required).
     Route::get('/employee-announcements',        [EmployeesController::class, 'employee_announcements'])->name('frontend.employee_announcements');
     Route::get('/employee-announcements/{slug}', [EmployeesController::class, 'employee_announcement'])->name('frontend.employee_announcement');

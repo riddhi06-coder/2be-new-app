@@ -290,8 +290,20 @@ class EmployeesController extends Controller
             }
         }
 
-        return redirect()->route('frontend.employee_incident_report')
-            ->with('message', 'Your incident report has been submitted successfully. Reference: '.$report->reference_no);
+        return redirect()->route('frontend.employee_incident_report_thankyou')
+            ->with('reference', $report->reference_no);
+    }
+
+    /** Thank-you page shown after an incident report is submitted. */
+    public function employee_incident_report_thankyou()
+    {
+        // Only reachable straight after a submission (reference is flashed to the session).
+        $reference = session('reference');
+        if (! $reference) {
+            return redirect()->route('frontend.employee_incident_report');
+        }
+
+        return view('frontend.employee.incident_report_thankyou', ['reference' => $reference]);
     }
 
     /**

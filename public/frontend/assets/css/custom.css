@@ -294,6 +294,50 @@
 .emp-empty__btn:hover { background: #0037d6; color: #fff; }
 
 /* =====================================================================
+   Incident Report — Thank You page
+   ===================================================================== */
+.ir-thankyou { padding: 60px 0 90px; background: #f4f6f9; min-height: 70vh; display: flex; align-items: center; }
+.ir-ty-card {
+    max-width: 640px; margin: 0 auto; background: #fff; border-radius: 20px; text-align: center;
+    padding: 48px 44px 40px; box-shadow: 0 14px 40px rgba(17,24,39,.08); border: 1px solid #eef0f2;
+}
+.ir-ty-check {
+    width: 92px; height: 92px; border-radius: 50%; margin: 0 auto 26px;
+    background: linear-gradient(135deg, #12855f, #2bb583); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 44px;
+    box-shadow: 0 10px 26px rgba(18,133,95,.28); animation: ir-ty-pop .35s ease;
+}
+@keyframes ir-ty-pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.ir-ty-title { font-size: 30px; font-weight: 800; color: #1f2933; margin: 0 0 12px; }
+.ir-ty-text { font-size: 15px; color: #667085; line-height: 1.7; margin: 0 auto 26px; max-width: 500px; }
+
+.ir-ty-ref {
+    display: inline-flex; flex-direction: column; gap: 4px; background: #eef2ff;
+    border: 1px dashed #b9c6f5; border-radius: 12px; padding: 14px 34px; margin-bottom: 22px;
+}
+.ir-ty-ref__label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #6b7ba8; }
+.ir-ty-ref__value { font-size: 22px; font-weight: 800; color: #0004fe; letter-spacing: .5px; }
+
+.ir-ty-note {
+    font-size: 13px; color: #8a94a3; line-height: 1.6; margin: 0 auto 30px; max-width: 480px;
+    background: #f7f9fc; border-radius: 10px; padding: 12px 16px;
+}
+.ir-ty-note i { color: #0004fe; margin-right: 5px; }
+
+.ir-ty-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 22px; }
+.ir-ty-btn {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
+    padding: 12px 24px; border-radius: 10px; text-decoration: none; transition: all .15s ease;
+}
+.ir-ty-btn--primary { background: #0004fe; color: #fff; box-shadow: 0 4px 12px rgba(0,4,254,.25); }
+.ir-ty-btn--primary:hover { background: #0037d6; color: #fff; transform: translateY(-2px); }
+.ir-ty-btn--outline { background: #fff; color: #0004fe; border: 1px solid #cdd9ff; }
+.ir-ty-btn--outline:hover { background: #eef2ff; color: #0004fe; }
+
+.ir-ty-home { display: inline-flex; align-items: center; gap: 7px; color: #8a94a3; text-decoration: none; font-size: 13.5px; font-weight: 600; }
+.ir-ty-home:hover { color: #0004fe; }
+
+/* =====================================================================
    Community Calendar (frontend)
    ===================================================================== */
 .cal-page { padding: 26px 0 70px; }
