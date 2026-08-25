@@ -207,13 +207,19 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/employee-incident-report',      [EmployeesController::class, 'employee_incident_report'])->middleware('employee.auth')->name('frontend.employee_incident_report');
     Route::post('/employee-incident-report',     [EmployeesController::class, 'employee_incident_report_store'])->middleware('employee.auth')->name('frontend.employee_incident_report_store');
     Route::get('/employee-incident-report/thank-you', [EmployeesController::class, 'employee_incident_report_thankyou'])->middleware('employee.auth')->name('frontend.employee_incident_report_thankyou');
+    
+    
     // Public: announcements are viewable by everyone (no login required).
     Route::get('/employee-announcements',        [EmployeesController::class, 'employee_announcements'])->name('frontend.employee_announcements');
     Route::get('/employee-announcements/{slug}', [EmployeesController::class, 'employee_announcement'])->name('frontend.employee_announcement');
+    
+    
     // Public: shared documents are viewable by anyone; personal docs require login (enforced in the controller).
     Route::get('/document-library',                       [EmployeesController::class, 'employee_documents'])->name('frontend.employee_documents');
     Route::get('/document-library/category/{slug}/{space?}', [EmployeesController::class, 'employee_document_category'])->whereIn('space', ['public', 'personal'])->name('frontend.employee_document_category');
     Route::get('/document-library/download/{document}',   [EmployeesController::class, 'employee_document_download'])->name('frontend.employee_document_download');
+    
+    
     // Public community calendar (admin management lives at /manage-community-calendar).
     Route::get('/community-calendar',        [EmployeesController::class, 'employee_calendar'])->name('frontend.employee_calendar');
     Route::get('/community-calendar/events', [EmployeesController::class, 'employee_calendar_events'])->name('frontend.employee_calendar_events');

@@ -58,7 +58,11 @@
                         aria-expanded="false"
                     >
                         <span class="user-icon">
-                        <i class="fa fa-user"> </i>
+                        @if(auth()->user()->avatar_url)
+                            <img src="{{ auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}">
+                        @else
+                            <i class="fa fa-user"> </i>
+                        @endif
                         </span>
                         <span class="employee-text">
                         <small> Welcome, </small>
@@ -73,7 +77,7 @@
                         </a>
                         </li>
                         <li>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ route('frontend.employee_dashboard') }}#profile">
                             <i class="fa fa-user"></i>
                             My Profile
                         </a>

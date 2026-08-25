@@ -49,7 +49,7 @@
 
                         <p>Company policies,<br />procedures and guidelines</p>
 
-                        <a href="#" class="btn psdude-info-box__btn">
+                        <a href="{{ route('frontend.employee_document_category', ['slug' => 'employee-handbook', 'space' => 'public']) }}" class="btn psdude-info-box__btn">
                             View Handbook
                             <i class="fa fa-long-arrow-right"></i>
                         </a>
@@ -66,7 +66,7 @@
 
                         <p>Safety policies, programs<br />and employee acknowledgements</p>
 
-                        <a href="#" class="btn psdude-info-box__btn">
+                        <a href="{{ route('frontend.employee_document_category', ['slug' => 'safety-programs', 'space' => 'public']) }}" class="btn psdude-info-box__btn">
                             View Programs
                             <i class="fa fa-long-arrow-right"></i>
                         </a>
@@ -83,7 +83,7 @@
 
                         <p>Report incidents and<br />submit documentation</p>
 
-                        <a href="#" class="btn psdude-info-box__btn psdude-info-box__btn--red">
+                        <a href="{{ route('frontend.employee_incident_report') }}" class="btn psdude-info-box__btn psdude-info-box__btn--red">
                             Submit Report
                             <i class="fa fa-long-arrow-right"></i>
                         </a>
@@ -100,7 +100,7 @@
 
                         <p>Federal and state labor<br />law posters and notices</p>
 
-                        <a href="#" class="btn psdude-info-box__btn">
+                        <a href="{{ route('frontend.employee_documents') }}" class="btn psdude-info-box__btn">
                             View Posters
                             <i class="fa fa-long-arrow-right"></i>
                         </a>
@@ -117,7 +117,7 @@
 
                         <p>View team schedule<br />and important dates</p>
 
-                        <a href="#" class="btn psdude-info-box__btn">
+                        <a href="{{ route('frontend.employee_calendar') }}" class="btn psdude-info-box__btn">
                             View Calendar
                             <i class="fa fa-long-arrow-right"></i>
                         </a>

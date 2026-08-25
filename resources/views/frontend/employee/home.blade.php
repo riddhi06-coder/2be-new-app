@@ -426,9 +426,17 @@
                 });
             });
 
-            // Deep-link (e.g. arriving at .../employee-dashboard#my-reports or #profile)
-            if (location.hash === '#my-reports') { activate('reports'); }
-            else if (location.hash === '#profile') { activate('profile'); }
+            // Deep-link + respond to hash changes (e.g. header "My Profile" while already here)
+            function activateFromHash() {
+                if (location.hash === '#my-reports') { activate('reports'); }
+                else if (location.hash === '#profile') { activate('profile'); }
+                else if (location.hash === '#dashboard') { activate('dashboard'); }
+            }
+            activateFromHash();
+            window.addEventListener('hashchange', function () {
+                activateFromHash();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
             @if($errors->any())
             // Validation errors belong to the profile/password forms — open that tab.
             activate('profile');

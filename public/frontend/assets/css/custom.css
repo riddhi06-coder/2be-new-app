@@ -11,6 +11,10 @@
 /* ---- Header: logged-out login button ---- */
 .employee-login-btn { text-decoration: none; }
 
+/* Header avatar: show the uploaded profile photo inside the round icon */
+.user-icon { overflow: hidden; }
+.user-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+
 /* =====================================================================
    Personalised employee dashboard — in-page account sidebar
    ===================================================================== */
