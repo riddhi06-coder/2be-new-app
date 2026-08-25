@@ -33,10 +33,16 @@ class Document extends Model
         return $this->belongsTo(DocumentCategory::class, 'document_category_id');
     }
 
-    /** The employee who owns this document (only for personal / non-public docs). */
+    /** The employee who owns this document (legacy single-owner column). */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /** Employees a personal document is assigned to (one doc → many employees). */
+    public function assignees(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class);
     }
 
     public function uploader(): BelongsTo

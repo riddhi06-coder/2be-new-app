@@ -318,7 +318,7 @@ class EmployeesController extends Controller
             ->withCount([
                 'documents as public_count'   => fn ($q) => $q->where('is_public', true),
                 'documents as personal_count' => fn ($q) => $user
-                    ? $q->where('is_public', false)->where('user_id', $user->id)
+                    ? $q->where('is_public', false)->whereHas('assignees', fn ($a) => $a->where('users.id', $user->id))
                     : $q->whereRaw('0 = 1'),
             ])
             ->orderBy('name')
@@ -345,7 +345,7 @@ class EmployeesController extends Controller
             ->where(function ($q) use ($user) {
                 $q->where('is_public', true);
                 if ($user) {
-                    $q->orWhere('user_id', $user->id);
+                    $q->orWhereHas('assignees', fn ($a) => $a->where('users.id', $user->id));
                 }
             })
             ->orderByDesc('id')
@@ -374,7 +374,7 @@ class EmployeesController extends Controller
     {
         if (! $document->is_public) {
             $user = Auth::user();
-            if (! $user || (int) $document->user_id !== (int) $user->id) {
+            if (! $user || ! $document->assignees()->where('users.id', $user->id)->exists()) {
                 abort(403, 'You do not have access to this document.');
             }
         }

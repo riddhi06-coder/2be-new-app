@@ -13,7 +13,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role')->orderByDesc('id')->get();
+        // Employees are managed under HR Portal → Employees, so keep them out of
+        // the Users list to avoid confusion (and bypassing the welcome-email flow).
+        $users = User::with('role')
+            ->whereDoesntHave('role', fn ($q) => $q->where('slug', 'employee'))
+            ->orderByDesc('id')
+            ->get();
+
         return view('backend.users.index', compact('users'));
     }
 

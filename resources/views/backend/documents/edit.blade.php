@@ -57,20 +57,32 @@
                                     <label class="form-label">Access <span class="text-danger">*</span></label>
                                     <select name="is_public" id="is_public" class="form-control">
                                         <option value="1" {{ old('is_public', $document->is_public ? '1' : '0') == '1' ? 'selected' : '' }}>Public — visible to everyone</option>
-                                        <option value="0" {{ old('is_public', $document->is_public ? '1' : '0') == '0' ? 'selected' : '' }}>Personal — one employee only</option>
+                                        <option value="0" {{ old('is_public', $document->is_public ? '1' : '0') == '0' ? 'selected' : '' }}>Personal — selected employees only</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6 mb-3" id="owner_wrap" style="display:none;">
-                                    <label class="form-label">Employee <span class="text-danger">*</span></label>
-                                    <select name="user_id" class="form-control @error('user_id') is-invalid @enderror">
-                                        <option value="">-- Select the employee --</option>
-                                        @foreach($employees as $emp)
-                                            <option value="{{ $emp->id }}" {{ old('user_id', $document->user_id) == $emp->id ? 'selected' : '' }}>{{ $emp->name }} ({{ $emp->email }})</option>
-                                        @endforeach
-                                    </select>
-                                    @error('user_id')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
-                                    <small class="text-muted">Only this employee (and admins) will be able to see this document.</small>
+                                    <label class="form-label">Employees <span class="text-danger">*</span></label>
+                                    @php $selectedIds = old('user_ids', $assignedIds ?? []); @endphp
+                                    <div class="assignee-picker @error('user_ids') is-invalid @enderror">
+                                        <div class="assignee-picker__search">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" class="assignee-search" placeholder="Search employees...">
+                                        </div>
+                                        <div class="assignee-list">
+                                            @forelse($employees as $emp)
+                                                <label class="assignee-item" data-name="{{ strtolower($emp->name.' '.$emp->email) }}">
+                                                    <input type="checkbox" name="user_ids[]" value="{{ $emp->id }}" {{ collect($selectedIds)->contains($emp->id) ? 'checked' : '' }}>
+                                                    <span class="assignee-item__text">{{ $emp->name }} <small>{{ $emp->email }}</small></span>
+                                                </label>
+                                            @empty
+                                                <div class="assignee-empty">No active employees found.</div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                    @error('user_ids')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                    @error('user_ids.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                    <small class="text-muted">Tick every employee who should see this document.</small>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -96,6 +108,18 @@
         }
         access.addEventListener('change', toggleOwner);
         toggleOwner();
+    })();
+
+    // Employee search filter for the assignee picker
+    (function () {
+        var search = document.querySelector('.assignee-search');
+        if (!search) return;
+        search.addEventListener('input', function () {
+            var q = this.value.toLowerCase().trim();
+            document.querySelectorAll('.assignee-item').forEach(function (item) {
+                item.style.display = item.getAttribute('data-name').indexOf(q) !== -1 ? '' : 'none';
+            });
+        });
     })();
 </script>
 </body>

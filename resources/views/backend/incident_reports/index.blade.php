@@ -14,7 +14,7 @@
                 <div class="col-6"><h3>{{ $canManage ? 'Incident Reports' : 'My Incident Reports' }}</h3></div>
                 <div class="col-6 text-end">
                     @if(auth()->user()->hasPermission('incident-reports.create'))
-                        <a href="{{ route('admin.incident-reports.create') }}" class="btn btn-primary">+ New Report</a>
+                        <a href="{{ route('admin.incident-reports.create') }}" class="btn btn-primary">+ New Incident Report</a>
                     @endif
                 </div>
             </div>
@@ -30,7 +30,7 @@
                                     <tr>
                                         <th>Ref #</th>
                                         <th>Date</th>
-                                        <th>Category</th>
+                                        <th>Reported By</th>
                                         <th>Severity</th>
                                         <th>Status</th>
                                         <th>Source</th>
@@ -42,7 +42,7 @@
                                         <tr>
                                             <td>{{ $r->reference_no }}</td>
                                             <td>{{ optional($r->incident_date)->format('d M Y') }}</td>
-                                            <td>{{ $r->category_label }}</td>
+                                            <td>{{ $r->reporter_name ?: ($r->reporter->name ?? '—') }}</td>
                                             <td><span class="badge {{ $r->severity_badge }}">{{ $r->severity_label }}</span></td>
                                             <td><span class="badge {{ $r->status_badge }}">{{ $r->status_label }}</span></td>
                                             <td data-order="{{ $r->source_label }}"><span class="badge {{ $r->source_badge }}">{{ $r->source_label }}</span></td>

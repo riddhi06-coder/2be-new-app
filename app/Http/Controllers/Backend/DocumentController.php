@@ -23,7 +23,7 @@ class DocumentController extends Controller
 
     public function index()
     {
-        $documents = Document::with(['category', 'owner'])->orderByDesc('id')->get();
+        $documents = Document::with(['category', 'assignees'])->orderByDesc('id')->get();
         return view('backend.documents.index', compact('documents'));
     }
 
@@ -46,7 +46,7 @@ class DocumentController extends Controller
         $mimeType     = $file->getClientMimeType();
         $path         = $this->storeFile($file);
 
-        Document::create([
+        $document = Document::create([
             'document_category_id' => $validated['document_category_id'],
             'title'                => $validated['title'],
             'file_path'            => $path,
@@ -54,19 +54,27 @@ class DocumentController extends Controller
             'file_size'            => $fileSize,
             'mime_type'            => $mimeType,
             'is_public'            => $request->boolean('is_public'),
-            'user_id'              => $request->boolean('is_public') ? null : $validated['user_id'],
+            'user_id'              => null, // assignments now live in the document_user pivot
             'uploaded_by'          => $request->user()->id,
         ]);
+
+        // Personal docs can be assigned to one or more employees.
+        if (! $request->boolean('is_public')) {
+            $document->assignees()->sync($validated['user_ids'] ?? []);
+        }
 
         return redirect()->route('admin.documents.index')->with('message', 'Document uploaded successfully.');
     }
 
     public function edit(Document $document)
     {
+        $document->load('assignees');
+
         return view('backend.documents.edit', [
-            'document'   => $document,
-            'categories' => DocumentCategory::where('is_active', true)->orWhere('id', $document->document_category_id)->orderBy('name')->get(),
-            'employees'  => $this->employees(),
+            'document'    => $document,
+            'assignedIds' => $document->assignees->pluck('id')->all(),
+            'categories'  => DocumentCategory::where('is_active', true)->orWhere('id', $document->document_category_id)->orderBy('name')->get(),
+            'employees'   => $this->employees(),
         ]);
     }
 
@@ -91,8 +99,11 @@ class DocumentController extends Controller
         $document->document_category_id = $validated['document_category_id'];
         $document->title                = $validated['title'];
         $document->is_public            = $request->boolean('is_public');
-        $document->user_id              = $request->boolean('is_public') ? null : $validated['user_id'];
+        $document->user_id              = null; // assignments live in the pivot now
         $document->save();
+
+        // Sync employee assignments: none for public, the selected set for personal.
+        $document->assignees()->sync($request->boolean('is_public') ? [] : ($validated['user_ids'] ?? []));
 
         return redirect()->route('admin.documents.index')->with('message', 'Document updated successfully.');
     }
@@ -167,11 +178,12 @@ class DocumentController extends Controller
             'title'                => 'required|string|max:255',
             'file'                 => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png', 'max:'.config('uploads.document_max_kb')],
             'is_public'            => 'nullable|boolean',
-            'user_id'              => [Rule::requiredIf(fn () => ! $request->boolean('is_public')), 'nullable', 'exists:users,id'],
+            'user_ids'             => [Rule::requiredIf(fn () => ! $request->boolean('is_public')), 'nullable', 'array'],
+            'user_ids.*'           => ['exists:users,id'],
         ], [
             'file.max'          => 'The file may not be larger than '.round(config('uploads.document_max_kb') / 1024).' MB.',
             'file.mimes'        => 'Allowed file types: PDF, Word, Excel, JPG, PNG.',
-            'user_id.required'  => 'Please choose the employee this personal document belongs to.',
+            'user_ids.required'  => 'Please choose at least one employee this personal document belongs to.',
         ]);
     }
 }
