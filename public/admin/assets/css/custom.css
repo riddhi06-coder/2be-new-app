@@ -65,8 +65,13 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 
 /* ---- Permissions matrix ---- */
 .perm-card-header { background: #f6f8fb; }
-.perm-matrix th.act-col, .perm-matrix td.act-col { width: 70px; }
-.perm-matrix th.sec-col { min-width: 140px; }
+/* Fixed layout so all columns (incl. Delete) always fit inside the half-width card */
+.perm-matrix { table-layout: fixed; width: 100%; }
+.perm-matrix th.act-col, .perm-matrix td.act-col {
+    width: 52px; padding-left: 2px; padding-right: 2px; text-align: center; font-size: 12.5px;
+}
+.perm-matrix th.sec-col, .perm-matrix td.sec-col { width: auto; white-space: normal; word-break: break-word; }
+.perm-matrix th { font-size: 12.5px; }
 
 /* ---- Document assignee picker (multi-select employees) ---- */
 .assignee-picker { border: 1px solid #ced4da; border-radius: 8px; overflow: hidden; background: #fff; }
@@ -85,6 +90,47 @@ html:has(body.auth-scroll-lock) { overflow: hidden; height: 100vh; }
 .assignee-item__text small { color: #8a94a3; display: block; font-size: 12px; }
 .assignee-item:has(input:checked) { background: #eef4ff; }
 .assignee-empty { padding: 16px; text-align: center; color: #8a94a3; font-size: 13px; }
+
+/* =====================================================================
+   Activity Log — table + filters
+   ===================================================================== */
+.actlog-filterbar {
+    background: #f7f9fb; border: 1px solid #eef0f2; border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.actlog-lbl { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
+.actlog-filterbar .form-control { height: 42px; border-radius: 8px; }
+/* Let the paired date inputs shrink so the range never overflows its column */
+.actlog-filterbar input[type="date"] { min-width: 0; flex: 1 1 0; padding-left: 8px; padding-right: 6px; }
+.actlog-filterbar__actions { display: flex; gap: 10px; margin-top: 16px; }
+
+/* Event badges */
+.actlog-badge {
+    display: inline-block; font-size: 12px; font-weight: 600; color: #fff;
+    padding: 5px 14px; border-radius: 7px; letter-spacing: .2px; white-space: nowrap;
+}
+.actlog-badge.ev-created  { background: #16a34a; }
+.actlog-badge.ev-updated  { background: #0f9d76; }
+.actlog-badge.ev-deleted  { background: #e11d48; }
+.actlog-badge.ev-restored { background: #0ea5b7; }
+.actlog-badge.ev-login    { background: #f26a4f; }
+.actlog-badge.ev-logout   { background: #2b3a4a; }
+.actlog-badge.ev-default  { background: #94a3b8; }
+
+/* Table */
+.actlog-table thead th {
+    font-size: 13px; font-weight: 700; color: #6b7280; text-transform: none;
+    border-bottom: 2px solid #eef0f2; padding: 12px 14px;
+}
+.actlog-table tbody td { padding: 14px; font-size: 14px; color: #374151; vertical-align: middle; }
+.actlog-table tbody tr { border-bottom: 1px solid #f1f3f5; }
+.actlog-table tbody tr:hover { background: #f9fafb; }
+.actlog-view { border-radius: 7px; font-weight: 600; }
+
+/* Details modal */
+.actlog-detail { display: grid; grid-template-columns: 130px 1fr; gap: 10px 16px; margin: 0; }
+.actlog-detail dt { font-size: 13px; font-weight: 600; color: #8a94a3; }
+.actlog-detail dd { font-size: 14px; color: #1f2933; margin: 0; word-break: break-word; }
 
 /* ---- File / image preview helpers ---- */
 /* Keep the Preview (eye) icon visible at rest — the theme leaves bare <button>

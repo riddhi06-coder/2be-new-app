@@ -52,6 +52,7 @@ class LoginController extends Controller
             }
 
             $request->session()->regenerate();
+            \App\Models\ActivityLog::write('login', 'Authentication', Auth::user()->name.' logged in to the admin panel.');
             return redirect()->route('admin.dashboard')->with('message', 'You are logged-in Successfully.');
         }
         else{
@@ -61,6 +62,9 @@ class LoginController extends Controller
     }
 
     public function logout(Request $request) {
+        if (Auth::check()) {
+            \App\Models\ActivityLog::write('logout', 'Authentication', Auth::user()->name.' logged out of the admin panel.');
+        }
         Session::flush();
         Auth::logout();
         $request->session()->invalidate();

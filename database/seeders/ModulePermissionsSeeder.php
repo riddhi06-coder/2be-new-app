@@ -43,7 +43,10 @@ class ModulePermissionsSeeder extends Seeder
 
                 ['Announcements',     'announcements',           ['view', 'create', 'edit', 'delete']],
                 ['Incident Reports',  'incident-reports',        ['view', 'create', 'edit', 'delete']],
-                ['Team Calendar',     'calendar',                ['view', 'create', 'edit', 'delete']],
+                ['Community Calendar','calendar',                ['view', 'create', 'edit', 'delete']],
+
+                // System
+                ['Activity Log',      'activity-log',            ['view']],
             ];
 
             $actionLabels = [
@@ -89,11 +92,17 @@ class ModulePermissionsSeeder extends Seeder
                 $superadmin->permissions()->sync(Permission::pluck('id'));
             }
 
-            // Admin -> existing + view/create/edit on every module (no delete)
+            // Admin -> view/create/edit on every NON-HR module (no delete).
+            // HR Portal modules are intentionally excluded (Super Admin manages HR).
             $admin = Role::where('slug', 'admin')->first();
             if ($admin) {
+                $hrPrefixes = ['employees', 'document-categories', 'documents', 'announcements', 'incident-reports', 'calendar'];
+
                 $adminSlugs = [];
                 foreach ($modules as [, $prefix, $actions]) {
+                    if (in_array($prefix, $hrPrefixes, true)) {
+                        continue; // skip HR modules for the Admin role
+                    }
                     foreach ($actions as $action) {
                         if ($action !== 'delete') {
                             $adminSlugs[] = $prefix.'.'.$action;
@@ -101,9 +110,16 @@ class ModulePermissionsSeeder extends Seeder
                     }
                 }
 
+                // Also drop any HR permissions the Admin might already hold.
+                $hrIds = Permission::where(function ($q) use ($hrPrefixes) {
+                    foreach ($hrPrefixes as $p) {
+                        $q->orWhere('slug', 'like', $p.'.%');
+                    }
+                })->pluck('id')->all();
+
                 $existingAdminIds = $admin->permissions()->pluck('permissions.id')->all();
                 $newAdminIds      = Permission::whereIn('slug', $adminSlugs)->pluck('id')->all();
-                $mergedAdminIds   = array_unique(array_merge($existingAdminIds, $newAdminIds));
+                $mergedAdminIds   = array_diff(array_unique(array_merge($existingAdminIds, $newAdminIds)), $hrIds);
                 $admin->permissions()->sync($mergedAdminIds);
             }
 

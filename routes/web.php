@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\DocumentController;
 use App\Http\Controllers\Backend\AnnouncementController;
 use App\Http\Controllers\Backend\IncidentReportController;
 use App\Http\Controllers\Backend\CalendarEventController;
+use App\Http\Controllers\Backend\ActivityLogController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -167,6 +168,10 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('manage-community-calendar/{calendar}/edit',  [CalendarEventController::class, 'edit'])->middleware('permission:calendar.edit')->name('admin.community-calendar.edit');
     Route::put('manage-community-calendar/{calendar}',       [CalendarEventController::class, 'update'])->middleware('permission:calendar.edit')->name('admin.community-calendar.update');
     Route::delete('manage-community-calendar/{calendar}',    [CalendarEventController::class, 'destroy'])->middleware('permission:calendar.delete')->name('admin.community-calendar.destroy');
+
+
+    // ==================== Activity Log ====================
+    Route::get('activity-log', [ActivityLogController::class, 'index'])->middleware('permission:activity-log.view')->name('admin.activity-logs.index');
 });
 
 

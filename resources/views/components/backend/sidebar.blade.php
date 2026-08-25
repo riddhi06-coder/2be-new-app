@@ -129,6 +129,21 @@
                 </li>
                 @endif
 
+                @if($can('activity-log.view'))
+                <li class="sidebar-list {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}">
+                  <i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link" href="{{ route('admin.activity-logs.index') }}">
+                    <svg class="stroke-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-task') }}"></use>
+                    </svg>
+                    <svg class="fill-icon">
+                      <use href="{{ asset('admin/assets/svg/icon-sprite.svg#fill-task') }}"></use>
+                    </svg>
+                    <span>Activity Log</span>
+                  </a>
+                </li>
+                @endif
+
 
                 @if($can('employees.view'))
                 <li class="sidebar-main-title">
