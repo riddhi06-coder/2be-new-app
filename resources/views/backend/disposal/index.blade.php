@@ -164,7 +164,15 @@
                                         <td>{{ $disposal->waste_type }}</td>
                                         <td>{{ $disposal->volume_pumped }}</td>
                                         <td>
-                                            <a href="{{ route('manage-disposal-details.edit', $disposal->id) }}" class="btn btn-sm btn-primary">Details</a>
+                                            <div class="d-flex gap-1">
+                                                <a href="{{ route('manage-disposal-details.edit', $disposal->id) }}" class="btn btn-sm btn-primary">Details</a>
+                                                @if(auth()->user()->hasPermission('manage-disposal-details.delete'))
+                                                    <form action="{{ route('manage-disposal-details.destroy', $disposal->id) }}" method="POST" class="m-0" onsubmit="return confirm('Delete this disposal record? It can be restored later if needed.');">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                    </form>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

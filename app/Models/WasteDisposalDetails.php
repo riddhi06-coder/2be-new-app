@@ -2,15 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WasteDisposalDetails extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, TracksDeletedBy;
 
     protected $table = 'waste_disposal_details';
     public $timestamps = false;
+
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
 
     protected $fillable = [
         'ip_address',

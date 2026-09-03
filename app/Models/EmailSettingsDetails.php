@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmailSettingsDetails extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, TracksDeletedBy;
 
     protected $table = 'email_settings';
     public $timestamps = false;

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksDeletedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CesspoolSystemDetails extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, TracksDeletedBy;
 
     protected $table = 'cesspool_system_details';
     public $timestamps = false;
@@ -73,5 +75,6 @@ class CesspoolSystemDetails extends Model
         'is_draft'       => 'boolean',
         'expires_at'     => 'datetime',
         'inserted_at'    => 'datetime',
+        'deleted_at'     => 'datetime',
     ];
 }

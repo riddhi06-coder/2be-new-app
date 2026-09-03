@@ -135,20 +135,18 @@ class IncidentReportController extends Controller
 
     public function destroy(IncidentReport $incident_report)
     {
-        foreach ($incident_report->photos as $photo) {
-            $this->deleteFile($photo->file_path);
-        }
+        // Soft delete — the report (and its photos/files) are retained so it can
+        // be restored later. Files are intentionally NOT removed.
         $incident_report->delete();
 
         return redirect()->route('admin.incident-reports.index')->with('message', 'Incident report deleted successfully.');
     }
 
-    /** Remove a single photo (managers only, checked on the route). */
+    /** Remove a single photo (managers only, checked on the route). Soft delete — file kept. */
     public function destroyPhoto(\App\Models\IncidentReportPhoto $photo)
     {
-        $this->deleteFile($photo->file_path);
         $reportId = $photo->incident_report_id;
-        $photo->delete();
+        $photo->delete(); // soft delete; the file stays on disk for possible restore
 
         return redirect()->route('admin.incident-reports.edit', $reportId)->with('message', 'Photo removed.');
     }

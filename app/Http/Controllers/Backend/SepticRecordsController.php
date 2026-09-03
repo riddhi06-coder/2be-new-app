@@ -176,16 +176,8 @@ class SepticRecordsController extends Controller
     {
         $record = SepticSystemDetails::findOrFail($id);
 
-        if ($record->image_path) {
-            Storage::disk('public')->delete($record->image_path);
-        }
-        if ($record->video_path && file_exists(public_path($record->video_path))) {
-            @unlink(public_path($record->video_path));
-        }
-        if ($record->inspector_signature && file_exists(public_path($record->inspector_signature))) {
-            @unlink(public_path($record->inspector_signature));
-        }
-
+        // Soft delete — row hidden but retained (with its files) so it can be
+        // restored later. Files are intentionally NOT removed here.
         $record->delete();
 
         return redirect()->route('septic-records.index')

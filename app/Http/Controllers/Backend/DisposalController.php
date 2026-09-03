@@ -75,6 +75,15 @@ class DisposalController extends Controller
         return view('backend.disposal.edit', compact('disposal'));
     }
 
+    /** Soft-delete a disposal record (kept in DB with deleted_at set). */
+    public function destroy($id)
+    {
+        $disposal = WasteDisposalDetails::findOrFail($id);
+        $disposal->delete(); // soft delete + stamps deleted_by via TracksDeletedBy
+
+        return redirect()->route('manage-disposal-details.index')->with('message', 'Disposal record deleted successfully.');
+    }
+
     public function export(Request $request)
     {
         $year = $request->year;

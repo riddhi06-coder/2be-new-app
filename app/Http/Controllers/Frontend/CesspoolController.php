@@ -22,7 +22,7 @@ class CesspoolController extends Controller
     {
         CesspoolSystemDetails::where('is_draft', true)
             ->where('expires_at', '<', Carbon::now())
-            ->delete();
+            ->forceDelete();
 
         return view('frontend.cesspool_systems');
     }
@@ -49,7 +49,7 @@ class CesspoolController extends Controller
             // Remove any existing draft for this session
             $sessionKey = $request->session()->get('cesspool_draft_key');
             if ($sessionKey) {
-                CesspoolSystemDetails::where('session_key', $sessionKey)->delete();
+                CesspoolSystemDetails::where('session_key', $sessionKey)->forceDelete();
                 $request->session()->forget('cesspool_draft_key');
             }
 
@@ -83,12 +83,12 @@ class CesspoolController extends Controller
             // Purge expired drafts
             CesspoolSystemDetails::where('is_draft', true)
                 ->where('expires_at', '<', Carbon::now())
-                ->delete();
+                ->forceDelete();
 
             // Delete previous draft from this session
             $sessionKey = $request->session()->get('cesspool_draft_key');
             if ($sessionKey) {
-                CesspoolSystemDetails::where('session_key', $sessionKey)->delete();
+                CesspoolSystemDetails::where('session_key', $sessionKey)->forceDelete();
             }
 
             $newKey = Str::uuid()->toString();

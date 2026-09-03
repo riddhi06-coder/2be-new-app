@@ -23,7 +23,7 @@ class SepticController extends Controller
     {
         SepticSystemDetails::where('is_draft', true)
             ->where('expires_at', '<', Carbon::now())
-            ->delete();
+            ->forceDelete();
 
         return view('frontend.septic_systems');
     }
@@ -49,7 +49,7 @@ class SepticController extends Controller
         try {
             $sessionKey = $request->session()->get('septic_draft_key');
             if ($sessionKey) {
-                SepticSystemDetails::where('session_key', $sessionKey)->delete();
+                SepticSystemDetails::where('session_key', $sessionKey)->forceDelete();
                 $request->session()->forget('septic_draft_key');
             }
 
@@ -82,11 +82,11 @@ class SepticController extends Controller
         try {
             SepticSystemDetails::where('is_draft', true)
                 ->where('expires_at', '<', Carbon::now())
-                ->delete();
+                ->forceDelete();
 
             $sessionKey = $request->session()->get('septic_draft_key');
             if ($sessionKey) {
-                SepticSystemDetails::where('session_key', $sessionKey)->delete();
+                SepticSystemDetails::where('session_key', $sessionKey)->forceDelete();
             }
 
             $newKey = Str::uuid()->toString();
