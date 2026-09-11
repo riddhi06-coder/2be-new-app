@@ -115,7 +115,17 @@ class EmployeeController extends Controller
     public function edit(User $employee)
     {
         $this->ensureIsEmployee($employee);
-        return view('backend.employees.edit', ['employee' => $employee]);
+
+        // Signed documents filed under this employee (read & sign acknowledgments).
+        $signedDocuments = $employee->documentAcknowledgments()
+            ->with('document')
+            ->latest('acknowledged_at')
+            ->get();
+
+        return view('backend.employees.edit', [
+            'employee'        => $employee,
+            'signedDocuments' => $signedDocuments,
+        ]);
     }
 
     public function update(Request $request, User $employee)

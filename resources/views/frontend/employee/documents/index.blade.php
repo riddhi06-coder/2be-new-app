@@ -42,6 +42,35 @@
                     <span class="current">Document Library</span>
                 </div>
 
+                @auth
+                    @if($pendingAck->isNotEmpty())
+                        <div class="doc-action-required">
+                            <div class="doc-action-required__head">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span>Action required — {{ $pendingAck->count() }} document{{ $pendingAck->count() > 1 ? 's' : '' }} need your signature</span>
+                            </div>
+                            <ul class="doc-action-required__list">
+                                @foreach($pendingAck as $doc)
+                                    <li class="doc-ar-item">
+                                        <div class="doc-ar-item__info">
+                                            <i class="fa fa-file-pdf-o"></i>
+                                            <div>
+                                                <span class="doc-ar-item__title">{{ $doc->title }}</span>
+                                                @if($doc->acknowledgment_due)
+                                                    <span class="doc-ar-item__due {{ $doc->acknowledgment_due->isPast() ? 'is-overdue' : '' }}">
+                                                        <i class="fa fa-clock-o"></i> Sign by {{ $doc->acknowledgment_due->format('M j, Y') }}{{ $doc->acknowledgment_due->isPast() ? ' (overdue)' : '' }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <a href="{{ route('frontend.employee_document_sign', $doc) }}" class="doc-ar-item__btn">Read &amp; Sign</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                @endauth
+
                 <!-- Public / Personal tabs -->
                 <div class="doc-tabs">
                     <button type="button" class="doc-tab active" data-doc-tab="public">

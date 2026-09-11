@@ -89,6 +89,24 @@
                                     @error('user_ids.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <small class="text-muted">Tick every employee who should see this document.</small>
                                 </div>
+
+                                <div class="col-12 mb-3" id="ack_wrap" style="display:none;">
+                                    <div class="p-3 rounded" style="background:#f6f7f9; border:1px solid #eef0f4;">
+                                        <div class="form-check">
+                                            <input type="hidden" name="requires_acknowledgment" value="0">
+                                            <input class="form-check-input @error('requires_acknowledgment') is-invalid @enderror" type="checkbox" id="requires_acknowledgment" name="requires_acknowledgment" value="1" {{ old('requires_acknowledgment') ? 'checked' : '' }}>
+                                            <label class="form-check-label fw-semibold" for="requires_acknowledgment">
+                                                Require each employee to read &amp; sign (acknowledge) this document
+                                            </label>
+                                            @error('requires_acknowledgment')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                        </div>
+                                        <small class="text-muted d-block mt-1"><i class="fa fa-file-pdf-o me-1"></i>PDF only. Each employee types their name to sign; a stamped signed copy is then filed under their profile.</small>
+                                        <div id="ack_due_wrap" class="mt-3" style="display:none; max-width:260px;">
+                                            <label class="form-label mb-1">Sign-by date <small class="text-muted">(optional)</small></label>
+                                            <input type="date" name="acknowledgment_due" class="form-control form-control-sm" value="{{ old('acknowledgment_due') }}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary" {{ $categories->isEmpty() ? 'disabled' : '' }}>Upload Document</button>
                             <a href="{{ route('admin.documents.index') }}" class="btn btn-light">Cancel</a>
@@ -108,11 +126,24 @@
     (function () {
         var access = document.getElementById('is_public');
         var ownerWrap = document.getElementById('owner_wrap');
+        var ackWrap = document.getElementById('ack_wrap');
         function toggleOwner() {
-            ownerWrap.style.display = (access.value === '0') ? '' : 'none';
+            var personal = (access.value === '0');
+            ownerWrap.style.display = personal ? '' : 'none';
+            if (ackWrap) ackWrap.style.display = personal ? '' : 'none';
         }
         access.addEventListener('change', toggleOwner);
         toggleOwner();
+    })();
+
+    // Show the sign-by date only when read & sign is required
+    (function () {
+        var chk = document.getElementById('requires_acknowledgment');
+        var dueWrap = document.getElementById('ack_due_wrap');
+        if (!chk || !dueWrap) return;
+        function toggleDue() { dueWrap.style.display = chk.checked ? '' : 'none'; }
+        chk.addEventListener('change', toggleDue);
+        toggleDue();
     })();
 
     // Employee search filter for the assignee picker

@@ -73,6 +73,18 @@ class User extends Authenticatable
         return $this->belongsTo(self::class, 'deleted_by');
     }
 
+    /** Personal documents assigned to this employee. */
+    public function assignedDocuments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Document::class);
+    }
+
+    /** Document acknowledgments (signatures) made by this employee. */
+    public function documentAcknowledgments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DocumentAcknowledgment::class);
+    }
+
     public function hasRole(string $slug): bool
     {
         return $this->role && $this->role->slug === $slug;

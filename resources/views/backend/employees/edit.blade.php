@@ -88,6 +88,45 @@
                         </form>
                     </div>
                 </div>
+
+                {{-- Signed documents filed under this employee --}}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3"><i class="fa fa-file-text-o me-2"></i>Signed Documents</h5>
+                        @if($signedDocuments->isEmpty())
+                            <p class="text-muted mb-0">This employee hasn't signed any documents yet.</p>
+                        @else
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Document</th>
+                                            <th>Signed as</th>
+                                            <th>When</th>
+                                            <th class="text-end">Certificate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($signedDocuments as $ack)
+                                            <tr>
+                                                <td><i class="fa fa-file-pdf-o text-danger me-1"></i>{{ optional($ack->document)->title ?? '(deleted document)' }}</td>
+                                                <td>{{ $ack->signed_name }}</td>
+                                                <td>{{ $ack->acknowledged_at->format('M j, Y g:i A') }}</td>
+                                                <td class="text-end">
+                                                    @if($ack->signed_pdf_path)
+                                                        <a href="{{ asset($ack->signed_pdf_path) }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary"><i class="fa fa-certificate"></i> Certificate</a>
+                                                    @else
+                                                        <span class="text-muted">—</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>

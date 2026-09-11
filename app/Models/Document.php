@@ -19,6 +19,8 @@ class Document extends Model
         'file_size',
         'mime_type',
         'is_public',
+        'requires_acknowledgment',
+        'acknowledgment_due',
         'user_id',
         'uploaded_by',
         'deleted_by',
@@ -26,6 +28,8 @@ class Document extends Model
 
     protected $casts = [
         'is_public' => 'boolean',
+        'requires_acknowledgment' => 'boolean',
+        'acknowledgment_due' => 'date',
     ];
 
     public function category(): BelongsTo
@@ -48,6 +52,22 @@ class Document extends Model
     public function uploader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    /** Signature/acknowledgment records for this document (one per employee). */
+    public function acknowledgments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DocumentAcknowledgment::class);
+    }
+
+    /** The acknowledgment record for a given employee, if they've signed. */
+    public function acknowledgmentFor(?User $user): ?DocumentAcknowledgment
+    {
+        if (! $user) {
+            return null;
+        }
+
+        return $this->acknowledgments->firstWhere('user_id', $user->id);
     }
 
     public function deletedBy(): BelongsTo

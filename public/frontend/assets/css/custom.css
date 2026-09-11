@@ -660,12 +660,15 @@
 .doc-item__badge { font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 20px; white-space: nowrap; }
 .doc-item__badge.is-shared   { background: #eaf0ff; color: #0004fe; }
 .doc-item__badge.is-personal { background: #fdecec; color: #d32f2f; }
+.doc-item__badge.is-signed   { background: #e6f6ec; color: #1a7f43; }
 .doc-item__btn {
     display: inline-flex; align-items: center; gap: 7px; background: #0004fe; color: #fff;
     text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 9px;
     white-space: nowrap; transition: background .15s ease;
 }
 .doc-item__btn:hover { background: #0037d6; color: #fff; }
+.doc-item__btn.is-ghost { background: #eef2ff; color: #0004fe; }
+.doc-item__btn.is-ghost:hover { background: #dfe6ff; color: #0037d6; }
 
 @media (max-width: 575px) {
     .doc-item { flex-wrap: wrap; }
@@ -810,4 +813,76 @@
     .article-post__body { padding: 24px 22px 30px; }
     .article-post__title { font-size: 24px; }
     .article-post__cover { height: 240px; }
+}
+
+/* =====================================================================
+   Document read & sign (acknowledgment)
+   ===================================================================== */
+/* Action-required banner on the document library */
+.doc-action-required {
+    background: #fff; border: 1px solid #ffd7d9; border-left: 4px solid #e62029;
+    border-radius: 14px; padding: 18px 20px; margin-bottom: 26px;
+    box-shadow: 0 8px 24px rgba(230,32,41,.08);
+}
+.doc-action-required__head { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #c81420; font-size: 15px; margin-bottom: 12px; }
+.doc-action-required__head i { font-size: 18px; }
+.doc-action-required__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.doc-ar-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    background: #fbfcff; border: 1px solid #eef0f4; border-radius: 10px; padding: 12px 14px; }
+.doc-ar-item__info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.doc-ar-item__info > i { color: #e62029; font-size: 20px; flex-shrink: 0; }
+.doc-ar-item__title { display: block; font-weight: 600; color: #1a2230; font-size: 14.5px; }
+.doc-ar-item__due { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #8a94a3; margin-top: 2px; }
+.doc-ar-item__due.is-overdue { color: #e62029; font-weight: 600; }
+.doc-ar-item__btn { flex-shrink: 0; background: #0004fe; color: #fff; text-decoration: none; font-weight: 600;
+    font-size: 13.5px; padding: 9px 18px; border-radius: 9px; transition: background .15s ease, transform .15s ease; }
+.doc-ar-item__btn:hover { background: #0037d6; color: #fff; transform: translateY(-1px); }
+
+/* Read & sign page */
+.sign-doc { background: #fff; border: 1px solid #e8ebf1; border-radius: 16px; padding: 24px 26px 28px; box-shadow: 0 12px 36px rgba(20,28,48,.06); margin-bottom: 40px; }
+.sign-doc__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 2px solid #1a2230; margin-bottom: 20px; }
+.sign-doc__title { font-size: 20px; font-weight: 700; color: #1a2230; margin: 0; display: flex; align-items: center; gap: 10px; }
+.sign-doc__title i { color: #e62029; }
+.sign-doc__due { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #8a94a3; font-weight: 600; }
+.sign-doc__due.is-overdue { color: #e62029; }
+.sign-doc__steps { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin-bottom: 16px; font-size: 13.5px; color: #5a6576; }
+.sign-doc__step { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.sign-doc__step b { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #0004fe; color: #fff; font-size: 12px; }
+.sign-doc__steps > i { color: #c7cdd8; }
+.sign-doc__jump { margin-left: auto; background: #eef2ff; color: #0004fe; font-weight: 700; font-size: 13px; padding: 7px 14px; border-radius: 30px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.sign-doc__jump:hover { background: #dfe6ff; color: #0037d6; }
+.sign-doc__viewer { position: relative; border: 1px solid #eef0f4; border-radius: 12px; overflow: hidden; background: #f6f7f9; }
+.sign-doc__viewer iframe { width: 100%; height: 460px; border: 0; display: block; }
+/* Blurred + non-interactive so content can't be read, selected or saved before signing */
+.sign-doc__viewer.is-blurred iframe { filter: blur(7px); pointer-events: none; transform: scale(1.04); }
+.sign-doc__lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 4px; padding: 20px; background: rgba(246,247,249,.55); backdrop-filter: blur(1px); }
+.sign-doc__lock i { font-size: 30px; color: #0004fe; margin-bottom: 8px; }
+.sign-doc__lock-title { font-size: 16px; font-weight: 800; color: #1a2230; }
+.sign-doc__lock-sub { font-size: 13px; color: #5a6576; max-width: 320px; }
+.sign-doc__form { margin-top: 22px; border: 2px solid #0004fe; border-radius: 14px; padding: 22px 24px; background: #fbfcff; scroll-margin-top: 20px; }
+.sign-doc__form-title { font-size: 17px; font-weight: 800; color: #1a2230; margin: 0 0 16px; display: flex; align-items: center; gap: 9px; }
+.sign-doc__form-title i { color: #0004fe; }
+.sign-doc__statement { margin-bottom: 18px; }
+.sign-doc__check { display: flex; align-items: flex-start; gap: 11px; cursor: pointer; font-size: 15px; color: #2b3240; line-height: 1.5; }
+.sign-doc__check input { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; accent-color: #0004fe; cursor: pointer; }
+.sign-doc__field { max-width: 460px; }
+.sign-doc__field label { display: block; font-weight: 600; color: #1a2230; font-size: 14px; margin-bottom: 7px; }
+.sign-doc__field .req { color: #e62029; }
+.sign-doc__field input { width: 100%; border: 1px solid #d9dee7; border-radius: 10px; padding: 12px 14px; font-size: 16px;
+    font-family: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; font-style: italic; color: #1a2230; transition: border-color .15s ease, box-shadow .15s ease; }
+.sign-doc__field input:focus { outline: none; border-color: #0004fe; box-shadow: 0 0 0 3px rgba(0,4,254,.12); }
+.sign-doc__hint { margin: 8px 0 0; font-size: 12px; color: #8a94a3; line-height: 1.5; }
+.sign-doc__error { color: #e62029; font-size: 13px; font-weight: 600; margin-top: 6px; }
+.sign-doc__actions { display: flex; align-items: center; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+.sign-doc__submit { background: #0004fe; color: #fff; border: none; font-weight: 700; font-size: 15px; padding: 13px 28px; border-radius: 11px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,4,254,.28); transition: transform .12s ease, box-shadow .12s ease; }
+.sign-doc__submit:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,4,254,.36); }
+.sign-doc__cancel { color: #8a94a3; text-decoration: none; font-weight: 600; font-size: 14px; }
+.sign-doc__cancel:hover { color: #1a2230; }
+
+@media (max-width: 575px) {
+    .sign-doc { padding: 18px 16px 22px; }
+    .sign-doc__viewer iframe { height: 62vh; }
+    .doc-ar-item__btn { width: 100%; text-align: center; }
 }

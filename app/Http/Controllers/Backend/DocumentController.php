@@ -23,7 +23,7 @@ class DocumentController extends Controller
 
     public function index()
     {
-        $documents = Document::with(['category', 'assignees'])->orderByDesc('id')->get();
+        $documents = Document::with(['category', 'assignees'])->withCount('acknowledgments')->orderByDesc('id')->get();
         return view('backend.documents.index', compact('documents'));
     }
 
@@ -38,6 +38,7 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateDocument($request, true);
+        $requiresAck = $this->resolveRequiresAck($request);
 
         $file = $request->file('file');
         // Read metadata BEFORE moving the file — after move() the temp file is gone.
@@ -47,15 +48,17 @@ class DocumentController extends Controller
         $path         = $this->storeFile($file);
 
         $document = Document::create([
-            'document_category_id' => $validated['document_category_id'],
-            'title'                => $validated['title'],
-            'file_path'            => $path,
-            'original_name'        => $originalName,
-            'file_size'            => $fileSize,
-            'mime_type'            => $mimeType,
-            'is_public'            => $request->boolean('is_public'),
-            'user_id'              => null, // assignments now live in the document_user pivot
-            'uploaded_by'          => $request->user()->id,
+            'document_category_id'    => $validated['document_category_id'],
+            'title'                   => $validated['title'],
+            'file_path'               => $path,
+            'original_name'           => $originalName,
+            'file_size'               => $fileSize,
+            'mime_type'               => $mimeType,
+            'is_public'               => $request->boolean('is_public'),
+            'requires_acknowledgment' => $requiresAck,
+            'acknowledgment_due'      => $requiresAck ? ($validated['acknowledgment_due'] ?? null) : null,
+            'user_id'                 => null, // assignments now live in the document_user pivot
+            'uploaded_by'             => $request->user()->id,
         ]);
 
         // Personal docs can be assigned to one or more employees.
@@ -81,6 +84,7 @@ class DocumentController extends Controller
     public function update(Request $request, Document $document)
     {
         $validated = $this->validateDocument($request, false);
+        $requiresAck = $this->resolveRequiresAck($request, $document);
 
         // Replace the file only if a new one was uploaded.
         if ($request->hasFile('file')) {
@@ -96,10 +100,12 @@ class DocumentController extends Controller
             $document->mime_type     = $mimeType;
         }
 
-        $document->document_category_id = $validated['document_category_id'];
-        $document->title                = $validated['title'];
-        $document->is_public            = $request->boolean('is_public');
-        $document->user_id              = null; // assignments live in the pivot now
+        $document->document_category_id    = $validated['document_category_id'];
+        $document->title                   = $validated['title'];
+        $document->is_public               = $request->boolean('is_public');
+        $document->requires_acknowledgment = $requiresAck;
+        $document->acknowledgment_due      = $requiresAck ? ($validated['acknowledgment_due'] ?? null) : null;
+        $document->user_id                 = null; // assignments live in the pivot now
         $document->save();
 
         // Sync employee assignments: none for public, the selected set for personal.
@@ -125,6 +131,33 @@ class DocumentController extends Controller
         }
 
         return response()->download($full, $document->original_name ?: basename($document->file_path));
+    }
+
+    /** Sign-off compliance for a document: who has signed vs who is still pending. */
+    public function acknowledgments(Document $document)
+    {
+        $document->load(['assignees', 'acknowledgments.user']);
+
+        $signedByUser = $document->acknowledgments->keyBy('user_id');
+
+        return view('backend.documents.acknowledgments', [
+            'document'     => $document,
+            'signedByUser' => $signedByUser,
+        ]);
+    }
+
+    /** Download an employee's stamped signed copy. */
+    public function downloadSigned(\App\Models\DocumentAcknowledgment $acknowledgment)
+    {
+        $full = $acknowledgment->signed_pdf_path ? public_path($acknowledgment->signed_pdf_path) : null;
+        if (! $full || ! file_exists($full)) {
+            abort(404, 'Signed copy not found.');
+        }
+
+        $doc  = $acknowledgment->document;
+        $name = pathinfo(optional($doc)->original_name ?: 'document', PATHINFO_FILENAME).'_certificate_'.$acknowledgment->user_id.'.pdf';
+
+        return response()->download($full, $name);
     }
 
     /**
@@ -174,16 +207,45 @@ class DocumentController extends Controller
     private function validateDocument(Request $request, bool $fileRequired): array
     {
         return $request->validate([
-            'document_category_id' => 'required|exists:document_categories,id',
-            'title'                => 'required|string|max:255',
-            'file'                 => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png', 'max:'.config('uploads.document_max_kb')],
-            'is_public'            => 'nullable|boolean',
-            'user_ids'             => [Rule::requiredIf(fn () => ! $request->boolean('is_public')), 'nullable', 'array'],
-            'user_ids.*'           => ['exists:users,id'],
+            'document_category_id'    => 'required|exists:document_categories,id',
+            'title'                   => 'required|string|max:255',
+            'file'                    => [$fileRequired ? 'required' : 'nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png', 'max:'.config('uploads.document_max_kb')],
+            'is_public'               => 'nullable|boolean',
+            'requires_acknowledgment' => 'nullable|boolean',
+            'acknowledgment_due'      => 'nullable|date',
+            'user_ids'                => [Rule::requiredIf(fn () => ! $request->boolean('is_public')), 'nullable', 'array'],
+            'user_ids.*'              => ['exists:users,id'],
         ], [
             'file.max'          => 'The file may not be larger than '.round(config('uploads.document_max_kb') / 1024).' MB.',
             'file.mimes'        => 'Allowed file types: PDF, Word, Excel, JPG, PNG.',
             'user_ids.required'  => 'Please choose at least one employee this personal document belongs to.',
         ]);
+    }
+
+    /**
+     * "Require read & sign" only applies to a PERSONAL (assigned) PDF, because
+     * the signature page is stamped onto the original PDF and filed per employee.
+     * Returns true when acknowledgment should be enabled for this request.
+     */
+    private function resolveRequiresAck(Request $request, ?Document $document = null): bool
+    {
+        if (! $request->boolean('requires_acknowledgment') || $request->boolean('is_public')) {
+            return false;
+        }
+
+        // Determine the effective file extension: the new upload, or the existing file.
+        if ($request->hasFile('file')) {
+            $ext = strtolower($request->file('file')->getClientOriginalExtension());
+        } else {
+            $ext = strtolower(pathinfo((string) optional($document)->file_path, PATHINFO_EXTENSION));
+        }
+
+        if ($ext !== 'pdf') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'requires_acknowledgment' => 'Read & sign can only be required for PDF documents. Please upload a PDF.',
+            ]);
+        }
+
+        return true;
     }
 }

@@ -45,6 +45,11 @@
                                                 @else
                                                     <span class="badge bg-warning text-dark">Personal</span>
                                                 @endif
+                                                @if($doc->requires_acknowledgment)
+                                                    <a href="{{ route('admin.documents.acknowledgments', $doc) }}" class="badge bg-primary text-decoration-none ms-1" title="Read &amp; sign — view status">
+                                                        <i class="fa fa-pencil-square-o me-1"></i>{{ $doc->acknowledgments_count }}/{{ $doc->assignees->count() }} signed
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td class="text-end">
                                                 <div class="d-flex gap-1 justify-content-end">

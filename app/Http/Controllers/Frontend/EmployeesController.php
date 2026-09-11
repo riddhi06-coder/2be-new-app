@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Announcement;
 use App\Models\CalendarEvent;
 use App\Models\Document;
+use App\Models\DocumentAcknowledgment;
 use App\Models\DocumentCategory;
 use App\Models\IncidentReport;
 use App\Models\User;
+use App\Services\DocumentSignatureService;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -345,7 +348,11 @@ class EmployeesController extends Controller
             ->withCount([
                 'documents as public_count'   => fn ($q) => $q->where('is_public', true),
                 'documents as personal_count' => fn ($q) => $user
-                    ? $q->where('is_public', false)->whereHas('assignees', fn ($a) => $a->where('users.id', $user->id))
+                    ? $q->where('is_public', false)
+                        ->whereHas('assignees', fn ($a) => $a->where('users.id', $user->id))
+                        // A sign-required doc is only "filed" once the employee has signed it.
+                        ->where(fn ($w) => $w->where('requires_acknowledgment', false)
+                            ->orWhereHas('acknowledgments', fn ($k) => $k->where('user_id', $user->id)))
                     : $q->whereRaw('0 = 1'),
             ])
             ->orderBy('name')
@@ -354,6 +361,7 @@ class EmployeesController extends Controller
         return view('frontend.employee.documents.index', [
             'publicCategories'   => $categories->where('public_count', '>', 0)->values(),
             'personalCategories' => $categories->where('personal_count', '>', 0)->values(),
+            'pendingAck'         => $this->pendingAcknowledgments($user),
         ]);
     }
 
@@ -372,9 +380,16 @@ class EmployeesController extends Controller
             ->where(function ($q) use ($user) {
                 $q->where('is_public', true);
                 if ($user) {
-                    $q->orWhereHas('assignees', fn ($a) => $a->where('users.id', $user->id));
+                    // Personal docs: assigned to me AND (no sign needed OR I've already signed it).
+                    $q->orWhere(function ($p) use ($user) {
+                        $p->where('is_public', false)
+                            ->whereHas('assignees', fn ($a) => $a->where('users.id', $user->id))
+                            ->where(fn ($w) => $w->where('requires_acknowledgment', false)
+                                ->orWhereHas('acknowledgments', fn ($k) => $k->where('user_id', $user->id)));
+                    });
                 }
             })
+            ->with(['acknowledgments' => fn ($q) => $user ? $q->where('user_id', $user->id) : $q->whereRaw('0 = 1')])
             ->orderByDesc('id')
             ->get();
 
@@ -399,11 +414,18 @@ class EmployeesController extends Controller
     /** Stream a document download. Public docs are open; personal docs need the owner logged in. */
     public function employee_document_download(Document $document)
     {
+        $user = Auth::user();
+
         if (! $document->is_public) {
-            $user = Auth::user();
             if (! $user || ! $document->assignees()->where('users.id', $user->id)->exists()) {
                 abort(403, 'You do not have access to this document.');
             }
+        }
+
+        // Sign-required docs unlock the original only after the employee has signed.
+        if ($document->requires_acknowledgment && $user) {
+            $signed = $document->acknowledgments()->where('user_id', $user->id)->exists();
+            abort_unless($signed, 403, 'Please read & sign this document first.');
         }
 
         $full = public_path($document->file_path);
@@ -412,6 +434,109 @@ class EmployeesController extends Controller
         }
 
         return response()->download($full, $document->original_name ?: basename($document->file_path));
+    }
+
+    /**
+     * Documents that require the logged-in employee to read & sign, and which
+     * they haven't signed yet. Used to surface an "Action Required" list.
+     */
+    private function pendingAcknowledgments(?User $user)
+    {
+        if (! $user) {
+            return collect();
+        }
+
+        return Document::where('requires_acknowledgment', true)
+            ->whereHas('assignees', fn ($a) => $a->where('users.id', $user->id))
+            ->whereDoesntHave('acknowledgments', fn ($q) => $q->where('user_id', $user->id))
+            ->with('category')
+            ->orderBy('acknowledgment_due')
+            ->get();
+    }
+
+    /** Guard: document must require sign-off and be assigned to this employee. */
+    private function assertSignable(Document $document, ?User $user): void
+    {
+        abort_unless($user, 403);
+        abort_unless($document->requires_acknowledgment, 404, 'This document does not require acknowledgment.');
+        abort_unless(
+            $document->assignees()->where('users.id', $user->id)->exists(),
+            403,
+            'You do not have access to this document.'
+        );
+    }
+
+    /** Show the read-and-sign screen for a document requiring acknowledgment. */
+    public function employee_document_sign(Document $document)
+    {
+        $user = Auth::user();
+        $this->assertSignable($document, $user);
+
+        // Already signed? Send them to their signed copy instead.
+        if ($document->acknowledgments()->where('user_id', $user->id)->exists()) {
+            return redirect()->route('frontend.employee_documents')
+                ->with('message', 'You have already signed this document.');
+        }
+
+        return view('frontend.employee.documents.sign', compact('document'));
+    }
+
+    /** Record the acknowledgment, generate the signed PDF, file it under the employee. */
+    public function employee_document_acknowledge(Request $request, Document $document, DocumentSignatureService $signatures)
+    {
+        $user = Auth::user();
+        $this->assertSignable($document, $user);
+
+        $validated = $request->validate([
+            'signed_name' => 'required|string|max:150',
+            'agree'       => 'accepted',
+        ], [
+            'signed_name.required' => 'Please type your full name to sign.',
+            'agree.accepted'       => 'You must confirm you have read and understood the document.',
+        ]);
+
+        // Guard against a double submission.
+        if ($document->acknowledgments()->where('user_id', $user->id)->exists()) {
+            return redirect()->route('frontend.employee_documents')
+                ->with('message', 'You have already signed this document.');
+        }
+
+        $at = now();
+        $ip = $request->ip();
+
+        $signedPath = $signatures->generateSignedPdf($document, $user, $validated['signed_name'], $ip, $at);
+
+        DocumentAcknowledgment::create([
+            'document_id'     => $document->id,
+            'user_id'         => $user->id,
+            'signed_name'     => $validated['signed_name'],
+            'ip_address'      => $ip,
+            'signed_pdf_path' => $signedPath,
+            'acknowledged_at' => $at,
+        ]);
+
+        ActivityLog::write('created', 'Documents',
+            $user->name.' acknowledged & signed "'.$document->title.'"', $document);
+
+        return redirect()->route('frontend.employee_documents')
+            ->with('message', 'Thank you — your acknowledgment has been recorded and filed under your profile.');
+    }
+
+    /** Stream the employee's own signed copy of a document. */
+    public function employee_signed_download(Document $document)
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $ack = $document->acknowledgments()->where('user_id', $user->id)->first();
+        abort_unless($ack && $ack->signed_pdf_path, 404, 'No signed copy found.');
+
+        $full = public_path($ack->signed_pdf_path);
+        abort_unless(file_exists($full), 404, 'Signed file not found.');
+
+        $name = pathinfo($document->original_name ?: 'document', PATHINFO_FILENAME).'_certificate.pdf';
+
+        return response()->download($full, $name);
     }
 
     /** Community Calendar — read-only view for everyone. */

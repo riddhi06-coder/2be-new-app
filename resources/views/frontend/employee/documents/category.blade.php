@@ -92,14 +92,29 @@
                         <h2 class="doc-group__title"><i class="fa fa-user"></i> My Personal Documents</h2>
                         <div class="doc-list">
                             @foreach($personalDocs as $doc)
-                                @php [$icon, $ftClass] = $iconFor($doc); @endphp
+                                @php
+                                    [$icon, $ftClass] = $iconFor($doc);
+                                    $signed = $doc->requires_acknowledgment && $doc->acknowledgments->isNotEmpty();
+                                @endphp
                                 <div class="doc-item">
                                     <span class="doc-item__icon {{ $ftClass }}"><i class="fa {{ $icon }}"></i></span>
                                     <div class="doc-item__info">
                                         <span class="doc-item__title">{{ $doc->title }}</span>
-                                        <span class="doc-item__meta">{{ $doc->original_name }} &middot; {{ $doc->readable_size }}</span>
+                                        <span class="doc-item__meta">
+                                            {{ $doc->original_name }} &middot; {{ $doc->readable_size }}
+                                            @if($signed)
+                                                &middot; Signed {{ optional($doc->acknowledgments->first())->acknowledged_at?->format('M j, Y') }}
+                                            @endif
+                                        </span>
                                     </div>
-                                    <span class="doc-item__badge is-personal">Personal</span>
+                                    @if($signed)
+                                        <span class="doc-item__badge is-signed"><i class="fa fa-check"></i> Signed</span>
+                                        <a href="{{ asset(optional($doc->acknowledgments->first())->signed_pdf_path) }}" target="_blank" rel="noopener" class="doc-item__btn is-ghost" title="Your certificate of acknowledgment">
+                                            <i class="fa fa-certificate"></i> <span>Certificate</span>
+                                        </a>
+                                    @else
+                                        <span class="doc-item__badge is-personal">Personal</span>
+                                    @endif
                                     <a href="{{ route('frontend.employee_document_download', $doc) }}" class="doc-item__btn">
                                         <i class="fa fa-download"></i> <span>Download</span>
                                     </a>

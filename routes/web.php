@@ -133,6 +133,8 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('documents/create',          [DocumentController::class, 'create'])->middleware('permission:documents.create')->name('admin.documents.create');
     Route::post('documents',                [DocumentController::class, 'store'])->middleware('permission:documents.create')->name('admin.documents.store');
     Route::get('documents/{document}/download', [DocumentController::class, 'download'])->middleware('permission:documents.view')->name('admin.documents.download');
+    Route::get('documents/{document}/acknowledgments', [DocumentController::class, 'acknowledgments'])->middleware('permission:documents.view')->name('admin.documents.acknowledgments');
+    Route::get('documents/acknowledgment/{acknowledgment}/signed', [DocumentController::class, 'downloadSigned'])->middleware('permission:documents.view')->name('admin.documents.signed_download');
     Route::get('documents/{document}/edit', [DocumentController::class, 'edit'])->middleware('permission:documents.edit')->name('admin.documents.edit');
     Route::put('documents/{document}',      [DocumentController::class, 'update'])->middleware('permission:documents.edit')->name('admin.documents.update');
     Route::delete('documents/{document}',   [DocumentController::class, 'destroy'])->middleware('permission:documents.delete')->name('admin.documents.destroy');
@@ -223,6 +225,10 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/document-library',                       [EmployeesController::class, 'employee_documents'])->name('frontend.employee_documents');
     Route::get('/document-library/category/{slug}/{space?}', [EmployeesController::class, 'employee_document_category'])->whereIn('space', ['public', 'personal'])->name('frontend.employee_document_category');
     Route::get('/document-library/download/{document}',   [EmployeesController::class, 'employee_document_download'])->name('frontend.employee_document_download');
+    // Read & sign (acknowledge) flow — enforced in the controller (must be logged in + assigned).
+    Route::get('/document-library/sign/{document}',       [EmployeesController::class, 'employee_document_sign'])->name('frontend.employee_document_sign');
+    Route::post('/document-library/sign/{document}',      [EmployeesController::class, 'employee_document_acknowledge'])->name('frontend.employee_document_acknowledge');
+    Route::get('/document-library/signed/{document}',     [EmployeesController::class, 'employee_signed_download'])->name('frontend.employee_signed_download');
     
     
     // Public community calendar (admin management lives at /manage-community-calendar).
