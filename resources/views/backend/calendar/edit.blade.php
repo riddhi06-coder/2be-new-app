@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.community-calendar.update', $event) }}" method="POST" class="theme-form">
+                        <form action="{{ route('admin.community-calendar.update', $event) }}" method="POST" enctype="multipart/form-data" class="theme-form">
                             @csrf @method('PUT')
                             <div class="row">
                                 <div class="col-md-8 mb-3">
@@ -91,6 +91,21 @@
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control ckeditor" rows="3">{{ old('description', $event->description) }}</textarea>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Flyer / Document <small class="text-muted">(optional)</small></label>
+                                    @if($event->attachment)
+                                        <div class="mb-2">
+                                            <a href="{{ asset($event->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <i class="fa fa-file-o"></i> View current flyer
+                                            </a>
+                                            <label class="ms-2 small"><input type="checkbox" name="remove_attachment" value="1"> Remove</label>
+                                        </div>
+                                    @endif
+                                    <input type="file" name="attachment" class="form-control @error('attachment') is-invalid @enderror" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp">
+                                    <small class="text-muted">PDF, Word or image. Max {{ round(config('uploads.document_max_kb') / 1024) }} MB. Uploading a new file replaces the current one.</small>
+                                    @error('attachment')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Changes</button>

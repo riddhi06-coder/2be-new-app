@@ -21,6 +21,7 @@ class CalendarEvent extends Model
         'end_time',
         'category',
         'location',
+        'attachment',
         'is_active',
         'created_by',
         'deleted_by',
@@ -60,5 +61,11 @@ class CalendarEvent extends Model
     public function getColorAttribute(): string
     {
         return self::CATEGORIES[$this->category]['color'] ?? '#6c757d';
+    }
+
+    /** Public URL of the uploaded flyer/document, or null. */
+    public function getAttachmentUrlAttribute(): ?string
+    {
+        return $this->attachment ? asset($this->attachment) : null;
     }
 }

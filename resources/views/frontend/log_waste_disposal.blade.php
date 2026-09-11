@@ -24,7 +24,7 @@
     <section class="log-btn-wrap">
         <div class="container">
           <div class="row">
-            <div class="col-md-2 col-sm-0"></div>
+            <div class="col-md-2 d-none d-md-block"></div>
             <div class="col-md-8 col-sm-12">
               <div class="form-box">
                 <h2>Log Waste Disposal Details</h2>

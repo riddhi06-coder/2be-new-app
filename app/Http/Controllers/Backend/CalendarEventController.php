@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\CalendarEvent;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\Rule;
 
 class CalendarEventController extends Controller
@@ -59,12 +60,18 @@ class CalendarEventController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateEvent($request);
+        unset($validated['attachment'], $validated['remove_attachment']);
 
-        CalendarEvent::create($validated + [
+        $event = CalendarEvent::create($validated + [
             'all_day'    => $request->boolean('all_day'),
             'is_active'  => $request->boolean('is_active'),
             'created_by' => $request->user()->id,
         ]);
+
+        if ($request->hasFile('attachment')) {
+            $event->attachment = $this->storeAttachment($request->file('attachment'));
+            $event->save();
+        }
 
         return redirect()->route('admin.community-calendar.index')->with('message', 'Event added successfully.');
     }
@@ -77,11 +84,26 @@ class CalendarEventController extends Controller
     public function update(Request $request, CalendarEvent $calendar)
     {
         $validated = $this->validateEvent($request);
+        unset($validated['attachment'], $validated['remove_attachment']);
 
         $calendar->update($validated + [
             'all_day'   => $request->boolean('all_day'),
             'is_active' => $request->boolean('is_active'),
         ]);
+
+        // Remove the current flyer if requested (and no replacement uploaded).
+        if ($request->boolean('remove_attachment') && ! $request->hasFile('attachment')) {
+            $this->deleteAttachment($calendar->attachment);
+            $calendar->attachment = null;
+            $calendar->save();
+        }
+
+        // Replace with a newly uploaded flyer.
+        if ($request->hasFile('attachment')) {
+            $this->deleteAttachment($calendar->attachment);
+            $calendar->attachment = $this->storeAttachment($request->file('attachment'));
+            $calendar->save();
+        }
 
         return redirect()->route('admin.community-calendar.index')->with('message', 'Event updated successfully.');
     }
@@ -95,14 +117,41 @@ class CalendarEventController extends Controller
     private function validateEvent(Request $request): array
     {
         return $request->validate([
-            'title'       => 'required|string|max:255',
-            'category'    => ['required', Rule::in(array_keys(CalendarEvent::CATEGORIES))],
-            'start_date'  => 'required|date',
-            'end_date'    => 'nullable|date|after_or_equal:start_date',
-            'start_time'  => 'nullable',
-            'end_time'    => 'nullable',
-            'location'    => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'title'             => 'required|string|max:255',
+            'category'          => ['required', Rule::in(array_keys(CalendarEvent::CATEGORIES))],
+            'start_date'        => 'required|date',
+            'end_date'          => 'nullable|date|after_or_equal:start_date',
+            'start_time'        => 'nullable',
+            'end_time'          => 'nullable',
+            'location'          => 'nullable|string|max:255',
+            'description'       => 'nullable|string',
+            'attachment'        => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,webp|max:'.config('uploads.document_max_kb'),
+            'remove_attachment' => 'nullable|boolean',
+        ], [
+            'attachment.mimes' => 'The flyer must be a PDF, Word document, or image (JPG, PNG, WEBP).',
+            'attachment.max'   => 'The flyer may not be larger than '.round(config('uploads.document_max_kb') / 1024).' MB.',
         ]);
+    }
+
+    /** Move an uploaded flyer/document into public/uploads/calendar with a safe, unique name. */
+    private function storeAttachment(UploadedFile $file): string
+    {
+        $dir = public_path('uploads/calendar');
+        if (! is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'flyer';
+        $filename = $base.'_'.time().'_'.mt_rand(1000, 9999).'.'.$file->getClientOriginalExtension();
+        $file->move($dir, $filename);
+
+        return 'uploads/calendar/'.$filename;
+    }
+
+    private function deleteAttachment(?string $path): void
+    {
+        if ($path && file_exists(public_path($path))) {
+            @unlink(public_path($path));
+        }
     }
 }

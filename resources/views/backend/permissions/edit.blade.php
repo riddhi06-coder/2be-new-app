@@ -44,6 +44,7 @@
                                                     Select all
                                                 </label>
                                             </div>
+                                            <div class="table-responsive">
                                             <table class="table table-sm table-hover mb-0 align-middle perm-matrix">
                                                 <thead>
                                                     <tr>
@@ -80,6 +81,7 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach

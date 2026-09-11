@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.community-calendar.store') }}" method="POST" class="theme-form">
+                        <form action="{{ route('admin.community-calendar.store') }}" method="POST" enctype="multipart/form-data" class="theme-form">
                             @csrf
                             <div class="row">
                                 <div class="col-md-8 mb-3">
@@ -90,6 +90,13 @@
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea name="description" class="form-control ckeditor" rows="3" placeholder="Optional details">{{ old('description') }}</textarea>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Flyer / Document <small class="text-muted">(optional)</small></label>
+                                    <input type="file" name="attachment" class="form-control @error('attachment') is-invalid @enderror" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp">
+                                    <small class="text-muted">PDF, Word or image. Max {{ round(config('uploads.document_max_kb') / 1024) }} MB. Employees can open it from the calendar.</small>
+                                    @error('attachment')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Add Event</button>

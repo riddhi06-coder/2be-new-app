@@ -76,7 +76,7 @@
                             <!-- Filter Form -->
                             <form method="GET"
                                 action="{{ route('manage-disposal-details.index') }}"
-                                class="d-flex align-items-center gap-2">
+                                class="d-flex align-items-center gap-2 flex-wrap">
 
                                 <!-- From Date -->
                                 <div class="d-flex flex-column">

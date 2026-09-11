@@ -84,6 +84,9 @@
                                                 <span class="cal-event__loc"><i class="fa fa-map-marker"></i> {{ $event->location }}</span>
                                             @endif
                                         </span>
+                                        @if($event->attachment_url)
+                                            <a href="{{ $event->attachment_url }}" target="_blank" rel="noopener" class="cal-event__flyer"><i class="fa fa-file-o"></i> View</a>
+                                        @endif
                                     </div>
                                 </div>
                             @empty
@@ -112,6 +115,9 @@
                             <div class="cal-modal__row"><i class="fa fa-clock-o"></i> <span id="calModalTime"></span></div>
                             <div class="cal-modal__row" id="calModalLocWrap"><i class="fa fa-map-marker"></i> <span id="calModalLoc"></span></div>
                             <p class="cal-modal__desc" id="calModalDesc"></p>
+                            <a href="#" target="_blank" rel="noopener" class="cal-modal__flyer" id="calModalFlyer" style="display:none;">
+                                <i class="fa fa-file-o"></i> View
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -132,8 +138,10 @@
                 buttonText: { today: 'Today', month: 'Month', list: 'List' },
                 height: 'auto',
                 fixedWeekCount: false,
-                dayMaxEvents: 3,
+                dayMaxEvents: 2,
+                moreLinkText: function (n) { return '+' + n + ' more'; },
                 eventDisplay: 'block',
+                displayEventTime: true,
                 eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
                 events: '{{ route('frontend.employee_calendar_events') }}',
                 eventClick: function (info) {
@@ -144,10 +152,11 @@
                     document.getElementById('calModalDate').textContent  = p.dateLabel || '';
                     document.getElementById('calModalTime').textContent  = p.timeLabel || '';
 
+                    var evColor = p.color || '#0004fe';
+                    document.querySelector('#calEventModal .cal-modal').style.setProperty('--evc', evColor);
+
                     var cat = document.getElementById('calModalCat');
                     cat.textContent = p.category || 'Event';
-                    cat.style.background = (p.color || '#0004fe') + '22';
-                    cat.style.color = p.color || '#0004fe';
 
                     var locWrap = document.getElementById('calModalLocWrap');
                     if (p.location) {
@@ -160,6 +169,14 @@
                     var desc = document.getElementById('calModalDesc');
                     desc.textContent = p.description || '';
                     desc.style.display = p.description ? '' : 'none';
+
+                    var flyer = document.getElementById('calModalFlyer');
+                    if (p.attachment) {
+                        flyer.setAttribute('href', p.attachment);
+                        flyer.style.display = '';
+                    } else {
+                        flyer.style.display = 'none';
+                    }
 
                     if (window.bootstrap && bootstrap.Modal) {
                         bootstrap.Modal.getOrCreateInstance(document.getElementById('calEventModal')).show();
