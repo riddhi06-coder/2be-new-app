@@ -198,7 +198,6 @@
                                             <button type="button" class="emp-filter__chip" data-filter="closed">Closed ({{ $reportStats['closed'] }})</button>
                                         </div>
 
-                                        @php $sevMap = ['minor' => 'sev-minor', 'moderate' => 'sev-moderate', 'serious' => 'sev-serious']; @endphp
                                         @foreach($myReportsAll as $report)
                                             @php $st = $statusMap[$report->status] ?? ['label' => ucfirst($report->status), 'class' => '']; @endphp
                                             <div class="emp-rcard" data-status="{{ $report->status }}">
@@ -219,10 +218,6 @@
                                                             <div class="emp-rcard__field">
                                                                 <span class="emp-rcard__label">Category</span>
                                                                 <span class="emp-rcard__value">{{ $report->category_label }}</span>
-                                                            </div>
-                                                            <div class="emp-rcard__field">
-                                                                <span class="emp-rcard__label">Severity</span>
-                                                                <span class="emp-sev {{ $sevMap[$report->severity] ?? '' }}">{{ $report->severity_label }}</span>
                                                             </div>
                                                             <div class="emp-rcard__field">
                                                                 <span class="emp-rcard__label">Date &amp; Time</span>
@@ -255,10 +250,14 @@
 
                                                         @if($report->photos->count())
                                                             <div class="emp-rcard__block">
-                                                                <span class="emp-rcard__label">Photos</span>
+                                                                <span class="emp-rcard__label">Attachments</span>
                                                                 <div class="emp-rcard__photos">
                                                                     @foreach($report->photos as $photo)
-                                                                        <a href="{{ asset($photo->file_path) }}" target="_blank"><img src="{{ asset($photo->file_path) }}" alt="Incident photo"></a>
+                                                                        @if(\Illuminate\Support\Str::startsWith($photo->mime_type ?? '', 'video'))
+                                                                            <video src="{{ asset($photo->file_path) }}" controls preload="metadata"></video>
+                                                                        @else
+                                                                            <a href="{{ asset($photo->file_path) }}" target="_blank"><img src="{{ asset($photo->file_path) }}" alt="Incident photo"></a>
+                                                                        @endif
                                                                     @endforeach
                                                                 </div>
                                                             </div>

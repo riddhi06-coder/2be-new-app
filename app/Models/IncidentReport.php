@@ -21,7 +21,6 @@ class IncidentReport extends Model
         'incident_time',
         'location',
         'category',
-        'severity',
         'description',
         'immediate_action',
         'witnesses',
@@ -47,12 +46,6 @@ class IncidentReport extends Model
         'vehicle'         => 'Vehicle',
         'equipment'       => 'Equipment',
         'other'           => 'Other',
-    ];
-
-    public const SEVERITIES = [
-        'minor'    => 'Minor',
-        'moderate' => 'Moderate',
-        'serious'  => 'Serious',
     ];
 
     public const STATUSES = [
@@ -97,11 +90,6 @@ class IncidentReport extends Model
         return self::CATEGORIES[$this->category] ?? ucfirst((string) $this->category);
     }
 
-    public function getSeverityLabelAttribute(): string
-    {
-        return self::SEVERITIES[$this->severity] ?? ucfirst((string) $this->severity);
-    }
-
     public function getStatusLabelAttribute(): string
     {
         return self::STATUSES[$this->status] ?? ucfirst((string) $this->status);
@@ -117,15 +105,6 @@ class IncidentReport extends Model
         ][$this->status] ?? 'bg-secondary';
     }
 
-    /** Bootstrap badge class for the current severity. */
-    public function getSeverityBadgeAttribute(): string
-    {
-        return [
-            'minor'    => 'bg-info',
-            'moderate' => 'bg-warning text-dark',
-            'serious'  => 'bg-danger',
-        ][$this->severity] ?? 'bg-secondary';
-    }
 
     public function getSourceLabelAttribute(): string
     {

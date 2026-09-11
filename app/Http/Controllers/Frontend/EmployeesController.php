@@ -197,7 +197,6 @@ class EmployeesController extends Controller
     {
         return view('frontend.employee.employee_incident_report', [
             'categories' => IncidentReport::CATEGORIES,
-            'severities' => IncidentReport::SEVERITIES,
             'employees'  => $this->activeEmployees(),
         ]);
     }
@@ -223,12 +222,13 @@ class EmployeesController extends Controller
             'incident_time'      => 'nullable|date_format:H:i',
             'incident_location'  => 'required|string|min:3|max:255',
             'category'           => ['required', Rule::in(array_keys(IncidentReport::CATEGORIES))],
-            'severity'           => ['required', Rule::in(array_keys(IncidentReport::SEVERITIES))],
             'description'        => 'required|string|min:10',
             'immediate_action'   => 'nullable|string',
             'witnesses'          => 'nullable|string|max:255',
             'incident_photos'    => 'nullable|array|max:6',
             'incident_photos.*'  => 'image|mimes:jpg,jpeg,png,gif,webp|max:'.config('uploads.image_max_kb'),
+            'incident_videos'    => 'nullable|array|max:4',
+            'incident_videos.*'  => 'file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm,video/x-matroska|max:'.config('uploads.video_max_kb'),
         ], [
             'incident_date.before_or_equal' => 'The incident date cannot be in the future.',
             'incident_location.min'         => 'Location must be at least 3 characters.',
@@ -236,6 +236,9 @@ class EmployeesController extends Controller
             'incident_photos.max'           => 'You can upload up to 6 photos at a time.',
             'incident_photos.*.image'       => 'Each attachment must be an image (JPG, PNG, GIF or WEBP).',
             'incident_photos.*.max'         => 'Each image may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
+            'incident_videos.max'           => 'You can upload up to 4 videos at a time.',
+            'incident_videos.*.mimetypes'   => 'Each video must be an MP4, MOV, AVI or WEBM file.',
+            'incident_videos.*.max'         => 'Each video may not be larger than '.round(config('uploads.video_max_kb') / 1024).' MB.',
         ]);
 
         // reported_by = the employee filing the report (always the logged-in user).
@@ -253,7 +256,6 @@ class EmployeesController extends Controller
             'incident_time'    => $validated['incident_time'] ?? null,
             'location'         => $validated['incident_location'],
             'category'         => $validated['category'],
-            'severity'         => $validated['severity'],
             'description'      => $validated['description'],
             'immediate_action' => $validated['immediate_action'] ?? null,
             'witnesses'        => $validated['witnesses'] ?? null,
@@ -276,6 +278,31 @@ class EmployeesController extends Controller
                     continue;
                 }
                 $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'photo';
+                $original = $file->getClientOriginalName();
+                $size     = $file->getSize();
+                $mime     = $file->getClientMimeType();
+                $filename = $base.'_'.time().'_'.mt_rand(100, 999).'.'.$file->getClientOriginalExtension();
+                $file->move($dir, $filename);
+                $report->photos()->create([
+                    'file_path'     => 'uploads/incident-reports/'.$filename,
+                    'original_name' => $original,
+                    'file_size'     => $size,
+                    'mime_type'     => $mime,
+                ]);
+            }
+        }
+
+        // Store any uploaded videos (same attachments table; distinguished by mime type).
+        if ($request->hasFile('incident_videos')) {
+            $dir = public_path('uploads/incident-reports');
+            if (! is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            foreach ($request->file('incident_videos') as $file) {
+                if (! $file->isValid()) {
+                    continue;
+                }
+                $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))) ?: 'video';
                 $original = $file->getClientOriginalName();
                 $size     = $file->getSize();
                 $mime     = $file->getClientMimeType();

@@ -76,17 +76,6 @@
                                     </select>
                                     @error('category')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Severity <span class="text-danger">*</span></label>
-                                    <select name="severity" class="form-control @error('severity') is-invalid @enderror" required>
-                                        <option value="">-- Select severity --</option>
-                                        @foreach(\App\Models\IncidentReport::SEVERITIES as $val => $label)
-                                            <option value="{{ $val }}" {{ old('severity') === $val ? 'selected' : '' }}>{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('severity')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
-
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description <span class="text-danger">*</span></label>
                                     <textarea name="description" class="form-control ckeditor @error('description') is-invalid @enderror" rows="5" placeholder="Describe what happened...">{{ old('description') }}</textarea>
@@ -109,6 +98,13 @@
                                     <small class="text-muted">You can select multiple images. JPG, PNG, GIF or WEBP. Max {{ round(config('uploads.image_max_kb') / 1024) }} MB each.</small>
                                     @error('photos.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <div id="photosPreview" class="d-flex flex-wrap gap-2 mt-2"></div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Videos</label>
+                                    <input type="file" name="videos[]" class="form-control @error('videos.*') is-invalid @enderror" accept=".mp4,.mov,.avi,.webm,.mkv" multiple>
+                                    <small class="text-muted">You can select multiple videos. MP4, MOV, AVI or WEBM. Max {{ round(config('uploads.video_max_kb') / 1024) }} MB each.</small>
+                                    @error('videos.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit Report</button>

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->time('incident_time')->nullable();
             $table->string('location');
             $table->string('category');
-            $table->string('severity');
             $table->text('description');
             $table->text('immediate_action')->nullable();
             $table->string('witnesses')->nullable();

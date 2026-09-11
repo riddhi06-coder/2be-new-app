@@ -28,7 +28,6 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
                             <div>
-                                <span class="badge {{ $report->severity_badge }} me-1">{{ $report->severity_label }}</span>
                                 <span class="badge {{ $report->status_badge }} me-1">{{ $report->status_label }}</span>
                                 <span class="badge {{ $report->source_badge }}">{{ $report->source_label }}</span>
                             </div>
@@ -59,11 +58,15 @@
                         @endif
 
                         @if($report->photos->count())
-                            <h6>Photos</h6>
+                            <h6>Attachments</h6>
                             <div class="d-flex flex-wrap gap-2 mb-3">
                                 @foreach($report->photos as $photo)
-                                    <img src="{{ asset($photo->file_path) }}" alt="" class="preview-img incident-photo-thumb"
-                                         data-url="{{ asset($photo->file_path) }}" data-title="{{ $photo->original_name }}" title="Click to preview">
+                                    @if(\Illuminate\Support\Str::startsWith($photo->mime_type ?? '', 'video'))
+                                        <video src="{{ asset($photo->file_path) }}" controls preload="metadata" class="incident-photo-thumb" style="width:auto;"></video>
+                                    @else
+                                        <img src="{{ asset($photo->file_path) }}" alt="" class="preview-img incident-photo-thumb"
+                                             data-url="{{ asset($photo->file_path) }}" data-title="{{ $photo->original_name }}" title="Click to preview">
+                                    @endif
                                 @endforeach
                             </div>
                         @endif

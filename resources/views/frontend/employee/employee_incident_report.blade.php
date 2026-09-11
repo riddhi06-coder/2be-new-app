@@ -116,21 +116,6 @@
                         </select>
                         <small class="field-error" data-error-for="category"></small>
                     </div>
-                    <div class="form-group col-md-3 col-sm-12">
-                        <label>
-                        Severity
-                        <span>
-                            *
-                        </span>
-                        </label>
-                        <select class="form-control" name="severity" id="severity" required="">
-                        <option value="">Select severity</option>
-                        @foreach($severities as $val => $label)
-                            <option value="{{ $val }}" {{ old('severity') === $val ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                        </select>
-                        <small class="field-error" data-error-for="severity"></small>
-                    </div>
                     <div class="form-group col-md-12 col-sm-12">
                         <label>
                         Description
@@ -177,9 +162,11 @@
                         3
                     </span>
                     <h4>
-                        Photos
+                        Photos &amp; Videos
                     </h4>
                     </div>
+
+                    <!-- Photos -->
                     <div class="upload-photo-box">
                     <input type="file" name="incident_photos[]" id="incident_photos" multiple accept=".jpg,.jpeg,.png,.gif,.webp">
                     <div class="upload-content">
@@ -200,6 +187,29 @@
                     <small class="field-error" data-error-for="incident_photos"></small>
                     <p class="upload-disclaimer">
                         * Only JPG, PNG, GIF or WEBP images &mdash; max {{ round(config('uploads.image_max_kb') / 1024, 1) }} MB each, up to 6 photos.
+                    </p>
+
+                    <!-- Videos -->
+                    <div class="upload-photo-box mt-3">
+                    <input type="file" name="incident_videos[]" id="incident_videos" multiple accept=".mp4,.mov,.avi,.webm,.mkv">
+                    <div class="upload-content">
+                        <i class="fa fa-video-camera">
+                        </i>
+                        <strong>
+                        Upload Videos
+                        </strong>
+                        <p>
+                        Drag and drop videos here or click to browse
+                        </p>
+                        <small>
+                        MP4, MOV, AVI or WEBM &mdash; up to {{ round(config('uploads.video_max_kb') / 1024, 1) }} MB each
+                        </small>
+                    </div>
+                    </div>
+                    <div class="video-preview-grid" id="videoPreview"></div>
+                    <small class="field-error" data-error-for="incident_videos"></small>
+                    <p class="upload-disclaimer">
+                        * Only MP4, MOV, AVI or WEBM videos &mdash; max {{ round(config('uploads.video_max_kb') / 1024, 1) }} MB each, up to 4 videos.
                     </p>
                 </div>
                 <!-- Buttons -->
@@ -234,7 +244,8 @@
             select.form-control.is-invalid { border-color: #e73b3b; box-shadow: 0 0 0 .15rem rgba(231,59,59,.15); }
 
             /* Photo upload previews */
-            .photo-preview-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+            .photo-preview-grid, .video-preview-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+            .photo-preview-item video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
             .photo-preview-item {
                 position: relative; width: 110px; height: 110px; border-radius: 10px;
                 overflow: hidden; border: 1px solid #e3e3e3; background: #fafafa;
@@ -268,6 +279,10 @@
             var MAX_PHOTO_KB  = {{ (int) config('uploads.image_max_kb') }};   // backend limit (KB)
             var MAX_PHOTOS    = 6;
             var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+            var MAX_VIDEO_KB  = {{ (int) config('uploads.video_max_kb') }};   // backend limit (KB)
+            var MAX_VIDEOS    = 4;
+            var ALLOWED_VIDEO = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska'];
 
             // Show/clear the message under a field. Returns true when the field is valid.
             function setError(field, msg) {
@@ -307,10 +322,6 @@
                     if (!document.getElementById('category').value) return setError('category', 'Please select a category.');
                     return setError('category', '');
                 },
-                severity: function () {
-                    if (!document.getElementById('severity').value) return setError('severity', 'Please select a severity level.');
-                    return setError('severity', '');
-                },
                 description: function () {
                     var v = val('description');
                     if (!v) return setError('description', 'Please describe the incident.');
@@ -335,6 +346,18 @@
                         if (f.size > MAX_PHOTO_KB * 1024) return setError('incident_photos', '"' + f.name + '" is larger than ' + (MAX_PHOTO_KB / 1024) + ' MB.');
                     }
                     return setError('incident_photos', '');
+                },
+                incident_videos: function () {
+                    var files = document.getElementById('incident_videos').files;
+                    if (!files || !files.length) return setError('incident_videos', '');
+                    if (files.length > MAX_VIDEOS) return setError('incident_videos', 'You can upload up to ' + MAX_VIDEOS + ' videos at a time.');
+                    for (var i = 0; i < files.length; i++) {
+                        var f = files[i];
+                        var okType = ALLOWED_VIDEO.indexOf(f.type) !== -1 || /\.(mp4|mov|avi|webm|mkv)$/i.test(f.name);
+                        if (!okType) return setError('incident_videos', '"' + f.name + '" is not a supported video (MP4, MOV, AVI or WEBM).');
+                        if (f.size > MAX_VIDEO_KB * 1024) return setError('incident_videos', '"' + f.name + '" is larger than ' + (MAX_VIDEO_KB / 1024) + ' MB.');
+                    }
+                    return setError('incident_videos', '');
                 }
             };
 
@@ -410,6 +433,63 @@
                     syncInput();
                     renderPreviews();
                     validators.incident_photos();
+                });
+            }
+
+            // ---- Video previews with removable thumbnails ----
+            var videoInput = document.getElementById('incident_videos');
+            var videoGrid  = document.getElementById('videoPreview');
+            var selectedVideos = [];
+
+            function syncVideoInput() {
+                var dt = new DataTransfer();
+                selectedVideos.forEach(function (f) { dt.items.add(f); });
+                videoInput.files = dt.files;
+            }
+
+            function renderVideoPreviews() {
+                videoGrid.innerHTML = '';
+                selectedVideos.forEach(function (file, index) {
+                    var item = document.createElement('div');
+                    item.className = 'photo-preview-item';
+
+                    var vid = document.createElement('video');
+                    vid.src = URL.createObjectURL(file);
+                    vid.muted = true;
+                    vid.setAttribute('playsinline', '');
+                    item.appendChild(vid);
+
+                    var name = document.createElement('span');
+                    name.className = 'photo-preview-name';
+                    name.textContent = file.name;
+                    item.appendChild(name);
+
+                    var remove = document.createElement('button');
+                    remove.type = 'button';
+                    remove.className = 'photo-preview-remove';
+                    remove.setAttribute('aria-label', 'Remove video');
+                    remove.innerHTML = '&times;';
+                    remove.addEventListener('click', function () {
+                        selectedVideos.splice(index, 1);
+                        syncVideoInput();
+                        renderVideoPreviews();
+                        validators.incident_videos();
+                    });
+                    item.appendChild(remove);
+
+                    videoGrid.appendChild(item);
+                });
+            }
+
+            if (videoInput) {
+                videoInput.addEventListener('change', function () {
+                    Array.prototype.forEach.call(videoInput.files, function (f) {
+                        var dup = selectedVideos.some(function (s) { return s.name === f.name && s.size === f.size; });
+                        if (!dup) selectedVideos.push(f);
+                    });
+                    syncVideoInput();
+                    renderVideoPreviews();
+                    validators.incident_videos();
                 });
             }
 

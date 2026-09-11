@@ -67,7 +67,6 @@ class IncidentReportController extends Controller
             'incident_time'    => $validated['incident_time'] ?? null,
             'location'         => $validated['location'],
             'category'         => $validated['category'],
-            'severity'         => $validated['severity'],
             'description'      => $validated['description'],
             'immediate_action' => $validated['immediate_action'] ?? null,
             'witnesses'        => $validated['witnesses'] ?? null,
@@ -115,7 +114,6 @@ class IncidentReportController extends Controller
             'incident_time'    => $validated['incident_time'] ?? null,
             'location'         => $validated['location'],
             'category'         => $validated['category'],
-            'severity'         => $validated['severity'],
             'description'      => $validated['description'],
             'immediate_action' => $validated['immediate_action'] ?? null,
             'witnesses'        => $validated['witnesses'] ?? null,
@@ -169,12 +167,13 @@ class IncidentReportController extends Controller
             'incident_time'    => 'nullable',
             'location'         => 'required|string|max:255',
             'category'         => ['required', Rule::in(array_keys(IncidentReport::CATEGORIES))],
-            'severity'         => ['required', Rule::in(array_keys(IncidentReport::SEVERITIES))],
             'description'      => 'required|string',
             'immediate_action' => 'nullable|string',
             'witnesses'        => 'nullable|string|max:255',
             'photos'           => 'nullable|array',
             'photos.*'         => 'image|mimes:jpg,jpeg,png,gif,webp|max:'.config('uploads.image_max_kb'),
+            'videos'           => 'nullable|array',
+            'videos.*'         => 'file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/webm,video/x-matroska|max:'.config('uploads.video_max_kb'),
         ];
 
         // Status + review notes only when a manager edits.
@@ -184,40 +183,45 @@ class IncidentReportController extends Controller
         }
 
         return $request->validate($rules, [
-            'photos.*.image' => 'Each attachment must be an image (JPG, PNG, GIF or WEBP).',
-            'photos.*.max'   => 'Each image may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
+            'photos.*.image'      => 'Each attachment must be an image (JPG, PNG, GIF or WEBP).',
+            'photos.*.max'        => 'Each image may not be larger than '.round(config('uploads.image_max_kb') / 1024).' MB.',
+            'videos.*.mimetypes'  => 'Each video must be an MP4, MOV, AVI or WEBM file.',
+            'videos.*.max'        => 'Each video may not be larger than '.round(config('uploads.video_max_kb') / 1024).' MB.',
         ]);
     }
 
+    /** Save uploaded photos AND videos (same attachments table, distinguished by mime type). */
     private function storePhotos(Request $request, IncidentReport $report): void
     {
-        if (! $request->hasFile('photos')) {
-            return;
-        }
-
-        $dir = public_path('uploads/incident-reports');
-        if (! is_dir($dir)) {
-            @mkdir($dir, 0755, true);
-        }
-
-        foreach ($request->file('photos') as $file) {
-            if (! $file->isValid()) {
+        foreach (['photos' => 'photo', 'videos' => 'video'] as $field => $fallback) {
+            if (! $request->hasFile($field)) {
                 continue;
             }
-            $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)));
-            $base = $base !== '' ? $base : 'photo';
-            $originalName = $file->getClientOriginalName();
-            $size         = $file->getSize();
-            $mime         = $file->getClientMimeType();
-            $filename     = $base.'_'.time().'_'.mt_rand(100, 999).'.'.$file->getClientOriginalExtension();
-            $file->move($dir, $filename);
 
-            $report->photos()->create([
-                'file_path'     => 'uploads/incident-reports/'.$filename,
-                'original_name' => $originalName,
-                'file_size'     => $size,
-                'mime_type'     => $mime,
-            ]);
+            $dir = public_path('uploads/incident-reports');
+            if (! is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+
+            foreach ($request->file($field) as $file) {
+                if (! $file->isValid()) {
+                    continue;
+                }
+                $base = preg_replace('/[^A-Za-z0-9_\-]/', '', preg_replace('/\s+/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)));
+                $base = $base !== '' ? $base : $fallback;
+                $originalName = $file->getClientOriginalName();
+                $size         = $file->getSize();
+                $mime         = $file->getClientMimeType();
+                $filename     = $base.'_'.time().'_'.mt_rand(100, 999).'.'.$file->getClientOriginalExtension();
+                $file->move($dir, $filename);
+
+                $report->photos()->create([
+                    'file_path'     => 'uploads/incident-reports/'.$filename,
+                    'original_name' => $originalName,
+                    'file_size'     => $size,
+                    'mime_type'     => $mime,
+                ]);
+            }
         }
     }
 

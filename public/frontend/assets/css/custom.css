@@ -175,10 +175,6 @@
 .emp-report-new-btn i { font-size: 12px; }
 
 /* Report accordion cards (reports tab) */
-.emp-sev { font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 8px; display: inline-block; }
-.emp-sev.sev-minor    { background: #eaf0ff; color: #0004fe; }
-.emp-sev.sev-moderate { background: #fdf3e0; color: #c77700; }
-.emp-sev.sev-serious  { background: #fdecec; color: #d32f2f; }
 
 .emp-rcard {
     border: 1px solid #e9edf2; border-radius: 12px; margin-bottom: 12px; background: #fff;
@@ -226,6 +222,7 @@
 .emp-rcard__photos { display: flex; flex-wrap: wrap; gap: 8px; }
 .emp-rcard__photos img { width: 76px; height: 76px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; transition: transform .15s ease; }
 .emp-rcard__photos img:hover { transform: scale(1.05); }
+.emp-rcard__photos video { width: 140px; height: 88px; object-fit: cover; border-radius: 8px; border: 1px solid #e5e7eb; background: #000; }
 
 .emp-rcard__review {
     margin-top: 14px; padding: 14px 16px; background: #f0f6ff; border-radius: 10px; border-left: 3px solid #0004fe;

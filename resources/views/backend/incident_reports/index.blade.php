@@ -31,7 +31,6 @@
                                         <th>Ref #</th>
                                         <th>Date</th>
                                         <th>Reported By</th>
-                                        <th>Severity</th>
                                         <th>Status</th>
                                         <th>Source</th>
                                         <th class="text-end" style="min-width:180px;">Actions</th>
@@ -43,7 +42,6 @@
                                             <td>{{ $r->reference_no }}</td>
                                             <td>{{ optional($r->incident_date)->format('d M Y') }}</td>
                                             <td>{{ $r->reporter_name ?: ($r->reporter->name ?? '—') }}</td>
-                                            <td><span class="badge {{ $r->severity_badge }}">{{ $r->severity_label }}</span></td>
                                             <td><span class="badge {{ $r->status_badge }}">{{ $r->status_label }}</span></td>
                                             <td data-order="{{ $r->source_label }}"><span class="badge {{ $r->source_badge }}">{{ $r->source_label }}</span></td>
                                             <td class="text-end">
@@ -83,7 +81,7 @@ jQuery(function ($) {
     var $table = $('#incidentReportsTable');
     if (!$table.length || !$.fn.DataTable) { return; }
 
-    var SOURCE_COL = 5; // 0-based index of the Source column
+    var SOURCE_COL = 4; // 0-based index of the Source column
 
     $table.DataTable({
         order: [[SOURCE_COL, 'asc']],

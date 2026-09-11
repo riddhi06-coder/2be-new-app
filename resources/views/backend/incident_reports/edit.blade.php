@@ -97,15 +97,6 @@
                                     </select>
                                     @error('category')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Severity <span class="text-danger">*</span></label>
-                                    <select name="severity" class="form-control @error('severity') is-invalid @enderror" required>
-                                        @foreach(\App\Models\IncidentReport::SEVERITIES as $val => $label)
-                                            <option value="{{ $val }}" {{ old('severity', $report->severity) === $val ? 'selected' : '' }}>{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('severity')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                </div>
 
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description <span class="text-danger">*</span></label>
@@ -123,13 +114,17 @@
                             </div>
 
                             <hr>
-                            <h6 class="mb-2">Photos</h6>
+                            <h6 class="mb-2">Attachments</h6>
                             @if($report->photos->count())
                                 <div class="d-flex flex-wrap gap-3 mb-3">
                                     @foreach($report->photos as $photo)
                                         <div class="text-center">
-                                            <img src="{{ asset($photo->file_path) }}" alt="" class="incident-photo-thumb d-block mb-1">
-                                            <button type="submit" form="delphoto-{{ $photo->id }}" class="btn btn-sm btn-link text-danger p-0" onclick="return confirm('Remove this photo?')">Remove</button>
+                                            @if(\Illuminate\Support\Str::startsWith($photo->mime_type ?? '', 'video'))
+                                                <video src="{{ asset($photo->file_path) }}" controls preload="metadata" class="incident-photo-thumb d-block mb-1" style="width:auto;"></video>
+                                            @else
+                                                <img src="{{ asset($photo->file_path) }}" alt="" class="incident-photo-thumb d-block mb-1">
+                                            @endif
+                                            <button type="submit" form="delphoto-{{ $photo->id }}" class="btn btn-sm btn-link text-danger p-0" onclick="return confirm('Remove this attachment?')">Remove</button>
                                         </div>
                                     @endforeach
                                 </div>
@@ -139,6 +134,13 @@
                                 <input type="file" name="photos[]" class="form-control @error('photos.*') is-invalid @enderror" accept=".jpg,.jpeg,.png,.gif,.webp" multiple>
                                 <small class="text-muted">JPG, PNG, GIF or WEBP. Max {{ round(config('uploads.image_max_kb') / 1024) }} MB each.</small>
                                 @error('photos.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Add More Videos</label>
+                                <input type="file" name="videos[]" class="form-control @error('videos.*') is-invalid @enderror" accept=".mp4,.mov,.avi,.webm,.mkv" multiple>
+                                <small class="text-muted">MP4, MOV, AVI or WEBM. Max {{ round(config('uploads.video_max_kb') / 1024) }} MB each.</small>
+                                @error('videos.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save Changes</button>
