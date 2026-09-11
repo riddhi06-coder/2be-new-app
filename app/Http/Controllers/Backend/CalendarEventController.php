@@ -33,13 +33,18 @@ class CalendarEventController extends Controller
                 $end = $e->end_time ? $endDate->toDateString().'T'.$e->end_time : null;
             }
 
+            // Editorial "chip" styling: light-tinted background + colored text/accent.
+            [$r, $g, $b] = $this->hexToRgb($e->color);
+
             return [
                 'id'      => $e->id,
                 'title'   => $e->title,
                 'start'   => $start,
                 'end'     => $end,
                 'allDay'  => $allDay,
-                'color'   => $e->color,
+                'backgroundColor' => "rgba($r, $g, $b, 0.14)",
+                'borderColor'     => $e->color,
+                'textColor'       => $e->color,
                 'extendedProps' => [
                     'category' => $e->category_label,
                     'location' => $e->location,
@@ -48,6 +53,16 @@ class CalendarEventController extends Controller
         });
 
         return response()->json($data);
+    }
+
+    /** Convert a #rrggbb hex colour to an [r, g, b] array. */
+    private function hexToRgb(string $hex): array
+    {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+        return [hexdec(substr($hex, 0, 2)), hexdec(substr($hex, 2, 2)), hexdec(substr($hex, 4, 2))];
     }
 
     public function create(Request $request)
