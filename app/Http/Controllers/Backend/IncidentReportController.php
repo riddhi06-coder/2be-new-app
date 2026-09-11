@@ -31,17 +31,88 @@ class IncidentReportController extends Controller
 
     public function index(Request $request)
     {
-        $query = IncidentReport::with(['reporter', 'employee'])->withCount('photos')->orderByDesc('id');
+        $reports = $this->filteredQuery($request)->with(['reporter', 'employee'])->withCount('photos')->get();
+
+        // Build the year dropdown from the incident dates actually on record
+        // (scoped to what this user is allowed to see).
+        $yearsQuery = IncidentReport::query();
+        if (! $this->canManage($request)) {
+            $yearsQuery->where('reported_by', $request->user()->id);
+        }
+        $years = $yearsQuery->selectRaw('YEAR(incident_date) as y')
+            ->whereNotNull('incident_date')
+            ->distinct()->orderByDesc('y')->pluck('y')->filter()->values();
+
+        return view('backend.incident_reports.index', [
+            'reports'    => $reports,
+            'canManage'  => $this->canManage($request),
+            'years'      => $years,
+            'categories' => IncidentReport::CATEGORIES,
+            'statuses'   => IncidentReport::STATUSES,
+        ]);
+    }
+
+    /**
+     * Base query with permission scoping + the date/year/category/status filters
+     * applied. Shared by the list view and the CSV/PDF exports so they always match.
+     */
+    private function filteredQuery(Request $request)
+    {
+        $query = IncidentReport::query()->orderByDesc('incident_date')->orderByDesc('id');
 
         // Employees see only their own reports.
         if (! $this->canManage($request)) {
             $query->where('reported_by', $request->user()->id);
         }
 
-        $reports  = $query->get();
-        $canManage = $this->canManage($request);
+        if ($request->filled('from_date')) {
+            $query->whereDate('incident_date', '>=', $request->input('from_date'));
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('incident_date', '<=', $request->input('to_date'));
+        }
+        if ($request->filled('year')) {
+            $query->whereYear('incident_date', $request->input('year'));
+        }
+        if ($request->filled('category')) {
+            $query->where('category', $request->input('category'));
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
 
-        return view('backend.incident_reports.index', compact('reports', 'canManage'));
+        return $query;
+    }
+
+    /** Export the currently-filtered incidents as a CSV file. */
+    public function exportCsv(Request $request)
+    {
+        $reports  = $this->filteredQuery($request)->with('reporter')->get();
+        $filename = 'incident-reports-'.now()->format('Y-m-d').'.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ];
+
+        return response()->streamDownload(function () use ($reports) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['Ref #', 'Date', 'Time', 'Reported By', 'Category', 'Location', 'Status', 'Source', 'Description']);
+            foreach ($reports as $r) {
+                fputcsv($out, [
+                    $r->reference_no,
+                    optional($r->incident_date)->format('Y-m-d'),
+                    $r->incident_time,
+                    $r->reporter_name ?: optional($r->reporter)->name,
+                    $r->category_label,
+                    $r->location,
+                    $r->status_label,
+                    $r->source_label,
+                    $r->description,
+                ]);
+            }
+            fclose($out);
+        }, $filename, $headers);
     }
 
     public function create(Request $request)

@@ -153,6 +153,7 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     // view + create are available to employees (view is scoped to own in the controller);
     // edit/delete are admin-only.
     Route::get('incident-reports',                       [IncidentReportController::class, 'index'])->middleware('permission:incident-reports.view')->name('admin.incident-reports.index');
+    Route::get('incident-reports/export/csv',            [IncidentReportController::class, 'exportCsv'])->middleware('permission:incident-reports.view')->name('admin.incident-reports.export-csv');
     Route::get('incident-reports/create',                [IncidentReportController::class, 'create'])->middleware('permission:incident-reports.create')->name('admin.incident-reports.create');
     Route::post('incident-reports',                      [IncidentReportController::class, 'store'])->middleware('permission:incident-reports.create')->name('admin.incident-reports.store');
     Route::get('incident-reports/{incident_report}',     [IncidentReportController::class, 'show'])->middleware('permission:incident-reports.view')->name('admin.incident-reports.show');

@@ -24,6 +24,49 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        {{-- Filter bar (instant client-side filtering — no page reload) --}}
+                        <div class="d-flex align-items-end gap-2 flex-wrap mb-4" id="incidentFilters">
+                            <div class="d-flex flex-column">
+                                <label class="small fw-semibold text-muted mb-1">From Date</label>
+                                <input type="date" id="f_from" class="form-control form-control-sm" style="min-width:150px;">
+                            </div>
+                            <div class="d-flex flex-column">
+                                <label class="small fw-semibold text-muted mb-1">To Date</label>
+                                <input type="date" id="f_to" class="form-control form-control-sm" style="min-width:150px;">
+                            </div>
+                            <div class="d-flex flex-column">
+                                <label class="small fw-semibold text-muted mb-1">Year</label>
+                                <select id="f_year" class="form-select form-select-sm" style="min-width:110px;">
+                                    <option value="">All</option>
+                                    @foreach($years as $y)
+                                        <option value="{{ $y }}">{{ $y }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <label class="small fw-semibold text-muted mb-1">Category</label>
+                                <select id="f_cat" class="form-select form-select-sm" style="min-width:150px;">
+                                    <option value="">All</option>
+                                    @foreach($categories as $key => $label)
+                                        <option value="{{ $key }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <label class="small fw-semibold text-muted mb-1">Status</label>
+                                <select id="f_status" class="form-select form-select-sm" style="min-width:130px;">
+                                    <option value="">All</option>
+                                    @foreach($statuses as $key => $label)
+                                        <option value="{{ $key }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <button type="button" id="f_reset" class="btn btn-sm btn-secondary">Reset</button>
+                            <a href="{{ route('admin.incident-reports.export-csv') }}" id="f_export" class="btn btn-sm btn-success ms-auto">
+                                <i class="fa fa-file-excel-o me-1"></i>Export CSV
+                            </a>
+                        </div>
+
                         <div class="table-responsive">
                             <table id="incidentReportsTable" class="display table table-hover align-middle">
                                 <thead>
@@ -38,7 +81,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($reports as $r)
-                                        <tr>
+                                        <tr data-date="{{ optional($r->incident_date)->format('Y-m-d') }}" data-category="{{ $r->category }}" data-status="{{ $r->status }}">
                                             <td>{{ $r->reference_no }}</td>
                                             <td>{{ optional($r->incident_date)->format('d M Y') }}</td>
                                             <td>{{ $r->reporter_name ?: ($r->reporter->name ?? '—') }}</td>
@@ -83,7 +126,7 @@ jQuery(function ($) {
 
     var SOURCE_COL = 4; // 0-based index of the Source column
 
-    $table.DataTable({
+    var dt = $table.DataTable({
         order: [[SOURCE_COL, 'asc']],
         columnDefs: [
             { targets: SOURCE_COL, visible: false }, // hidden — shown as a group header instead
@@ -109,6 +152,39 @@ jQuery(function ($) {
                 }
             });
         }
+    });
+
+    // ---- Instant client-side filtering (no page reload) ----
+    function val(id) { return (document.getElementById(id).value || '').trim(); }
+
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (settings.nTable.id !== 'incidentReportsTable') { return true; }
+        var row  = dt.row(dataIndex).node();
+        var d    = row.getAttribute('data-date') || '';       // YYYY-MM-DD
+        var cat  = row.getAttribute('data-category') || '';
+        var st   = row.getAttribute('data-status') || '';
+        var from = val('f_from'), to = val('f_to'), yr = val('f_year'), fc = val('f_cat'), fs = val('f_status');
+
+        if (from && (!d || d < from)) { return false; }
+        if (to   && (!d || d > to))   { return false; }
+        if (yr   && (!d || d.substring(0, 4) !== yr)) { return false; }
+        if (fc   && cat !== fc) { return false; }
+        if (fs   && st  !== fs) { return false; }
+        return true;
+    });
+
+    $('#f_from, #f_to, #f_year, #f_cat, #f_status').on('change keyup', function () { dt.draw(); });
+
+    $('#f_reset').on('click', function () {
+        ['f_from', 'f_to', 'f_year', 'f_cat', 'f_status'].forEach(function (id) { document.getElementById(id).value = ''; });
+        dt.draw();
+    });
+
+    // Export CSV reflects the current filter selections
+    var exportBase = '{{ route('admin.incident-reports.export-csv') }}';
+    $('#f_export').on('click', function () {
+        var q = $.param({ from_date: val('f_from'), to_date: val('f_to'), year: val('f_year'), category: val('f_cat'), status: val('f_status') });
+        this.href = exportBase + (q ? '?' + q : '');
     });
 });
 </script>
