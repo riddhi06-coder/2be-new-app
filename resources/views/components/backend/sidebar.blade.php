@@ -182,7 +182,8 @@
                           <li><a href="{{ route('admin.document-categories.index') }}" class="{{ request()->routeIs('admin.document-categories.*') ? 'active' : '' }}">Folders</a></li>
                       @endif
                       @if($can('documents.view'))
-                          <li><a href="{{ route('admin.documents.index') }}" class="{{ request()->routeIs('admin.documents.*') ? 'active' : '' }}">Documents</a></li>
+                          <li><a href="{{ route('admin.documents.index') }}" class="{{ request()->routeIs('admin.documents.*') && ! request()->routeIs('admin.documents.sign-offs') ? 'active' : '' }}">Documents</a></li>
+                          <li><a href="{{ route('admin.documents.sign-offs') }}" class="{{ request()->routeIs('admin.documents.sign-offs') ? 'active' : '' }}">Signed Documents</a></li>
                       @endif
                   </ul>
                 </li>

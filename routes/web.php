@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
 
     // ---- Documents (files) ----
     Route::get('documents',                 [DocumentController::class, 'index'])->middleware('permission:documents.view')->name('admin.documents.index');
+    Route::get('documents/sign-offs',       [DocumentController::class, 'signOffs'])->middleware('permission:documents.view')->name('admin.documents.sign-offs');
     Route::get('documents/create',          [DocumentController::class, 'create'])->middleware('permission:documents.create')->name('admin.documents.create');
     Route::post('documents',                [DocumentController::class, 'store'])->middleware('permission:documents.create')->name('admin.documents.store');
     Route::get('documents/{document}/download', [DocumentController::class, 'download'])->middleware('permission:documents.view')->name('admin.documents.download');

@@ -133,6 +133,31 @@ class DocumentController extends Controller
         return response()->download($full, $document->original_name ?: basename($document->file_path));
     }
 
+    /**
+     * "Signed Documents" overview — every document that requires a signature,
+     * with live progress on how many assigned employees have completed it.
+     */
+    public function signOffs()
+    {
+        $documents = Document::where('requires_acknowledgment', true)
+            ->with('category')
+            ->withCount(['assignees', 'acknowledgments'])
+            ->orderByDesc('id')
+            ->get();
+
+        $total    = $documents->count();
+        $complete = $documents->filter(fn ($d) => $d->assignees_count > 0 && $d->acknowledgments_count >= $d->assignees_count)->count();
+
+        return view('backend.documents.sign_offs', [
+            'documents'    => $documents,
+            'total'        => $total,
+            'complete'     => $complete,
+            'pending'      => $total - $complete,
+            'totalSigners' => $documents->sum('assignees_count'),
+            'totalSigned'  => $documents->sum('acknowledgments_count'),
+        ]);
+    }
+
     /** Sign-off compliance for a document: who has signed vs who is still pending. */
     public function acknowledgments(Document $document)
     {
