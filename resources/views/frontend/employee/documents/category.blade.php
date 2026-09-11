@@ -31,7 +31,8 @@
                     <div class="pumping-log__content">
                         <h1 class="pumping-log__title">{{ $category->name }}</h1>
                         <p class="pumping-log__description">
-                        {{ $category->description ?: 'Documents available in this category.' }}
+                        @php $catDesc = trim(preg_replace('/\s+/', ' ', strip_tags(str_ireplace(['<br>', '<br/>', '<br />'], ' ', (string) $category->description)))); @endphp
+                        {{ $catDesc ?: 'Documents available in this category.' }}
                         </p>
                     </div>
                     </div>
