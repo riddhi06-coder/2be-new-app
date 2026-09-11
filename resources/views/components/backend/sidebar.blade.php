@@ -132,7 +132,7 @@
                 @if($can('activity-log.view'))
                 <li class="sidebar-list {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}">
                   <i class="fa fa-thumb-tack"></i>
-                  <a class="sidebar-link" href="{{ route('admin.activity-logs.index') }}">
+                  <a class="sidebar-link sidebar-title" href="#">
                     <svg class="stroke-icon">
                       <use href="{{ asset('admin/assets/svg/icon-sprite.svg#stroke-task') }}"></use>
                     </svg>
@@ -141,6 +141,10 @@
                     </svg>
                     <span>Activity Log</span>
                   </a>
+                  <ul class="sidebar-submenu">
+                      <li><a href="{{ route('admin.activity-logs.index') }}" class="{{ request()->routeIs('admin.activity-logs.index') ? 'active' : '' }}">HR Activity</a></li>
+                      <li><a href="{{ route('admin.activity-logs.forms') }}" class="{{ request()->routeIs('admin.activity-logs.forms') ? 'active' : '' }}">Forms Activity</a></li>
+                  </ul>
                 </li>
                 @endif
 

@@ -22,11 +22,11 @@
     <div class="container-fluid">
         <div class="page-title">
             <div class="row">
-                <div class="col-6"><h3>Activity Log</h3></div>
+                <div class="col-6"><h3>{{ $title ?? 'Activity Log' }}</h3></div>
                 <div class="col-6">
                     <ol class="breadcrumb justify-content-end">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i></a></li>
-                        <li class="breadcrumb-item active">Activity Log</li>
+                        <li class="breadcrumb-item active">{{ $title ?? 'Activity Log' }}</li>
                     </ol>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <div class="card-body">
 
                         {{-- Filters --}}
-                        <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="actlog-filterbar">
+                        <form method="GET" action="{{ route($selfRoute ?? 'admin.activity-logs.index') }}" class="actlog-filterbar">
                             <div class="row g-3">
                                 <div class="col-md-2 col-sm-6">
                                     <label class="actlog-lbl">Search</label>
@@ -81,7 +81,7 @@
                             </div>
                             <div class="actlog-filterbar__actions">
                                 <button type="submit" class="btn btn-primary">Filter</button>
-                                <a href="{{ route('admin.activity-logs.index') }}" class="btn btn-outline-danger">Reset</a>
+                                <a href="{{ route($selfRoute ?? 'admin.activity-logs.index') }}" class="btn btn-outline-danger">Reset</a>
                             </div>
                         </form>
 

@@ -176,6 +176,7 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
 
     // ==================== Activity Log ====================
     Route::get('activity-log', [ActivityLogController::class, 'index'])->middleware('permission:activity-log.view')->name('admin.activity-logs.index');
+    Route::get('activity-log/forms', [ActivityLogController::class, 'forms'])->middleware('permission:activity-log.view')->name('admin.activity-logs.forms');
 });
 
 

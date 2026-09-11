@@ -34,6 +34,16 @@ class ActivityLog extends Model
         SepticSystemDetails::class  => 'Septic Records',
     ];
 
+    /**
+     * Modules that belong to the field/forms activity log (septic & cesspool
+     * inspection forms + disposal). Everything else is treated as HR activity.
+     */
+    public const FORMS_MODULES = [
+        'Cesspool Records',
+        'Septic Records',
+        'Disposal Details',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
