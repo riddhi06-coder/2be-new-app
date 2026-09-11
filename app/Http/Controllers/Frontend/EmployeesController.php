@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\AdminNotification;
 use App\Models\Announcement;
 use App\Models\CalendarEvent;
 use App\Models\Document;
@@ -179,6 +180,69 @@ class EmployeesController extends Controller
         ]);
     }
 
+    /** Employee notifications — full list page. */
+    public function employee_notifications()
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $notifications = AdminNotification::where('user_id', $user->id)->latest()->paginate(30);
+
+        return view('frontend.employee.notifications', compact('notifications'));
+    }
+
+    /** JSON feed for the employee's live toast poller. */
+    public function employee_notifications_feed(Request $request)
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $after  = (int) $request->query('after', 0);
+        $unread = AdminNotification::where('user_id', $user->id)->whereNull('read_at')->count();
+
+        $items = AdminNotification::where('user_id', $user->id)
+            ->when($after > 0, fn ($q) => $q->where('id', '>', $after))
+            ->latest()->limit(8)->get()
+            ->map(fn ($n) => [
+                'id'      => $n->id,
+                'type'    => $n->type,
+                'title'   => $n->title,
+                'message' => $n->message,
+                'url'     => $n->url ?: route('frontend.employee_dashboard'),
+                'icon'    => $n->icon ?: 'fa fa-bell',
+            ]);
+
+        return response()->json([
+            'unread'   => $unread,
+            'items'    => $items->values(),
+            'latestId' => AdminNotification::where('user_id', $user->id)->max('id') ?? 0,
+        ]);
+    }
+
+    /** Mark one notification read, then go to its target. */
+    public function employee_notification_read(AdminNotification $notification)
+    {
+        $user = Auth::user();
+        abort_unless($user && $notification->user_id === $user->id, 403);
+
+        if (! $notification->read_at) {
+            $notification->update(['read_at' => now()]);
+        }
+
+        return redirect($notification->url ?: route('frontend.employee_dashboard'));
+    }
+
+    /** Mark all the employee's notifications read. */
+    public function employee_notifications_read_all()
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        AdminNotification::where('user_id', $user->id)->whereNull('read_at')->update(['read_at' => now()]);
+
+        return back()->with('message', 'All notifications marked as read.');
+    }
+
     /** Full list of published announcements for employees. */
     public function employee_announcements()
     {
@@ -319,6 +383,16 @@ class EmployeesController extends Controller
                 ]);
             }
         }
+
+        AdminNotification::notifyAdmins([
+            'type'       => 'incident',
+            'title'      => 'New incident report',
+            'message'    => $user->name.' submitted incident '.$report->reference_no.' ('.$report->category_label.')',
+            'url'        => route('admin.incident-reports.edit', $report),
+            'icon'       => 'fa fa-exclamation-triangle',
+            'actor_id'   => $user->id,
+            'actor_name' => $user->name,
+        ]);
 
         return redirect()->route('frontend.employee_incident_report_thankyou')
             ->with('reference', $report->reference_no);
@@ -517,6 +591,16 @@ class EmployeesController extends Controller
 
         ActivityLog::write('created', 'Documents',
             $user->name.' acknowledged & signed "'.$document->title.'"', $document);
+
+        AdminNotification::notifyAdmins([
+            'type'       => 'document',
+            'title'      => 'Document signed',
+            'message'    => $user->name.' read & signed "'.$document->title.'"',
+            'url'        => route('admin.documents.acknowledgments', $document),
+            'icon'       => 'fa fa-pencil-square-o',
+            'actor_id'   => $user->id,
+            'actor_name' => $user->name,
+        ]);
 
         return redirect()->route('frontend.employee_documents')
             ->with('message', 'Thank you — your acknowledgment has been recorded and filed under your profile.');

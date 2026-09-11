@@ -11,7 +11,7 @@
     <!-- Sidebar jquery-->
     <script src="{{ asset('admin/assets/js/config.js') }}"></script>
     <!-- Plugins JS start-->
-    <script src="{{ asset('admin/assets/js/sidebar-menu.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/sidebar-menu.js') }}?v={{ filemtime(public_path('admin/assets/js/sidebar-menu.js')) }}"></script>
     <script src="{{ asset('admin/assets/js/sidebar-pin.js') }}"></script>
     <script src="{{ asset('admin/assets/js/slick/slick.min.js') }}"></script>
     <script src="{{ asset('admin/assets/js/slick/slick.js') }}"></script>

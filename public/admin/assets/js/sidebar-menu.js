@@ -365,9 +365,10 @@
                 }
             });
    
-            // Hide all dropdowns if no tab is active
+            // No matching menu item for this page (e.g. Notifications): collapse the
+            // submenus but keep the top-level menu visible — never hide the whole nav.
             if (!isAnyDropdownActive) {
-                $(".sidebar-wrapper nav ul").css("display", "none");
+                $(".sidebar-wrapper nav .sidebar-submenu, .sidebar-wrapper nav .menu-content").css("display", "none");
             }
         }
     });    

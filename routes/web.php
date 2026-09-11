@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\AnnouncementController;
 use App\Http\Controllers\Backend\IncidentReportController;
 use App\Http\Controllers\Backend\CalendarEventController;
 use App\Http\Controllers\Backend\ActivityLogController;
+use App\Http\Controllers\Backend\NotificationController;
 
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CesspoolController;
@@ -177,6 +178,12 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     // ==================== Activity Log ====================
     Route::get('activity-log', [ActivityLogController::class, 'index'])->middleware('permission:activity-log.view')->name('admin.activity-logs.index');
     Route::get('activity-log/forms', [ActivityLogController::class, 'forms'])->middleware('permission:activity-log.view')->name('admin.activity-logs.forms');
+
+    // ==================== Notifications (admin bell) ====================
+    Route::get('notifications',                 [NotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('notifications/feed',            [NotificationController::class, 'feed'])->name('admin.notifications.feed');
+    Route::post('notifications/read-all',       [NotificationController::class, 'readAll'])->name('admin.notifications.read-all');
+    Route::get('notifications/{notification}/read', [NotificationController::class, 'read'])->name('admin.notifications.read');
 });
 
 
@@ -208,6 +215,12 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     Route::get('/employee-logout',     [EmployeesController::class, 'logout'])->name('frontend.employee_logout');
     Route::get('/employee-portal',     [EmployeesController::class, 'employee_portal'])->name('frontend.employee_portal');
     Route::get('/employee-dashboard',  [EmployeesController::class, 'employee_dashboard'])->middleware('employee.auth')->name('frontend.employee_dashboard');
+
+    // Employee notifications (bell + live toasts)
+    Route::get('/employee-notifications',            [EmployeesController::class, 'employee_notifications'])->middleware('employee.auth')->name('frontend.employee_notifications');
+    Route::get('/employee-notifications/feed',       [EmployeesController::class, 'employee_notifications_feed'])->middleware('employee.auth')->name('frontend.employee_notifications_feed');
+    Route::post('/employee-notifications/read-all',  [EmployeesController::class, 'employee_notifications_read_all'])->middleware('employee.auth')->name('frontend.employee_notifications_read_all');
+    Route::get('/employee-notifications/{notification}/read', [EmployeesController::class, 'employee_notification_read'])->middleware('employee.auth')->name('frontend.employee_notification_read');
     Route::post('/employee-profile',   [EmployeesController::class, 'employee_update_profile'])->middleware('employee.auth')->name('frontend.employee_update_profile');
     Route::post('/employee-password',  [EmployeesController::class, 'employee_change_password'])->middleware('employee.auth')->name('frontend.employee_change_password');
     Route::get('/employee-forgot-password',   [EmployeesController::class, 'employee_forgot_password'])->name('frontend.employee_forgot_password');

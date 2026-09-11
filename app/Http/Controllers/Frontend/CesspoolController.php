@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 use App\Models\CesspoolSystemDetails;
+use App\Models\AdminNotification;
+use Illuminate\Support\Facades\Auth;
 
 
 class CesspoolController extends Controller
@@ -64,6 +66,17 @@ class CesspoolController extends Controller
             $entry = CesspoolSystemDetails::create($data);
 
             Log::info('Cesspool form saved successfully', ['id' => $entry->id, 'ip' => $request->ip()]);
+
+            $actor = Auth::user();
+            AdminNotification::notifyAdmins([
+                'type'       => 'cesspool',
+                'title'      => 'Cesspool inspection submitted',
+                'message'    => ($actor->name ?? 'An employee').' submitted a cesspool inspection form',
+                'url'        => route('cesspool-records.index'),
+                'icon'       => 'fa fa-clipboard',
+                'actor_id'   => $actor->id ?? null,
+                'actor_name' => $actor->name ?? null,
+            ]);
 
             return redirect()->route('frontend.thank_you')
                 ->with('message', 'Your Cesspool Inspection entry has been submitted.');

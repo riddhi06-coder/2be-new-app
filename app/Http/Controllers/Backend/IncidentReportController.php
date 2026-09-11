@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\IncidentReport;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -152,6 +153,12 @@ class IncidentReportController extends Controller
 
         $this->storePhotos($request, $report);
 
+        // If an admin logged this on behalf of an employee, let that employee know.
+        if ($isManager && ! empty($validated['employee_id'])) {
+            $this->notifyIncidentEmployees($report, $request, 'Incident report filed',
+                'An incident report '.$report->reference_no.' was filed involving you.', [$validated['employee_id']]);
+        }
+
         return redirect()->route('admin.incident-reports.index')->with('message', 'Incident report submitted successfully.');
     }
 
@@ -178,6 +185,8 @@ class IncidentReportController extends Controller
     {
         $validated = $this->validateReport($request, true);
 
+        $oldStatus = $incident_report->status;
+
         $incident_report->fill([
             'employee_id'      => $validated['employee_id'] ?? null,
             'reporter_name'    => $validated['reporter_name'],
@@ -199,7 +208,45 @@ class IncidentReportController extends Controller
 
         $this->storePhotos($request, $incident_report);
 
+        // Tell the involved employee(s) when a manager changes the status of their report.
+        if ($oldStatus !== $incident_report->status) {
+            $this->notifyIncidentEmployees($incident_report, $request, 'Incident report updated',
+                'Your incident report '.$incident_report->reference_no.' is now '.$incident_report->status_label.'.',
+                [$incident_report->reported_by, $incident_report->employee_id]);
+        }
+
         return redirect()->route('admin.incident-reports.index')->with('message', 'Incident report updated successfully.');
+    }
+
+    /**
+     * Notify the employee(s) tied to an incident report (reporter/involved),
+     * skipping the acting manager and anyone who isn't an employee account.
+     */
+    private function notifyIncidentEmployees(IncidentReport $report, Request $request, string $title, string $message, array $candidateIds): void
+    {
+        $actorId = $request->user()->id;
+
+        $ids = collect($candidateIds)->filter()->unique()->reject(fn ($id) => (int) $id === (int) $actorId);
+        if ($ids->isEmpty()) {
+            return;
+        }
+
+        // Only notify employee-role accounts (managers see incidents in their own bell).
+        $employeeIds = User::whereIn('id', $ids)
+            ->whereHas('role', fn ($q) => $q->where('slug', 'employee'))
+            ->pluck('id');
+
+        foreach ($employeeIds as $uid) {
+            AdminNotification::notifyUser($uid, [
+                'type'       => 'incident',
+                'title'      => $title,
+                'message'    => $message,
+                'url'        => route('frontend.employee_dashboard'),
+                'icon'       => 'fa fa-exclamation-triangle',
+                'actor_id'   => $actorId,
+                'actor_name' => $request->user()->name,
+            ]);
+        }
     }
 
     public function destroy(IncidentReport $incident_report)

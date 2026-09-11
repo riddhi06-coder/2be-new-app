@@ -85,6 +85,12 @@ class User extends Authenticatable
         return $this->hasMany(DocumentAcknowledgment::class);
     }
 
+    /** Admin notifications addressed to this user (as a recipient). */
+    public function adminNotifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AdminNotification::class);
+    }
+
     public function hasRole(string $slug): bool
     {
         return $this->role && $this->role->slug === $slug;

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\AdminNotification;
 use App\Observers\ActivityObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -49,5 +52,33 @@ class AppServiceProvider extends ServiceProvider
         foreach (self::AUDITED_MODELS as $model) {
             $model::observe(ActivityObserver::class);
         }
+
+        // Feed the admin header bell with the current user's notifications.
+        View::composer('components.backend.header', function ($view) {
+            $user = Auth::user();
+            $unread = 0;
+            $recent = collect();
+
+            if ($user) {
+                $unread = AdminNotification::where('user_id', $user->id)->whereNull('read_at')->count();
+                $recent = AdminNotification::where('user_id', $user->id)->latest()->limit(8)->get();
+            }
+
+            $view->with('navUnread', $unread)->with('navNotifications', $recent);
+        });
+
+        // Feed the employee-portal header bell with the logged-in employee's notifications.
+        View::composer('components.frontend.employee_header', function ($view) {
+            $user = Auth::user();
+            $unread = 0;
+            $recent = collect();
+
+            if ($user) {
+                $unread = AdminNotification::where('user_id', $user->id)->whereNull('read_at')->count();
+                $recent = AdminNotification::where('user_id', $user->id)->latest()->limit(8)->get();
+            }
+
+            $view->with('empUnread', $unread)->with('empNotifications', $recent);
+        });
     }
 }

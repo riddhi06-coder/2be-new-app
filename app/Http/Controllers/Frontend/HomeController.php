@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 use App\Models\WasteDisposalDetails;
+use App\Models\AdminNotification;
+use Illuminate\Support\Facades\Auth;
 
 
 class HomeController extends Controller
@@ -115,6 +117,17 @@ class HomeController extends Controller
             Log::info('Waste entry saved successfully', [
                 'id' => $entry->id,
                 'ip' => $request->ip()
+            ]);
+
+            $actor = Auth::user();
+            AdminNotification::notifyAdmins([
+                'type'       => 'disposal',
+                'title'      => 'Waste disposal logged',
+                'message'    => ($actor->name ?? $request->generator_name ?: 'An employee').' logged a waste disposal entry'.($request->volume_pumped ? ' ('.$request->volume_pumped.' '.$request->unit.')' : ''),
+                'url'        => route('manage-disposal-details.index'),
+                'icon'       => 'fa fa-truck',
+                'actor_id'   => $actor->id ?? null,
+                'actor_name' => $actor->name ?? ($request->generator_name ?: null),
             ]);
 
             return redirect()->route('frontend.thank_you')->with('message', 'Your Wastewater Pumping & Hauling entry has been submitted.');

@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use PDF;
 
 use App\Models\SepticSystemDetails;
+use App\Models\AdminNotification;
+use Illuminate\Support\Facades\Auth;
 
 
 class SepticController extends Controller
@@ -64,6 +66,17 @@ class SepticController extends Controller
             $entry = SepticSystemDetails::create($data);
 
             Log::info('Septic form saved successfully', ['id' => $entry->id, 'ip' => $request->ip()]);
+
+            $actor = Auth::user();
+            AdminNotification::notifyAdmins([
+                'type'       => 'septic',
+                'title'      => 'Septic inspection submitted',
+                'message'    => ($actor->name ?? 'An employee').' submitted a septic tank inspection form',
+                'url'        => route('septic-records.index'),
+                'icon'       => 'fa fa-clipboard',
+                'actor_id'   => $actor->id ?? null,
+                'actor_name' => $actor->name ?? null,
+            ]);
 
             return redirect()->route('frontend.thank_you')
                 ->with('message', 'Your Septic Tank Inspection entry has been submitted.');

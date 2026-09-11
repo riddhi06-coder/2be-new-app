@@ -90,10 +90,26 @@
                         </div>
 
                         <div class="sign-doc__actions">
-                            <button type="submit" class="sign-doc__submit"><i class="fa fa-check"></i> Acknowledge &amp; Sign</button>
+                            <button type="submit" class="sign-doc__submit" id="signSubmitBtn"><i class="fa fa-check"></i> Acknowledge &amp; Sign</button>
                             <a href="{{ route('frontend.employee_documents') }}" class="sign-doc__cancel">Cancel</a>
                         </div>
                     </form>
+                    <script>
+                        (function () {
+                            var form = document.getElementById('signHere');
+                            var btn  = document.getElementById('signSubmitBtn');
+                            if (!form || !btn) { return; }
+                            form.addEventListener('submit', function () {
+                                // Let native validation (required name / checkbox) run first.
+                                if (!form.checkValidity || form.checkValidity()) {
+                                    btn.disabled = true;
+                                    btn.style.opacity = '0.75';
+                                    btn.style.cursor = 'wait';
+                                    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Submitting…';
+                                }
+                            });
+                        })();
+                    </script>
                 </div>
             </div>
             </section>

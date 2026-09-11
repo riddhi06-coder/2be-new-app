@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Models\User;
@@ -63,7 +64,8 @@ class DocumentController extends Controller
 
         // Personal docs can be assigned to one or more employees.
         if (! $request->boolean('is_public')) {
-            $document->assignees()->sync($validated['user_ids'] ?? []);
+            $sync = $document->assignees()->sync($validated['user_ids'] ?? []);
+            $this->notifyAssignees($document, $sync['attached'] ?? [], $request);
         }
 
         return redirect()->route('admin.documents.index')->with('message', 'Document uploaded successfully.');
@@ -109,9 +111,38 @@ class DocumentController extends Controller
         $document->save();
 
         // Sync employee assignments: none for public, the selected set for personal.
-        $document->assignees()->sync($request->boolean('is_public') ? [] : ($validated['user_ids'] ?? []));
+        $sync = $document->assignees()->sync($request->boolean('is_public') ? [] : ($validated['user_ids'] ?? []));
+        // Notify only the newly-added employees (not those already assigned).
+        $this->notifyAssignees($document, $sync['attached'] ?? [], $request);
 
         return redirect()->route('admin.documents.index')->with('message', 'Document updated successfully.');
+    }
+
+    /** Notify employees who were just assigned a personal document. */
+    private function notifyAssignees(Document $document, array $userIds, Request $request): void
+    {
+        if (empty($userIds)) {
+            return;
+        }
+
+        $actor  = $request->user();
+        $isSign = (bool) $document->requires_acknowledgment;
+
+        foreach ($userIds as $uid) {
+            AdminNotification::notifyUser($uid, [
+                'type'       => 'document',
+                'title'      => $isSign ? 'Document to read & sign' : 'New document shared with you',
+                'message'    => $isSign
+                    ? 'Please read & sign: "'.$document->title.'"'
+                    : 'A document was shared with you: "'.$document->title.'"',
+                'url'        => $isSign
+                    ? route('frontend.employee_document_sign', $document)
+                    : route('frontend.employee_documents'),
+                'icon'       => $isSign ? 'fa fa-pencil-square-o' : 'fa fa-file-text-o',
+                'actor_id'   => $actor->id ?? null,
+                'actor_name' => $actor->name ?? null,
+            ]);
+        }
     }
 
     public function destroy(Document $document)
