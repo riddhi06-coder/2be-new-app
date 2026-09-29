@@ -146,6 +146,7 @@
                                     <th>Generator Name</th>
                                     <th>Waste Type</th>
                                     <th>Volume Pumped <br>(In Gallons)</th>
+                                    <th>Inserted At</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -163,6 +164,7 @@
                                         <td>{{ $disposal->generator_name }}</td>
                                         <td>{{ $disposal->waste_type }}</td>
                                         <td>{{ $disposal->volume_pumped }}</td>
+                                        <td>{{ $disposal->inserted_at ? \Carbon\Carbon::parse($disposal->inserted_at)->format('d-m-Y') : '-' }}</td>
                                         <td>
                                             <div class="d-flex gap-1">
                                                 <a href="{{ route('manage-disposal-details.edit', $disposal->id) }}" class="btn btn-sm btn-primary">Details</a>
