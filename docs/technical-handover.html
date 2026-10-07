@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+    @page { margin: 120px 50px 70px 50px; }
+    * { box-sizing: border-box; }
+    body {
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 10.5px;
+        line-height: 1.5;
+        color: #1f2933;
+    }
+
+    /* Running header / footer */
+    #page-header {
+        position: fixed;
+        top: -90px; left: 0; right: 0;
+        height: 60px;
+        border-bottom: 2px solid #0d6efd;
+        color: #52606d;
+        font-size: 9px;
+    }
+    #page-header .brand { font-size: 13px; font-weight: bold; color: #0b3d91; }
+    #page-footer {
+        position: fixed;
+        bottom: -45px; left: 0; right: 0;
+        height: 30px;
+        border-top: 1px solid #cbd2d9;
+        color: #7b8794;
+        font-size: 8.5px;
+        padding-top: 5px;
+    }
+    #page-footer .pnum:after { content: counter(page) " / " counter(pages); }
+
+    /* Cover */
+    .cover { text-align: center; padding-top: 150px; page-break-after: always; }
+    .cover .eyebrow { letter-spacing: 3px; color: #0d6efd; font-size: 12px; text-transform: uppercase; }
+    .cover h1 { font-size: 40px; color: #0b3d91; margin: 18px 0 6px; }
+    .cover h2 { font-size: 18px; color: #52606d; font-weight: normal; margin: 0 0 40px; }
+    .cover .meta { margin-top: 60px; font-size: 11px; color: #52606d; }
+    .cover .meta table { margin: 0 auto; border-collapse: collapse; }
+    .cover .meta td { padding: 4px 14px; text-align: left; }
+    .cover .meta td.k { color: #9aa5b1; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
+    .cover .badge { display: inline-block; margin-top: 30px; padding: 6px 16px; border: 1px solid #0d6efd; color: #0d6efd; border-radius: 20px; font-size: 10px; }
+
+    h2.section {
+        font-size: 19px; color: #0b3d91;
+        border-bottom: 2px solid #0d6efd;
+        padding-bottom: 4px; margin: 26px 0 12px;
+        page-break-after: avoid;
+    }
+    h3 { font-size: 13.5px; color: #11489c; margin: 18px 0 6px; page-break-after: avoid; }
+    h4 { font-size: 11.5px; color: #334e68; margin: 12px 0 4px; page-break-after: avoid; }
+    p { margin: 6px 0; }
+    ul, ol { margin: 6px 0 6px 0; padding-left: 20px; }
+    li { margin: 3px 0; }
+
+    code, .mono {
+        font-family: "DejaVu Sans Mono", monospace;
+        font-size: 9px;
+        background: #eef2f7;
+        padding: 1px 4px;
+        border-radius: 3px;
+        color: #0b3d91;
+    }
+
+    table.data { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 9.3px; }
+    table.data th { background: #0b3d91; color: #fff; text-align: left; padding: 6px 8px; font-weight: bold; }
+    table.data td { border: 1px solid #d2dae5; padding: 5px 8px; vertical-align: top; }
+    table.data tr:nth-child(even) td { background: #f5f8fc; }
+
+    .callout { border-left: 4px solid; padding: 8px 12px; margin: 10px 0; font-size: 9.8px; border-radius: 0 4px 4px 0; }
+    .callout.warn { background: #fff8e6; border-color: #f0ad4e; }
+    .callout.risk { background: #fdecef; border-color: #dc3545; }
+    .callout.info { background: #eaf3ff; border-color: #0d6efd; }
+    .callout .lbl { font-weight: bold; text-transform: uppercase; font-size: 8.5px; letter-spacing: 1px; }
+
+    .toc { page-break-after: always; }
+    .toc h2 { font-size: 22px; color: #0b3d91; margin-bottom: 16px; }
+    .toc ol { list-style: none; padding-left: 0; counter-reset: toc; }
+    .toc > ol > li { counter-increment: toc; padding: 5px 0; border-bottom: 1px dotted #cbd2d9; font-size: 11px; }
+    .toc > ol > li:before { content: counter(toc) ".  "; color: #0d6efd; font-weight: bold; }
+
+    .pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 8px; font-weight: bold; color: #fff; }
+    .pill.get { background: #198754; }
+    .pill.post { background: #0d6efd; }
+    .pill.put { background: #fd7e14; }
+    .pill.del { background: #dc3545; }
+
+    .lead { font-size: 11px; color: #52606d; }
+    .nobreak { page-break-inside: avoid; }
+    hr.soft { border: none; border-top: 1px solid #e4e9f0; margin: 16px 0; }
+    .small { font-size: 9px; color: #7b8794; }
+</style>
+</head>
+<body>
+
+<div id="page-header">
+    <span class="brand">2B Environmental</span> &nbsp;—&nbsp; Technical Handover Document
+</div>
+<div id="page-footer">
+    Confidential · Internal Engineering Documentation &nbsp;|&nbsp; <span style="float:right;">Page <span class="pnum"></span></span>
+</div>
+
+<!-- ============================ COVER ============================ -->
+<div class="cover">
+    <div class="eyebrow">Technical Handover</div>
+    <h1>2B Environmental</h1>
+    <h2>Waste-Management Operations &amp; Career Portal Platform</h2>
+
+    <div class="badge">Laravel 12 · PHP 8.2 · MySQL</div>
+
+    <div class="meta">
+        <table>
+            <tr><td class="k">Document</td><td>Engineering Handover &amp; System Reference</td></tr>
+            <tr><td class="k">Prepared</td><td>7 October 2026</td></tr>
+            <tr><td class="k">Codebase branch</td><td>new-career-app</td></tr>
+            <tr><td class="k">Audience</td><td>Incoming engineers / maintainers</td></tr>
+            <tr><td class="k">Scope</td><td>Full application: architecture, modules, flows, data model, risks</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- ============================ TOC ============================ -->
+<div class="toc">
+    <h2>Contents</h2>
+    <ol>
+        <li>System Overview</li>
+        <li>Technology Stack &amp; Environment</li>
+        <li>Application Architecture</li>
+        <li>Authentication &amp; Authorization (RBAC)</li>
+        <li>Module — Waste Disposal</li>
+        <li>Module — Cesspool &amp; Septic Inspections</li>
+        <li>Module — Document Management &amp; E-Signature</li>
+        <li>Module — Announcements</li>
+        <li>Module — Community Calendar</li>
+        <li>Module — Incident Reports</li>
+        <li>Module — Employees (HR) &amp; Employee Portal</li>
+        <li>Notifications</li>
+        <li>Activity Log &amp; Auditing</li>
+        <li>Email &amp; Scheduled Jobs</li>
+        <li>Database Schema Summary</li>
+        <li>File Storage Conventions</li>
+        <li>Known Issues, Risks &amp; Handover Flags</li>
+        <li>Setup &amp; Deployment Notes</li>
+    </ol>
+</div>
+
+<!-- ============================ 1. OVERVIEW ============================ -->
+<h2 class="section">1. System Overview</h2>
+<p class="lead">
+    "2B Environmental" is an internal web platform for a Hawai‘i-based waste-management / wastewater-pumping
+    company. It bundles two distinct applications into a single Laravel codebase:
+</p>
+<ul>
+    <li><strong>Admin back office</strong> (<code>/dashboard</code> and below) — staff manage waste-disposal records,
+        cesspool &amp; septic inspection reports, users/roles/permissions, an HR &amp; career portal (employees,
+        documents, announcements, calendar, incident reports), activity logs and notifications.</li>
+    <li><strong>Public / employee frontend</strong> — public intake forms for field submissions (waste disposal,
+        cesspool, septic), plus a self-service <strong>Employee Portal</strong> (login, document library with
+        read-and-sign, incident reporting, announcements, calendar, notifications, profile).</li>
+</ul>
+<p>
+    Both halves share one <code>users</code> table and one Laravel <code>web</code> session guard. A user's
+    <strong>role slug</strong> determines which half they belong to — a user whose role slug is
+    <code>employee</code> is an Employee-Portal user; everyone else is back-office staff. There is no separate
+    authentication guard for employees.
+</p>
+
+<table class="data">
+    <tr><th style="width:26%">Business domain</th><th>What the platform does</th></tr>
+    <tr><td>Wastewater pumping &amp; hauling</td><td>Captures waste-disposal pickups and generates the official County of Hawai‘i monthly source report.</td></tr>
+    <tr><td>Cesspool &amp; septic inspections</td><td>Field inspection intake forms with media (photos/video) &amp; signatures; admin review, PDF export, email delivery.</td></tr>
+    <tr><td>HR / career portal</td><td>Employee onboarding (welcome emails), document distribution with mandatory read-and-sign acknowledgment, announcements, team calendar, incident reporting.</td></tr>
+    <tr><td>Governance</td><td>Granular role-based permissions, full activity audit log, in-app notifications.</td></tr>
+</table>
+
+<!-- ============================ 2. STACK ============================ -->
+<h2 class="section">2. Technology Stack &amp; Environment</h2>
+<table class="data">
+    <tr><th style="width:26%">Layer</th><th>Choice</th></tr>
+    <tr><td>Framework</td><td>Laravel 12 (PHP <code>^8.2</code>)</td></tr>
+    <tr><td>Database</td><td>MySQL (local DB name <code>2be</code>)</td></tr>
+    <tr><td>Queue</td><td><code>database</code> driver (note: mail is sent <em>synchronously</em>, not queued)</td></tr>
+    <tr><td>Mail</td><td>SMTP (Gmail, <code>smtp.gmail.com:587</code> TLS)</td></tr>
+    <tr><td>PDF generation</td><td><code>barryvdh/laravel-dompdf</code> (dompdf) — plus a Chrome/Edge headless "print-to-pdf" path for signature certificates, falling back to dompdf. <code>setasign/fpdf</code>+<code>fpdi</code> are in <code>composer.json</code> but <strong>not actually used</strong> anywhere.</td></tr>
+    <tr><td>Frontend build</td><td>Vite 7 + Tailwind CSS 4 (minimal — the app is predominantly server-rendered Blade over a Bootstrap-based admin theme with DataTables; no SPA framework)</td></tr>
+    <tr><td>Local host</td><td>XAMPP on Windows (<code>c:\xampp\htdocs\2be</code>)</td></tr>
+</table>
+<div class="callout info">
+    <span class="lbl">Environment note</span><br>
+    The local <code>.env</code> runs with <code>APP_DEBUG=true</code> and <code>APP_ENV=local</code>, and <code>.env</code> is tracked in git. Ensure production flips <code>APP_DEBUG=false</code> and uses a separate, untracked secrets file.
+</div>
+
+<!-- ============================ 3. ARCHITECTURE ============================ -->
+<h2 class="section">3. Application Architecture</h2>
+<h3>3.1 Request routing</h3>
+<p>All routes live in <code>routes/web.php</code> (255 lines). Two groups:</p>
+<ul>
+    <li><strong>Admin group</strong> — <code>middleware(['auth:web', PreventBackHistoryMiddleware])</code>. Every route is
+        additionally gated by a granular <code>permission:&lt;slug&gt;</code> middleware (e.g. <code>permission:manage-disposal-details.view</code>).</li>
+    <li><strong>Frontend group</strong> — <code>middleware([PreventBackHistoryMiddleware])</code>; public forms and the
+        employee portal. Logged-in-only employee routes add the <code>employee.auth</code> middleware.</li>
+</ul>
+
+<h3>3.2 Key directories</h3>
+<table class="data">
+    <tr><th style="width:34%">Path</th><th>Contents</th></tr>
+    <tr><td><code>app/Http/Controllers/Backend/</code></td><td>15 admin controllers (Disposal, Cesspool, Septic, Role, User, Permission, Employee, Document, DocumentCategory, Announcement, IncidentReport, CalendarEvent, ActivityLog, Notification, EmailSettings)</td></tr>
+    <tr><td><code>app/Http/Controllers/Frontend/</code></td><td>Home, Cesspool, Septic, Employees (the 801-line portal controller)</td></tr>
+    <tr><td><code>app/Http/Middleware/</code></td><td><code>CheckPermission</code>, <code>EmployeeAuth</code>, <code>PreventBackHistoryMiddleware</code></td></tr>
+    <tr><td><code>app/Models/</code></td><td>17 Eloquent models + <code>Concerns/TracksDeletedBy</code> trait</td></tr>
+    <tr><td><code>app/Services/</code></td><td><code>DocumentSignatureService</code> (certificate PDF generation)</td></tr>
+    <tr><td><code>app/Observers/</code></td><td><code>ActivityObserver</code> (audit logging)</td></tr>
+    <tr><td><code>app/Mail/</code>, <code>app/Console/Commands/</code></td><td>Monthly-report reminder mailable + command</td></tr>
+    <tr><td><code>resources/views/backend|frontend|pdf|emails/</code></td><td>Blade templates (admin theme, public forms, PDF layouts, mail bodies)</td></tr>
+    <tr><td><code>public/uploads/</code></td><td>User-uploaded files (documents, avatars, incident media, signatures, announcements, calendar flyers)</td></tr>
+</table>
+
+<h3>3.3 Cross-cutting conventions</h3>
+<ul>
+    <li><strong>Soft deletes everywhere.</strong> Nearly all models use <code>SoftDeletes</code> + a <code>TracksDeletedBy</code> trait that stamps <code>deleted_by</code> with the acting user's id on soft-delete (skips force-deletes and unauthenticated deletes).</li>
+    <li><strong>Audit by observer.</strong> An <code>ActivityObserver</code> is attached to 12 models and records create/update/delete/restore events into <code>activity_logs</code> (console/CLI operations are skipped).</li>
+    <li><strong>Uploads under <code>public/</code>.</strong> Most files are written directly into <code>public/uploads/...</code> and referenced by a relative path. (Exception: cesspool/septic inspection <em>images</em> use the Laravel public storage disk — see §16.)</li>
+</ul>
+
+<!-- ============================ 4. AUTH ============================ -->
+<h2 class="section">4. Authentication &amp; Authorization (RBAC)</h2>
+
+<h3>4.1 Data model</h3>
+<p>
+    Custom role-based access control built on the standard session <code>web</code> guard. A <code>User</code> belongs
+    to one <code>Role</code> (<code>role_id</code>, nullable). A <code>Role</code> has many <code>Permission</code>s through
+    the <code>permission_role</code> pivot (composite PK, cascade delete). Permission slugs follow a
+    <code>module.action</code> convention (e.g. <code>users.create</code>, <code>documents.edit</code>, <code>permissions.assign</code>).
+</p>
+<table class="data">
+    <tr><th>Model</th><th>Key fields</th><th>Notes</th></tr>
+    <tr><td><code>Role</code></td><td>name, slug (unique), description, is_protected, is_active</td><td>Constant <code>SUPERADMIN_SLUG = 'superadmin'</code>. Caches its permission slugs per instance.</td></tr>
+    <tr><td><code>Permission</code></td><td>name, slug (unique), module, description</td><td>Slug is never changed on edit (route middleware references depend on it).</td></tr>
+    <tr><td><code>User</code></td><td>name, email, phone, avatar, password, role_id, is_active, welcome_email_sent_at</td><td>Casts password→hashed, is_active→bool.</td></tr>
+</table>
+
+<h3>4.2 Permission resolution</h3>
+<p>The <code>permission:&lt;slug&gt;</code> middleware (<code>CheckPermission</code>) runs on each admin route:</p>
+<ol>
+    <li>No authenticated user → redirect to <code>admin.login</code>.</li>
+    <li>User exists but <code>is_active = false</code> → force logout, invalidate session, redirect with "account deactivated".</li>
+    <li><code>User::hasPermission($slug)</code> fails → <code>abort(403)</code>.</li>
+</ol>
+<p><code>User::hasPermission()</code> logic (in order): inactive user → <code>false</code>; <strong>superadmin → <code>true</code> (bypasses all checks)</strong>; no role or inactive role → <code>false</code>; otherwise delegates to <code>Role::hasPermission()</code> which checks the role's cached permission-slug set.</p>
+<div class="callout info"><span class="lbl">Superadmin</span><br>
+Superadmin is protected two ways: (1) it implicitly holds every permission regardless of pivot rows; (2) the <code>is_protected</code> flag blocks deactivating the role, deleting it, or editing its permission matrix. <code>UserController</code> also refuses to delete the last remaining superadmin user. Caveat: the superadmin bypass is <em>active-account gated</em> — deactivating a superadmin <em>user</em> strips their access because the <code>is_active</code> check runs first.</div>
+
+<h3>4.3 Admin login flow (<code>LoginController</code>)</h3>
+<ol>
+    <li><span class="pill post">POST</span> <code>/login</code> → validate email+password → <code>Auth::attempt()</code> on the <code>web</code> guard with optional "remember".</li>
+    <li>If the authenticated user has role slug <code>employee</code> → immediately logged back out and redirected to admin login (employees must use the Employee Portal).</li>
+    <li>On success: regenerate session, write a <code>login</code> ActivityLog entry, redirect to <code>admin.dashboard</code>.</li>
+    <li>Logout is a <span class="pill get">GET</span> <code>/logout</code> route that flushes the session and writes a <code>logout</code> log.</li>
+</ol>
+
+<h3>4.4 Role / User / Permission management</h3>
+<ul>
+    <li><strong>Roles</strong> (<code>RoleController</code>): CRUD with auto-generated unique slug. Protected roles can't be deactivated/deleted; a role with assigned users can't be deleted; slug is never changed on update.</li>
+    <li><strong>Users</strong> (<code>UserController</code>): manages non-employee staff only (employees are excluded from the list and can't be assigned here — they're created in the HR section). Guards: can't deactivate/delete your own account; can't delete the only superadmin.</li>
+    <li><strong>Permission matrix</strong> (<code>PermissionController</code>): per-role grid grouped by module; <code>update()</code> does a full <code>sync()</code> of pivot rows (protected roles blocked). A <strong>permission catalog</strong> lets admins add/edit/remove permission definitions as new tabs appear (slug preserved on edit).</li>
+</ul>
+
+<h3>4.5 PreventBackHistoryMiddleware</h3>
+<p>Applied to the whole admin group. Sets a battery of security headers (X-Frame-Options DENY, nosniff, HSTS, no-cache so the back button can't show cached authed pages, CSP <code>frame-ancestors 'none'</code>) and a manual idle-timeout branch.</p>
+<div class="callout risk"><span class="lbl">Security — review these</span>
+<ol style="margin-bottom:0">
+    <li><strong>Open self-registration:</strong> <code>/register</code> is public and ungated; it creates a role-less active user. Such a user can't pass permission checks but is a valid authenticated account. Remove or gate for production.</li>
+    <li><strong>Password reset with no identity proof:</strong> the public <code>/update-password</code> POST lets anyone set a new password for any existing email with no token/OTP/current-password check — a full account-takeover vector. This is <em>not</em> a real forgot-password flow (the employee portal's reset flow, by contrast, uses proper tokenized <code>Password::reset</code>).</li>
+    <li><strong>Permissive CORS with credentials:</strong> the middleware reflects the caller's <code>Origin</code> back as <code>Access-Control-Allow-Origin</code> together with <code>Allow-Credentials: true</code>, which defeats same-origin protection for any browser that honors it.</li>
+    <li><strong>Minor:</strong> GET logout is CSRF-triggerable; the plaintext password is flashed to session on failed login; the custom idle-timeout branch is effectively inert (nothing sets the <code>logged_in</code> session key it depends on, and the threshold is 3600s despite a "30 minutes" comment).</li>
+</ol>
+</div>
+
+<!-- ============================ 5. DISPOSAL ============================ -->
+<h2 class="section">5. Module — Waste Disposal</h2>
+<p class="lead">Core operational domain: records of waste pumped &amp; hauled, feeding the County of Hawai‘i monthly source report. Table: <code>waste_disposal_details</code> (model <code>WasteDisposalDetails</code>, <code>timestamps = false</code>, manual <code>inserted_at</code>).</p>
+
+<h3>5.1 Public intake (<code>Frontend/HomeController</code>)</h3>
+<ul>
+    <li><span class="pill get">GET</span> <code>/log-waste-disposal</code> — the public form; <span class="pill post">POST</span> <code>/waste-entry</code> → <code>store_waste_entry()</code>.</li>
+    <li>Validates dates as <code>m/d/Y</code>, generator/waste-type/address/volume/unit/zip, <code>discharge_site ∈ {Hilo, Kona}</code>, transporter initials, vehicle license. Creates the record with the submitter's IP and <code>inserted_at = now()</code>, then fires an <code>AdminNotification</code> to all admins (type <code>disposal</code>). No file uploads, no drafts.</li>
+</ul>
+
+<h3>5.2 Admin review &amp; output (<code>Backend/DisposalController</code>)</h3>
+<table class="data">
+    <tr><th style="width:30%">Action</th><th>Behavior</th></tr>
+    <tr><td><code>index()</code></td><td>Filterable list (year / from-date / to-date), ordered by pickup date desc, with a distinct-year dropdown. <em>(The file you had open — <code>disposal/index.blade.php</code> — is this list: DataTable + row-select bulk PDF, CSV export, permission-gated delete.)</em></td></tr>
+    <tr><td><code>export()</code></td><td>Streamed CSV (optionally by year): IP, pickup date, generator, waste type, address, volume, unit, zip, discharge date/site, transporter, vehicle license.</td></tr>
+    <tr><td><code>exportSelectedPdf()</code></td><td>Takes comma-joined selected IDs. One record → single dompdf download; multiple → builds a <code>ZipArchive</code> of per-record PDFs and streams it (<code>deleteFileAfterSend</code>).</td></tr>
+    <tr><td><code>generate_monthly_report()</code></td><td>Renders the official <strong>County of Hawai‘i Wastewater Sludge Pumping &amp; Hauling Source Report</strong> (A4 landscape PDF) for a chosen month/year with registration/permit/signatory fields.</td></tr>
+    <tr><td><code>destroy()</code></td><td>Soft-delete (restorable).</td></tr>
+</table>
+<div class="callout warn"><span class="lbl">Note</span><br>
+<code>create/store/edit/update</code> routes are declared but <strong>there is no <code>store</code> or <code>update</code> method</strong> — disposal records are created only via the public form, not hand-entered by admins. The <code>index()</code> query is also built three times redundantly (dead reassignments).</div>
+
+<!-- ============================ 6. CESSPOOL/SEPTIC ============================ -->
+<h2 class="section">6. Module — Cesspool &amp; Septic Inspections</h2>
+<p class="lead">Two near-identical field-inspection modules. Tables <code>cesspool_system_details</code> / <code>septic_system_details</code> (both <code>timestamps = false</code>, soft-deletes). Each has a public intake form with <strong>draft auto-save</strong>, and an admin screen for review, media editing, PDF export and email delivery.</p>
+
+<h3>6.1 Public intake (<code>Frontend/CesspoolController</code> / <code>SepticController</code>)</h3>
+<ul>
+    <li><span class="pill get">GET</span> form pages first <strong>purge expired drafts</strong> (<code>is_draft=true AND expires_at &lt; now</code>).</li>
+    <li><span class="pill post">POST</span> <code>/…/draft</code> — AJAX draft save. Generates a UUID <code>session_key</code>, stores the row with <code>is_draft=true</code> and a <strong>1-hour TTL</strong> (<code>expires_at = now()+1h</code>), keeps the key in session.</li>
+    <li><span class="pill post">POST</span> <code>/…-systems</code> — final submit. Deletes this session's draft, builds the record with <code>is_draft=false</code>, fires an <code>AdminNotification</code> (type <code>cesspool</code> / <code>septic</code>).</li>
+    <li><strong>Enrichment on submit:</strong> captures IP + parsed browser/OS/device (<code>parseBrowserInfo</code>) and geolocates the IP via the external <code>ip-api.com</code> free API (<code>getLocation</code>, 3s timeout). Checkbox groups are collapsed into comma-separated human-readable strings. The typed/drawn signature arrives as a <code>data:image/…;base64</code> URL and is decoded to a PNG under <code>public/&lt;domain&gt;/signatures/</code>.</li>
+</ul>
+<div class="callout warn"><span class="lbl">Tech-debt</span><br>
+<code>parseBrowserInfo()</code> and <code>getLocation()</code> are copy-pasted across both controllers — candidates for a shared service. The synchronous <code>ip-api.com</code> call adds an external dependency and up to 3s latency to every public submit. Septic also carries a dead <code>use PDF;</code> import.</div>
+
+<h3>6.2 Admin review (<code>Backend/CesspoolRecordsController</code> / <code>SepticRecordsController</code>)</h3>
+<table class="data">
+    <tr><th style="width:24%">Action</th><th>Behavior</th></tr>
+    <tr><td><code>index()</code></td><td>Filter by date range + draft/submitted status. Cesspool orders by <code>id desc</code>; septic by <code>inserted_at desc</code>. Drafts are visible in the admin list.</td></tr>
+    <tr><td><code>edit()</code> / <code>update()</code></td><td>Edit record + media. <strong>Image</strong> → Laravel public storage disk (<code>cesspool|septic/images</code>). <strong>Video</strong> → written directly into <code>public/&lt;domain&gt;/videos/</code>. <strong>Signature</strong> → decoded base64 PNG into <code>public/&lt;domain&gt;/signatures/</code>. All support remove flags.</td></tr>
+    <tr><td><code>exportPdf()</code></td><td>A4-portrait inspection report via dompdf.</td></tr>
+    <tr><td><code>sendReport()</code></td><td>Renders the PDF in-memory and emails it with the branded <code>emails.inspection_report</code> template, attached. <strong>Cesspool supports multiple recipients</strong> (splits on whitespace/comma/semicolon, validates each); <strong>septic accepts a single address only.</strong></td></tr>
+    <tr><td><code>destroy()</code></td><td>Soft-delete; uploaded files intentionally retained on disk.</td></tr>
+</table>
+
+<!-- ============================ 7. DOCUMENTS ============================ -->
+<h2 class="section">7. Module — Document Management &amp; E-Signature</h2>
+<p class="lead">Admins upload documents into folders (categories) and either publish them publicly or assign them to specific employees. Documents can require a mandatory "read &amp; sign" acknowledgment that produces a certificate PDF.</p>
+
+<h3>7.1 Data model</h3>
+<ul>
+    <li><code>DocumentCategory</code> — the "folder" (name, unique slug, is_active).</li>
+    <li><code>Document</code> — file metadata, <code>is_public</code>, <code>requires_acknowledgment</code>, <code>acknowledgment_due</code>. Assignment to employees is via the <code>document_user</code> pivot (<code>assignees()</code>). The old <code>documents.user_id</code> single-owner column is <strong>legacy</strong> — controllers now force it to <code>null</code> and route all assignment through the pivot.</li>
+    <li><code>DocumentAcknowledgment</code> — one signature record per employee per document (unique on <code>document_id,user_id</code>): signed name, IP, <code>signed_pdf_path</code> (the certificate), <code>acknowledged_at</code>.</li>
+</ul>
+
+<h3>7.2 Admin side (<code>DocumentController</code> / <code>DocumentCategoryController</code>)</h3>
+<ul>
+    <li><code>store/update</code> — validate (mimes pdf/doc/docx/xls/xlsx/jpg/png, max from <code>config/uploads.php</code>), read file metadata <em>before</em> moving the temp file, store under <code>public/uploads/documents</code>. If not public, <code>sync()</code> assignees and notify only newly-added employees. <strong>Read-and-sign can only be required on personal PDF documents</strong> (enforced in <code>resolveRequiresAck</code> — throws a validation error otherwise).</li>
+    <li><code>signOffs()</code> — compliance dashboard: all sign-required docs with signed-vs-pending counts (a doc is "complete" when <code>acknowledgments ≥ assignees</code>).</li>
+    <li><code>acknowledgments(Document)</code> — per-document signer list (signed vs pending); <code>downloadSigned()</code> streams any employee's certificate.</li>
+    <li>A folder with documents can't be deleted; destroying a document deletes its physical file then soft-deletes the row.</li>
+</ul>
+
+<h3>7.3 Employee read-and-sign flow (frontend)</h3>
+<ol>
+    <li>Employee sees a document card; sign-required docs appear under "Action Required" (<code>pendingAcknowledgments</code>, ordered by due date).</li>
+    <li><span class="pill get">GET</span> <code>/document-library/sign/{document}</code> shows the read screen (must be logged in, assigned, and the doc must require ack).</li>
+    <li><span class="pill post">POST</span> acknowledge — validates typed <code>signed_name</code> + <code>agree</code> checkbox, captures IP + timestamp, calls <code>DocumentSignatureService::generateSignedPdf()</code>, creates the <code>DocumentAcknowledgment</code>, writes an ActivityLog entry, and notifies admins (type <code>document</code>).</li>
+    <li><strong>The original file stays locked</strong> (403 on download) until the employee has signed.</li>
+</ol>
+
+<h3>7.4 DocumentSignatureService — how "signing" works</h3>
+<div class="callout info"><span class="lbl">Important clarification</span><br>
+The service does <strong>not</strong> stamp/overlay the original PDF. It renders a <strong>separate "Certificate of Acknowledgment" PDF</strong> from the Blade view <code>pdf.acknowledgment_certificate</code> (embedding logo/watermark/seal as base64 data URIs). The <strong>typed full name is the signature</strong>; IP + timestamp are recorded on the certificate. Rendering <strong>prefers headless Chrome/Edge</strong> (<code>--headless=new --print-to-pdf</code>, discovered via <code>CHROME_PATH</code> or a probe list) for pixel-accurate CSS, and <strong>falls back to dompdf</strong> (A4 landscape) if no Chrome binary is found.</div>
+
+<!-- ============================ 8. ANNOUNCEMENTS ============================ -->
+<h2 class="section">8. Module — Announcements</h2>
+<ul>
+    <li><code>Announcement</code>: title, unique slug, body, optional image, <code>is_active</code>, <code>published_at</code>, <code>created_by</code>. Slug is generated on create (backfilled by migration for legacy rows) and never regenerated on update.</li>
+    <li>Admin CRUD (<code>AnnouncementController</code>) with image upload under <code>public/uploads/announcements</code> and remove-image support; <code>published_at</code> defaults to now.</li>
+    <li><strong>Public:</strong> announcements are viewable by anyone without login — <span class="pill get">GET</span> <code>/employee-announcements</code> (paginated) and <code>/employee-announcements/{slug}</code>. The employee dashboard shows the 3 latest via <code>scopePublishedLatest()</code>.</li>
+</ul>
+
+<!-- ============================ 9. CALENDAR ============================ -->
+<h2 class="section">9. Module — Community Calendar</h2>
+<ul>
+    <li><code>CalendarEvent</code>: title, description, start/end date, <code>all_day</code>, start/end time, <code>category</code>, location, optional <code>attachment</code> (flyer). A <code>CATEGORIES</code> constant maps 5 keys (holiday/meeting/training/pto/other) to labels + hex colors — this drives the legend, validation whitelist and event colors.</li>
+    <li>Admin CRUD (<code>CalendarEventController</code>) with flyer upload (<code>public/uploads/calendar</code>, mimes pdf/doc/docx/images).</li>
+    <li><strong>FullCalendar JSON feed</strong> (<code>events()</code>): maps each active event to a FullCalendar object. All-day events add +1 day to <code>end</code> (FullCalendar treats all-day end as exclusive); timed events emit <code>date T time</code> strings. Category color becomes a soft translucent background (<code>rgba(...,0.14)</code>) with a solid border/text color via <code>hexToRgb()</code>.</li>
+    <li><strong>Public read-only view</strong> at <code>/community-calendar</code> + its own events feed (8 upcoming events + legend).</li>
+</ul>
+
+<!-- ============================ 10. INCIDENT ============================ -->
+<h2 class="section">10. Module — Incident Reports</h2>
+<p class="lead">Workplace-incident reporting filed by employees or by managers on their behalf. Table <code>incident_reports</code> + <code>incident_report_photos</code> (which stores <em>both</em> images and videos, distinguished by MIME type).</p>
+<ul>
+    <li><strong>Permission model:</strong> <code>canManage() = hasPermission('incident-reports.edit')</code>. Managers see/manage all; non-managers (employees) are scoped to <code>reported_by = own id</code>.</li>
+    <li><code>reference_no</code> is auto-generated as <code>IR-&lt;year&gt;-&lt;zero-padded id&gt;</code>. Statuses: open / under-review / closed. Source: employee / admin.</li>
+    <li><strong>Employee submit</strong> (frontend) attaches up to 6 photos + 4 videos, sets <code>reported_by</code> = filer and <code>employee_id</code> = involved employee, and notifies all admins.</li>
+    <li><strong>Admin</strong> (<code>IncidentReportController</code>): list with filters + year dropdown, CSV export, create/edit, status changes stamp <code>reviewed_by</code>/<code>reviewed_at</code>. When a manager files/updates on behalf of an employee, the affected employee(s) get a <code>notifyUser</code> notification. Destroy is soft-delete; media files are deliberately kept (a single photo can also be soft-deleted individually).</li>
+</ul>
+
+<!-- ============================ 11. EMPLOYEES ============================ -->
+<h2 class="section">11. Module — Employees (HR) &amp; Employee Portal</h2>
+
+<h3>11.1 Employee authentication</h3>
+<p>
+    Employees are <code>users</code> with role slug <code>employee</code>, authenticated on the same <code>web</code> guard. On login the controller stores <code>employee_password_hash</code> in the session. The <code>EmployeeAuth</code> middleware checks (a) the user is logged in and is an employee, and (b) the stored hash still matches the DB password — if an admin or another device changed the password, the session is invalidated and the user is forced to re-login. The employee portal has a <strong>proper tokenized password-reset flow</strong> (<code>Password::sendResetLink</code> / <code>Password::reset</code>); <code>AppServiceProvider</code> overrides the reset URL to point at the employee frontend page.
+</p>
+
+<h3>11.2 Employee Portal features (<code>Frontend/EmployeesController</code>, 801 lines)</h3>
+<table class="data">
+    <tr><th style="width:26%">Area</th><th>Capability</th></tr>
+    <tr><td>Portal / dashboard</td><td>Public landing (no login) + authenticated dashboard showing latest announcements, the employee's own incident reports and status stats.</td></tr>
+    <tr><td>Profile &amp; password</td><td>Edit name/phone/avatar (email intentionally not editable); change password (re-stores the session hash so the user isn't logged out mid-request).</td></tr>
+    <tr><td>Document library</td><td>Public + personal documents, read-and-sign flow, signed-certificate download (§7.3).</td></tr>
+    <tr><td>Incident reporting</td><td>Submit incidents with photos/videos (§10).</td></tr>
+    <tr><td>Announcements &amp; calendar</td><td>Read-only views of published announcements and upcoming events.</td></tr>
+    <tr><td>Notifications</td><td>Bell feed + live toast polling (§12).</td></tr>
+</table>
+
+<h3>11.3 HR admin side (<code>Backend/EmployeeController</code>)</h3>
+<ul>
+    <li>Manages only <code>employee</code>-role users. <code>store()</code> creates the account and <strong>sends a welcome email containing the plaintext password</strong>, stamping <code>welcome_email_sent_at</code> on success. Mail failure does <em>not</em> roll back account creation (leaves the timestamp null for retry).</li>
+    <li><code>update()</code> has welcome-email retry logic: if never sent and a new password is provided, it resends; passwords are hashed and unreadable, so retry requires setting a fresh password.</li>
+    <li>The edit screen also surfaces the employee's signed-document acknowledgments.</li>
+</ul>
+
+<!-- ============================ 12. NOTIFICATIONS ============================ -->
+<h2 class="section">12. Notifications</h2>
+<ul>
+    <li><code>AdminNotification</code> model with <code>recipient()</code> and <code>actor()</code> relations. Two creators: <code>notifyAdmins()</code> (bulk-inserts one row per active non-employee user) and <code>notifyUser()</code> (single recipient, e.g. an affected employee).</li>
+    <li><strong>Created by:</strong> public form submissions (disposal/cesspool/septic), document shares &amp; signatures, and incident reports → admins; manager-filed/updated incidents → the affected employee.</li>
+    <li>Both admin and employee UIs have a bell feed (view composers inject unread count + latest 8) plus a JSON <code>feed</code> endpoint polled for live toasts (client sends an <code>after</code> id so only new items replay), "mark read", and "read all". Note: <code>notifyAdmins</code> uses a bulk <code>insert</code>, bypassing model events/observers (harmless — no observer on this model).</li>
+</ul>
+
+<!-- ============================ 13. ACTIVITY LOG ============================ -->
+<h2 class="section">13. Activity Log &amp; Auditing</h2>
+<ul>
+    <li><code>ActivityObserver</code> is attached (in <code>AppServiceProvider</code>) to 12 models: Document, DocumentCategory, Announcement, IncidentReport, CalendarEvent, User, Role, Permission, EmailSettingsDetails, WasteDisposalDetails, CesspoolSystemDetails, SepticSystemDetails. It records create/update/delete/restore with the changed-column list, the acting user, IP, URL and HTTP method. <strong>Console/CLI operations are skipped</strong> (migrations/seeders/tinker produce no logs).</li>
+    <li><code>ActivityLog::write()</code> is a safe static helper callable anywhere (used directly for login/logout and document-signing events).</li>
+    <li>The admin UI splits the log into two views via <code>ActivityLogController</code>: <strong>"Forms"</strong> (Cesspool Records, Septic Records, Disposal Details) and <strong>"HR"</strong> (everything else), each with module/event/user/text/date filters.</li>
+</ul>
+
+<!-- ============================ 14. EMAIL/CRON ============================ -->
+<h2 class="section">14. Email &amp; Scheduled Jobs</h2>
+<ul>
+    <li><strong>Transactional mail:</strong> employee welcome email (with credentials), inspection-report delivery (PDF attached), password-reset links. All sent <strong>synchronously</strong> in-request (no queue), via SMTP.</li>
+    <li><strong>Monthly report reminder:</strong> command <code>email:monthly-report-reminder</code> emails the recipients configured in <code>EmailSettingsDetails</code> (default + up to 3 addresses) a reminder with an admin-login CTA.</li>
+    <li><strong>Schedule:</strong> defined in <code>routes/console.php</code> → <code>lastDayOfMonth('09:00')</code> in <code>Pacific/Honolulu</code>. Requires the system cron to run <code>php artisan schedule:run</code> every minute.</li>
+</ul>
+<div class="callout warn"><span class="lbl">Stale config</span><br>
+<code>app/Console/Kernel.php</code> contains an old commented-out <code>everyMinute()</code> version with a misleading "runs every day at 9:00 AM" comment. It is inert — the authoritative schedule is in <code>console.php</code> (last day of month, 09:00 Hawai‘i time). The command itself does not re-check the date; gating is entirely the scheduler's job.</div>
+
+<!-- ============================ 15. SCHEMA ============================ -->
+<h2 class="section">15. Database Schema Summary</h2>
+<table class="data">
+    <tr><th style="width:30%">Table</th><th>Purpose</th></tr>
+    <tr><td><code>users</code></td><td>Staff + employees (role_id, is_active, welcome_email_sent_at, soft-delete + deleted_by)</td></tr>
+    <tr><td><code>roles</code> / <code>permissions</code> / <code>permission_role</code></td><td>RBAC (roles, permission catalog, pivot)</td></tr>
+    <tr><td><code>waste_disposal_details</code></td><td>Public waste-disposal submissions <span class="small">(⚠ no migration — see §17)</span></td></tr>
+    <tr><td><code>cesspool_system_details</code> / <code>septic_system_details</code></td><td>Inspection records (drafts, media, signatures, client/geo fingerprint)</td></tr>
+    <tr><td><code>document_categories</code> / <code>documents</code> / <code>document_user</code> / <code>document_acknowledgments</code></td><td>Folders, files, per-employee assignment pivot, signature certificates</td></tr>
+    <tr><td><code>announcements</code></td><td>Company announcements (slug added + backfilled by later migration)</td></tr>
+    <tr><td><code>calendar_events</code></td><td>Community calendar (category, all-day/timed, flyer attachment)</td></tr>
+    <tr><td><code>incident_reports</code> / <code>incident_report_photos</code></td><td>Incident reports + attachments (photos &amp; videos in one table)</td></tr>
+    <tr><td><code>activity_logs</code></td><td>Audit trail</td></tr>
+    <tr><td><code>admin_notifications</code></td><td>In-app notifications (admin + employee)</td></tr>
+    <tr><td><code>email_settings</code></td><td>Monthly-report recipient configuration (<code>timestamps=false</code>, custom inserted/modified columns)</td></tr>
+    <tr><td><code>jobs</code> / <code>cache</code></td><td>Laravel infrastructure tables</td></tr>
+</table>
+
+<!-- ============================ 16. STORAGE ============================ -->
+<h2 class="section">16. File Storage Conventions</h2>
+<p>Most uploads go directly into <code>public/uploads/…</code> (documents, documents/signed certificates, avatars, incident-reports, announcements, calendar) and are served via <code>asset()</code>. Soft-deleting a row does <em>not</em> remove its file unless the controller explicitly unlinks it on <code>destroy</code>/replace.</p>
+<div class="callout warn"><span class="lbl">Storage asymmetry (easy to trip on)</span><br>
+Cesspool/septic inspection <strong>images</strong> use the Laravel <strong>public storage disk</strong> (<code>storage/app/public/…</code>, which requires <code>php artisan storage:link</code>), while <strong>videos and signatures</strong> for the same records are written straight into <code>public/</code>. The PDF templates account for this by resolving images with <code>storage_path()</code> but signatures with <code>public_path()</code>. Video cannot be embedded in dompdf PDFs — it's rendered as a clickable link.</div>
+
+<!-- ============================ 17. RISKS ============================ -->
+<h2 class="section">17. Known Issues, Risks &amp; Handover Flags</h2>
+<table class="data">
+    <tr><th style="width:20%">Severity</th><th>Item</th></tr>
+    <tr><td><strong style="color:#dc3545">High</strong></td><td>Public <code>/update-password</code> sets any user's password with no token/identity check (account takeover). Fix before any public exposure.</td></tr>
+    <tr><td><strong style="color:#dc3545">High</strong></td><td>No migration exists for <code>waste_disposal_details</code>, yet the whole disposal module depends on it. A fresh <code>php artisan migrate</code> on an empty DB will NOT create it — the table is currently created out-of-band. Add a migration before any clean deploy/CI.</td></tr>
+    <tr><td><strong style="color:#f0ad4e">Medium</strong></td><td>Open, ungated <code>/register</code> self-registration route on the admin app.</td></tr>
+    <tr><td><strong style="color:#f0ad4e">Medium</strong></td><td>Reflected-origin CORS with <code>Allow-Credentials: true</code> in <code>PreventBackHistoryMiddleware</code>.</td></tr>
+    <tr><td><strong style="color:#f0ad4e">Medium</strong></td><td>Synchronous <code>ip-api.com</code> geolocation call on every cesspool/septic public submit (external dependency + up to 3s latency). Consider making it async/optional.</td></tr>
+    <tr><td><strong style="color:#6c757d">Low</strong></td><td>No automated test coverage (only the two default <code>ExampleTest</code> stubs).</td></tr>
+    <tr><td><strong style="color:#6c757d">Low</strong></td><td>Duplicated <code>parseBrowserInfo</code>/<code>getLocation</code> across cesspool/septic controllers; <code>DisposalController::index</code> builds its query 3×; dead imports (<code>DisposalDetails</code>, <code>EmailSettingsDetails</code>, <code>PDF</code>); stale <code>Kernel.php</code> schedule comment.</td></tr>
+    <tr><td><strong style="color:#6c757d">Low</strong></td><td>Repo hygiene: a ~6&nbsp;MB <code>cron.log</code> and a stray <code>public/test.php</code> are committed; <code>.env</code> is tracked with <code>APP_DEBUG=true</code>.</td></tr>
+    <tr><td><strong style="color:#6c757d">Low</strong></td><td><code>EmailSettingsController::destroy</code> catches an unqualified <code>Exception</code> (not imported in that namespace) — a latent fatal if an exception is actually thrown.</td></tr>
+</table>
+
+<!-- ============================ 18. SETUP ============================ -->
+<h2 class="section">18. Setup &amp; Deployment Notes</h2>
+<ol>
+    <li><code>composer install</code> &amp; <code>npm install</code>; copy <code>.env.example</code> → <code>.env</code>; <code>php artisan key:generate</code>. (A composer <code>setup</code> script bundles these.)</li>
+    <li>Create the MySQL database and run <code>php artisan migrate</code>. <strong>Then provision <code>waste_disposal_details</code> manually</strong> (no migration yet — see §17) and seed roles/permissions + a superadmin.</li>
+    <li><code>php artisan storage:link</code> (required — cesspool/septic images live on the public storage disk).</li>
+    <li>Ensure <code>public/uploads/</code> and its subfolders are writable by the web server.</li>
+    <li>Configure SMTP in <code>.env</code>; populate <code>email_settings</code> for the monthly-report reminder.</li>
+    <li>Register the system cron: <code>* * * * * php artisan schedule:run</code> (drives the last-day-of-month reminder).</li>
+    <li>Optional: install Chrome/Edge (or set <code>CHROME_PATH</code>) for pixel-accurate signature certificates; otherwise dompdf is used automatically.</li>
+    <li><code>npm run build</code> for production assets. In production set <code>APP_ENV=production</code>, <code>APP_DEBUG=false</code>, and resolve the §17 security items.</li>
+</ol>
+
+<hr class="soft">
+<p class="small">End of document — generated from a full static analysis of the <code>new-career-app</code> branch. Line-level references for every item summarized here are available in the source controllers, models, middleware and migrations cited throughout.</p>
+
+</body>
+</html>
