@@ -4,127 +4,12 @@
 <head>
     @include('components.backend.head')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        .edit-page-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f6f8fb 100%);
-            border: 1px solid #e6eaf0;
-            border-radius: 12px;
-            padding: 20px 26px;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-        }
-        .edit-page-header .page-title {
-            font-size: 1.3rem; font-weight: 600; color: #1f2937;
-            margin: 0; display: flex; align-items: center; gap: 12px;
-        }
-        .edit-page-header .title-icon {
-            width: 38px; height: 38px;
-            display: inline-flex; align-items: center; justify-content: center;
-            background: #eaf2ff; color: #0d6efd;
-            border-radius: 10px; font-size: 1rem;
-        }
-        .edit-page-header .breadcrumb { margin: 6px 0 0 50px; font-size: 0.82rem; }
-        .edit-page-header .breadcrumb-item + .breadcrumb-item::before { content: "›"; color: #9aa3b2; }
-        .edit-page-header .breadcrumb-item a { color: #6b7280; text-decoration: none; }
-        .edit-page-header .breadcrumb-item a:hover { color: #0d6efd; }
-        .edit-page-header .breadcrumb-item.active { color: #1f2937; font-weight: 500; }
-
-        .edit-card {
-            border: 1px solid #e6eaf0; border-radius: 12px;
-            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-        }
-        .edit-card .nav-tabs {
-            border-bottom: 1px solid #e6eaf0;
-            padding: 8px 16px 0;
-            background: #fafbfd;
-            border-top-left-radius: 12px; border-top-right-radius: 12px;
-            gap: 4px;
-        }
-        .edit-card .nav-tabs .nav-link {
-            font-size: 0.88rem; font-weight: 600; color: #6b7280;
-            border: none; padding: 12px 18px;
-            border-bottom: 3px solid transparent;
-        }
-        .edit-card .nav-tabs .nav-link.active {
-            color: #0d6efd; background: transparent;
-            border-bottom-color: #0d6efd;
-        }
-        .edit-card .nav-tabs .nav-link i { margin-right: 6px; }
-
-        .section-block {
-            padding: 28px 30px; border-bottom: 1px dashed #e6eaf0;
-        }
-        .section-block:last-child { border-bottom: 0; }
-        .section-block .section-title {
-            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.1em; color: #6b7280; margin-bottom: 18px;
-            padding-bottom: 8px; border-bottom: 1px solid #f1f3f7;
-        }
-        .section-block .section-title i { color: #0d6efd; margin-right: 8px; }
-
-        .form-label {
-            font-weight: 600; color: #344054; font-size: 0.85rem; margin-bottom: 6px;
-        }
-        .form-control, .form-select {
-            font-size: 0.92rem; padding: 9px 12px;
-            border: 1px solid #d9dde3; border-radius: 8px;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,0.12);
-        }
-        .form-text { font-size: 0.76rem; color: #8a93a3; margin-top: 4px; }
-
-        .row.g-form { --bs-gutter-x: 1.5rem; --bs-gutter-y: 1.25rem; }
-
-        .status-bar {
-            background: #f8fafc; border: 1px solid #eef0f4; border-radius: 10px;
-            padding: 12px 18px; margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: 10px;
-        }
-        .status-bar .badge { font-size: 0.78rem; padding: 7px 14px; }
-        .status-bar .submitted-time { font-size: 0.82rem; color: #6b7280; }
-        .status-bar .submitted-time i { margin-right: 4px; color: #9aa3b2; }
-
-        .media-card {
-            background: #fafbfd; border: 1px dashed #d9dde3; border-radius: 10px;
-            padding: 18px; height: 100%;
-        }
-        .media-card .media-title { font-weight: 600; color: #344054; margin-bottom: 4px; }
-        .media-card .media-help { color: #8a93a3; font-size: 0.78rem; margin-bottom: 12px; }
-        .media-card .media-preview img,
-        .media-card .media-preview video {
-            max-width: 100%; max-height: 220px; border-radius: 8px;
-            border: 1px solid #e6eaf0; object-fit: cover;
-        }
-        .media-card .empty-state {
-            color: #9aa3b2; font-size: 0.85rem; padding: 14px;
-            text-align: center; background: #fff; border-radius: 8px;
-            border: 1px dashed #e6eaf0;
-        }
-
-        .card-footer-actions {
-            background: #fafbfd; border-top: 1px solid #e6eaf0;
-            padding: 16px 26px; display: flex; gap: 10px; justify-content: flex-end;
-            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-        }
-        .card-footer-actions .btn { padding: 9px 22px; font-weight: 500; }
-
-        @media (max-width: 768px) {
-            .section-block { padding: 22px 18px; }
-        }
-
-        /* Toast */
-        .app-toast-container { z-index: 1080; }
-        .app-toast { min-width: 280px; border: 0; box-shadow: 0 8px 20px rgba(16,24,40,0.18); }
-        .app-toast .toast-body i { font-size: 1.05rem; }
-    </style>
 </head>
 
 @include('components.backend.header')
 @include('components.backend.sidebar')
 
-<div class="page-body">
+<div class="page-body septic-records-edit-page">
     <div class="container-fluid">
 
         <!-- Toast container -->

@@ -2,47 +2,6 @@
 <html lang="en">
 <head>
     @include('components.backend.head')
-    <style>
-        .sg-card { border: 1px solid #e8ebf1; border-radius: 14px; box-shadow: 0 8px 26px rgba(20,28,48,.05); }
-        .sg-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-        @media (max-width: 767px) { .sg-tiles { grid-template-columns: repeat(2, 1fr); } }
-        .sg-tile { border-radius: 13px; padding: 18px 20px; border: 1px solid #eef0f4; }
-        .sg-tile b { display: block; font-size: 28px; font-weight: 800; line-height: 1; }
-        .sg-tile span { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: #8a94a3; }
-        .sg-tile.docs    { background: #eef2ff; } .sg-tile.docs b    { color: #0004fe; }
-        .sg-tile.done    { background: #e6f6ec; } .sg-tile.done b    { color: #1a7f43; }
-        .sg-tile.await   { background: #fff2ec; } .sg-tile.await b   { color: #d1600f; }
-        .sg-tile.sig     { background: #f4f6fa; } .sg-tile.sig b     { color: #1a2230; }
-
-        .sg-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
-        .sg-search { position: relative; }
-        .sg-search i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #b0b8c5; }
-        .sg-search input { padding: 8px 14px 8px 34px; border: 1px solid #e2e6ee; border-radius: 9px; min-width: 240px; font-size: 13.5px; }
-
-        .sg-table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        .sg-table thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: #9aa2b1;
-            font-weight: 700; padding: 0 14px 12px; border-bottom: 1px solid #eef0f4; text-align: left; }
-        .sg-table tbody td { padding: 15px 14px; border-bottom: 1px solid #f3f5f8; vertical-align: middle; }
-        .sg-table tbody tr:last-child td { border-bottom: none; }
-        .sg-doc { display: flex; align-items: center; gap: 12px; }
-        .sg-doc__ic { flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px; background: #fdecec; color: #e62029;
-            display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .sg-doc__t { font-weight: 600; color: #1a2230; }
-        .sg-doc__m { font-size: 12px; color: #8a94a3; }
-        .sg-bar { height: 8px; border-radius: 20px; background: #eef0f4; overflow: hidden; width: 160px; }
-        .sg-bar__f { height: 100%; border-radius: 20px; background: #1a7f43; }
-        .sg-bar__f.part { background: #f0a020; }
-        .sg-count { font-size: 12.5px; color: #5a6576; font-weight: 600; margin-top: 6px; }
-        .sg-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 30px; }
-        .sg-pill.done { background: #e6f6ec; color: #1a7f43; }
-        .sg-pill.await { background: #fff2ec; color: #d1600f; }
-        .sg-pill.none { background: #eef1f6; color: #8a94a3; }
-        .sg-view { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600;
-            color: #0004fe; border: 1px solid #cdd6ff; background: #f5f7ff; padding: 7px 15px; border-radius: 9px; text-decoration: none; }
-        .sg-view:hover { background: #0004fe; color: #fff; border-color: #0004fe; }
-        .sg-due { font-size: 12px; color: #c98a00; font-weight: 600; }
-        .sg-empty { text-align: center; color: #8a94a3; padding: 40px 0; }
-    </style>
 </head>
 <body>
 @include('components.backend.header')

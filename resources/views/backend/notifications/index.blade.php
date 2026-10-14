@@ -2,26 +2,6 @@
 <html lang="en">
 <head>
     @include('components.backend.head')
-    <style>
-        .nfp-card { border: 1px solid #e8ebf1; border-radius: 14px; box-shadow: 0 8px 26px rgba(20,28,48,.05); }
-        .nfp-list { list-style: none; margin: 0; padding: 0; }
-        .nfp-list > li { border-bottom: 1px solid #f3f5f8; }
-        .nfp-list > li:last-child { border-bottom: none; }
-        .nfp-list > li.is-unread { background: #f5f8ff; }
-        .nfp-row { display: flex; gap: 14px; padding: 16px 18px; text-decoration: none; align-items: flex-start; }
-        .nfp-row:hover { background: #f7f8fb; }
-        .nfp-ic { flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
-            justify-content: center; font-size: 17px; background: #eef2ff; color: #0004fe; }
-        .nfp-ic--incident { background: #fdecec; color: #e62029; }
-        .nfp-ic--document { background: #eef2ff; color: #0004fe; }
-        .nfp-ic--cesspool, .nfp-ic--septic { background: #e6f6ec; color: #1a7f43; }
-        .nfp-ic--disposal { background: #fff2ec; color: #d1600f; }
-        .nfp-title { font-weight: 600; color: #1a2230; }
-        .nfp-msg { color: #5a6576; font-size: 13.5px; margin-top: 2px; }
-        .nfp-time { color: #9aa2b1; font-size: 12px; margin-top: 4px; }
-        .nfp-dot { flex-shrink: 0; width: 9px; height: 9px; border-radius: 50%; background: #0004fe; margin-top: 6px; }
-        .nfp-empty { text-align: center; color: #9aa2b1; padding: 50px 0; }
-    </style>
 </head>
 <body>
 @include('components.backend.header')
