@@ -39,7 +39,7 @@
                                         <tr>
                                             <td>
                                                 @if($a->image_path)
-                                                    <img src="{{ asset($a->image_path) }}" alt="" class="preview-img announcement-thumb"
+                                                    <img loading="lazy" src="{{ asset($a->image_path) }}" alt="" class="preview-img announcement-thumb"
                                                          data-url="{{ asset($a->image_path) }}" data-title="{{ $a->title }}"
                                                          title="Click to preview">
                                                 @else

@@ -122,7 +122,7 @@
                                             @if(\Illuminate\Support\Str::startsWith($photo->mime_type ?? '', 'video'))
                                                 <video src="{{ asset($photo->file_path) }}" controls preload="metadata" class="incident-photo-thumb d-block mb-1" style="width:auto;"></video>
                                             @else
-                                                <img src="{{ asset($photo->file_path) }}" alt="" class="incident-photo-thumb d-block mb-1">
+                                                <img loading="lazy" src="{{ asset($photo->file_path) }}" alt="" class="incident-photo-thumb d-block mb-1">
                                             @endif
                                             <button type="submit" form="delphoto-{{ $photo->id }}" class="btn btn-sm btn-link text-danger p-0" onclick="return confirm('Remove this attachment?')">Remove</button>
                                         </div>

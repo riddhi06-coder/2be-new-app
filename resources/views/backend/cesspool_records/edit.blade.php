@@ -135,7 +135,7 @@
                                             @if($record->inspector_signature && file_exists(public_path($record->inspector_signature)))
                                                 <div class="mb-2">
                                                     <div style="font-size:12px; color:#6b7d72; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">Current signature on file</div>
-                                                    <img src="{{ asset($record->inspector_signature) }}" alt="Signature" style="max-height:80px; border:1px solid #c4cac6; padding:6px; background:#fafbfa;">
+                                                    <img loading="lazy" src="{{ asset($record->inspector_signature) }}" alt="Signature" style="max-height:80px; border:1px solid #c4cac6; padding:6px; background:#fafbfa;">
                                                 </div>
                                             @elseif($record->inspector_signature)
                                                 <div class="mb-2 text-muted" style="font-size:13px;">
@@ -327,7 +327,7 @@
                                                 <div class="media-help">Accepted: JPG, PNG, WebP &nbsp;|&nbsp; Max size: 2 MB</div>
                                                 @if($record->image_path)
                                                     <div class="media-preview mb-3">
-                                                        <img src="{{ Storage::url($record->image_path) }}" alt="Inspection Image">
+                                                        <img loading="lazy" src="{{ Storage::url($record->image_path) }}" alt="Inspection Image">
                                                     </div>
                                                     <div class="form-check mb-3">
                                                         <input class="form-check-input" type="checkbox" name="remove_image" id="remove_image" value="1">

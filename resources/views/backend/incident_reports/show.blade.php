@@ -64,7 +64,7 @@
                                     @if(\Illuminate\Support\Str::startsWith($photo->mime_type ?? '', 'video'))
                                         <video src="{{ asset($photo->file_path) }}" controls preload="metadata" class="incident-photo-thumb" style="width:auto;"></video>
                                     @else
-                                        <img src="{{ asset($photo->file_path) }}" alt="" class="preview-img incident-photo-thumb"
+                                        <img loading="lazy" src="{{ asset($photo->file_path) }}" alt="" class="preview-img incident-photo-thumb"
                                              data-url="{{ asset($photo->file_path) }}" data-title="{{ $photo->original_name }}" title="Click to preview">
                                     @endif
                                 @endforeach

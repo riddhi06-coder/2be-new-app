@@ -52,7 +52,7 @@
                                     <small class="text-muted">Upload to replace. JPG, PNG, GIF or WEBP. Max {{ round(config('uploads.image_max_kb') / 1024) }} MB.</small>
                                     @error('image')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                                     <div class="mt-2">
-                                        <img id="imagePreview" src="{{ $announcement->image_path ? asset($announcement->image_path) : '' }}" alt=""
+                                        <img loading="lazy" id="imagePreview" src="{{ $announcement->image_path ? asset($announcement->image_path) : '' }}" alt=""
                                              class="form-image-preview {{ $announcement->image_path ? '' : 'd-none' }}">
                                     </div>
                                     @if($announcement->image_path)
