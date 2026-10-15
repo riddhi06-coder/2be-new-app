@@ -259,6 +259,20 @@ class EmployeesController extends Controller
         return view('frontend.employee.announcement_show', ['announcement' => $announcement]);
     }
 
+    /** Company Google reviews — what customers are saying (visible to all employees). */
+    public function employee_reviews()
+    {
+        $reviews = \App\Models\GoogleReview::visible()
+            ->orderByDesc('reviewed_at')
+            ->get();
+
+        return view('frontend.employee.reviews', [
+            'reviews' => $reviews,
+            'average' => round((float) $reviews->avg('rating'), 1),
+            'count'   => $reviews->count(),
+        ]);
+    }
+
     /** Show the employee-facing incident report form. */
     public function employee_incident_report()
     {

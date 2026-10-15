@@ -236,6 +236,9 @@ Route::group(['prefix'=> '', 'middleware'=>[\App\Http\Middleware\PreventBackHist
     // Public: announcements are viewable by everyone (no login required).
     Route::get('/employee-announcements',        [EmployeesController::class, 'employee_announcements'])->name('frontend.employee_announcements');
     Route::get('/employee-announcements/{slug}', [EmployeesController::class, 'employee_announcement'])->name('frontend.employee_announcement');
+
+    // Company Google reviews (visible to all employees).
+    Route::get('/company-reviews', [EmployeesController::class, 'employee_reviews'])->name('frontend.employee_reviews');
     
     
     // Public: shared documents are viewable by anyone; personal docs require login (enforced in the controller).

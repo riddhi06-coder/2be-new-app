@@ -35,4 +35,22 @@ return [
         ],
     ],
 
+    /*
+    | Google Business Profile reviews. Fill these in .env once the client grants
+    | access + Google approves API access; until then the portal shows the
+    | sample reviews loaded via `php artisan reviews:seed-sample`.
+    */
+    'google_reviews' => [
+        // Option A — Business Profile API (all reviews, auto-updating)
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'refresh_token' => env('GOOGLE_REFRESH_TOKEN'),
+        'account_id'    => env('GOOGLE_GBP_ACCOUNT_ID'),   // e.g. accounts/123456789
+        'location_id'   => env('GOOGLE_GBP_LOCATION_ID'),  // e.g. locations/987654321
+
+        // Option B — Places API interim (rating + latest 5 reviews)
+        'places_api_key' => env('GOOGLE_PLACES_API_KEY'),
+        'place_id'       => env('GOOGLE_PLACE_ID'),
+    ],
+
 ];

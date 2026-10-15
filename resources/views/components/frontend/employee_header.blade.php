@@ -91,6 +91,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('frontend.employee_calendar') }}"> COMMUNITY CALENDAR </a>
                     </li>
+
+                    <!-- Google Reviews -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('frontend.employee_reviews') }}"> REVIEWS </a>
+                    </li>
                     </ul>
                 </div>
                 <!-- Right Side -->
