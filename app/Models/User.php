@@ -29,8 +29,14 @@ class User extends Authenticatable
         'role_id',
         'is_active',
         'welcome_email_sent_at',
+        'start_date',
+        'last_assessment_at',
+        'assessment_due_notified_at',
         'deleted_by',
     ];
+
+    /** Number of days between quarterly assessments (90-day cycle). */
+    public const ASSESSMENT_INTERVAL_DAYS = 90;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,10 +56,13 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'     => 'datetime',
-            'password'              => 'hashed',
-            'is_active'             => 'boolean',
-            'welcome_email_sent_at' => 'datetime',
+            'email_verified_at'          => 'datetime',
+            'password'                   => 'hashed',
+            'is_active'                  => 'boolean',
+            'welcome_email_sent_at'      => 'datetime',
+            'start_date'                 => 'date',
+            'last_assessment_at'         => 'date',
+            'assessment_due_notified_at' => 'datetime',
         ];
     }
 
@@ -89,6 +98,37 @@ class User extends Authenticatable
     public function adminNotifications(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AdminNotification::class);
+    }
+
+    /** Completed quarterly assessments for this employee (newest first). */
+    public function quarterlyAssessments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(QuarterlyAssessment::class)->orderByDesc('assessed_on');
+    }
+
+    /**
+     * The date the current 90-day cycle is measured from: the last completed
+     * assessment, or the start date if none has been completed yet.
+     */
+    public function assessmentBaseline(): ?\Illuminate\Support\Carbon
+    {
+        return $this->last_assessment_at ?? $this->start_date;
+    }
+
+    /** Date the next quarterly assessment becomes due (null if no start date). */
+    public function nextAssessmentDueDate(): ?\Illuminate\Support\Carbon
+    {
+        $base = $this->assessmentBaseline();
+
+        return $base ? $base->copy()->addDays(self::ASSESSMENT_INTERVAL_DAYS) : null;
+    }
+
+    /** True when the employee has a start date and the next assessment is due/overdue. */
+    public function isAssessmentDue(): bool
+    {
+        $due = $this->nextAssessmentDueDate();
+
+        return $due !== null && $due->startOfDay()->lte(now()->startOfDay());
     }
 
     public function hasRole(string $slug): bool

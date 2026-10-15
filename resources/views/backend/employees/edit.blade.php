@@ -22,6 +22,13 @@
             </div>
         </div>
 
+        @if(session('message'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -50,6 +57,12 @@
                                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                            value="{{ old('email', $employee->email) }}" required placeholder="name@example.com">
                                     @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Start Date <small class="text-muted">(used for the 90-day quarterly assessment)</small></label>
+                                    <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror"
+                                           value="{{ old('start_date', optional($employee->start_date)->format('Y-m-d')) }}">
+                                    @error('start_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Status</label>
@@ -86,6 +99,83 @@
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                             <a href="{{ route('admin.employees.index') }}" class="btn btn-light">Cancel</a>
                         </form>
+                    </div>
+                </div>
+
+                {{-- Quarterly (90-day) assessment tracking --}}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3"><i class="fa fa-clipboard me-2"></i>Quarterly Assessment</h5>
+
+                        @if(! $employee->start_date)
+                            <p class="text-muted mb-0">Set a <strong>Start Date</strong> above and save to enable 90-day quarterly assessment tracking.</p>
+                        @else
+                            @php
+                                $nextDue = $employee->nextAssessmentDueDate();
+                                $isDue   = $employee->isAssessmentDue();
+                            @endphp
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-3">
+                                    <div class="small text-muted text-uppercase">Status</div>
+                                    @if($isDue)
+                                        <span class="badge bg-danger">Due now</span>
+                                    @else
+                                        <span class="badge bg-success">On track</span>
+                                    @endif
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="small text-muted text-uppercase">Last completed</div>
+                                    <div>{{ $employee->last_assessment_at ? $employee->last_assessment_at->format('M j, Y') : 'Not yet' }}</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="small text-muted text-uppercase">Next due</div>
+                                    <div class="{{ $isDue ? 'text-danger fw-semibold' : '' }}">
+                                        {{ optional($nextDue)->format('M j, Y') }}
+                                        @if($nextDue)<small class="text-muted">({{ $nextDue->diffForHumans() }})</small>@endif
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-md-end">
+                                    @if(auth()->user()->hasPermission('employees.edit'))
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#completeAssessmentForm">
+                                            <i class="fa fa-check me-1"></i> Mark Completed
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if(auth()->user()->hasPermission('employees.edit'))
+                                <div class="collapse mt-3" id="completeAssessmentForm">
+                                    <form action="{{ route('admin.employees.complete-assessment', $employee) }}" method="POST"
+                                          onsubmit="return confirm('Record a completed quarterly assessment for this employee, dated today?');">
+                                        @csrf
+                                        <label class="form-label">Notes <small class="text-muted">(optional)</small></label>
+                                        <textarea name="notes" class="form-control mb-2" rows="2" placeholder="Any notes about this assessment..."></textarea>
+                                        <button type="submit" class="btn btn-success btn-sm">Record as completed today</button>
+                                    </form>
+                                </div>
+                            @endif
+
+                            @if($employee->quarterlyAssessments->isNotEmpty())
+                                <hr>
+                                <div class="small text-muted text-uppercase mb-2">History</div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover mb-0">
+                                        <thead>
+                                            <tr><th>Date</th><th>Recorded by</th><th>Notes</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($employee->quarterlyAssessments as $a)
+                                                <tr>
+                                                    <td>{{ $a->assessed_on->format('M j, Y') }}</td>
+                                                    <td>{{ optional($a->assessor)->name ?? '—' }}</td>
+                                                    <td>{{ $a->notes ?: '—' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        @endif
                     </div>
                 </div>
 

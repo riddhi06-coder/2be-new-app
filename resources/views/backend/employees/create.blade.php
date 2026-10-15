@@ -43,6 +43,12 @@
                                     @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <label class="form-label">Start Date <small class="text-muted">(used for the 90-day quarterly assessment)</small></label>
+                                    <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror"
+                                           value="{{ old('start_date') }}">
+                                    @error('start_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Status</label>
                                     <div class="form-check form-switch mt-2">
                                         <input type="hidden" name="is_active" value="0">

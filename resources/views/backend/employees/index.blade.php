@@ -20,6 +20,13 @@
             </div>
         </div>
 
+        @if(session('message'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ session('message') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -31,6 +38,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Status</th>
+                                        <th>Quarterly Assessment</th>
                                         <th class="text-end" style="min-width:170px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -44,6 +52,23 @@
                                                     <span class="badge bg-success">Active</span>
                                                 @else
                                                     <span class="badge bg-secondary">Inactive</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if(! $emp->start_date)
+                                                    <span class="text-muted">No start date</span>
+                                                @else
+                                                    @php $nextDue = $emp->nextAssessmentDueDate(); @endphp
+                                                    @if($emp->isAssessmentDue())
+                                                        <span class="badge bg-danger">Due</span>
+                                                        <div class="small text-muted">since {{ $nextDue->format('M j, Y') }}</div>
+                                                    @else
+                                                        <span class="badge bg-success">On track</span>
+                                                        <div class="small text-muted">due {{ $nextDue->format('M j, Y') }}</div>
+                                                    @endif
+                                                    @if($emp->last_assessment_at)
+                                                        <div class="small text-muted">last: {{ $emp->last_assessment_at->format('M j, Y') }}</div>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td class="text-end">
@@ -61,7 +86,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="4" class="text-center text-muted py-4">No employees yet. Click &ldquo;New Employee&rdquo; to add one.</td></tr>
+                                        <tr><td colspan="5" class="text-center text-muted py-4">No employees yet. Click &ldquo;New Employee&rdquo; to add one.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

@@ -44,17 +44,19 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users', 'email')->whereNull('deleted_at')],
-            'password' => ['required', 'string', 'confirmed', PasswordRule::min(8)],
+            'name'       => 'required|string|max:255',
+            'email'      => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users', 'email')->whereNull('deleted_at')],
+            'password'   => ['required', 'string', 'confirmed', PasswordRule::min(8)],
+            'start_date' => ['nullable', 'date'],
         ]);
 
         $employee = User::create([
-            'name'      => $validated['name'],
-            'email'     => $validated['email'],
-            'password'  => Hash::make($validated['password']),
-            'role_id'   => $this->employeeRole()->id,
-            'is_active' => $request->boolean('is_active'),
+            'name'       => $validated['name'],
+            'email'      => $validated['email'],
+            'password'   => Hash::make($validated['password']),
+            'role_id'    => $this->employeeRole()->id,
+            'is_active'  => $request->boolean('is_active'),
+            'start_date' => $validated['start_date'] ?? null,
         ]);
 
         // Send the introductory email with the credentials the admin set.
@@ -133,13 +135,15 @@ class EmployeeController extends Controller
         $this->ensureIsEmployee($employee);
 
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users', 'email')->ignore($employee->id)->whereNull('deleted_at')],
-            'password' => ['nullable', 'string', 'confirmed', PasswordRule::min(8)],
+            'name'       => 'required|string|max:255',
+            'email'      => ['required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users', 'email')->ignore($employee->id)->whereNull('deleted_at')],
+            'password'   => ['nullable', 'string', 'confirmed', PasswordRule::min(8)],
+            'start_date' => ['nullable', 'date'],
         ]);
 
-        $employee->name  = $validated['name'];
-        $employee->email = $validated['email'];
+        $employee->name       = $validated['name'];
+        $employee->email      = $validated['email'];
+        $employee->start_date = $validated['start_date'] ?? null;
 
         if (! empty($validated['password'])) {
             $employee->password = Hash::make($validated['password']);
@@ -193,6 +197,40 @@ class EmployeeController extends Controller
         $employee->delete();
 
         return redirect()->route('admin.employees.index')->with('message', 'Employee deleted successfully.');
+    }
+
+    /**
+     * Record a completed quarterly assessment for the employee. Logs a history
+     * row, advances the 90-day cycle (last_assessment_at = today) and clears the
+     * "due reminder sent" flag so the next cycle can notify again.
+     */
+    public function completeAssessment(Request $request, User $employee)
+    {
+        $this->ensureIsEmployee($employee);
+
+        $validated = $request->validate([
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        if (! $employee->start_date) {
+            return back()->with('message', 'Set a start date for this employee before recording an assessment.');
+        }
+
+        $today = now()->toDateString();
+
+        \App\Models\QuarterlyAssessment::create([
+            'user_id'     => $employee->id,
+            'assessed_on' => $today,
+            'assessed_by' => auth()->id(),
+            'notes'       => $validated['notes'] ?? null,
+        ]);
+
+        $employee->forceFill([
+            'last_assessment_at'         => $today,
+            'assessment_due_notified_at' => null,
+        ])->save();
+
+        return back()->with('message', 'Quarterly assessment recorded for '.$employee->name.'. Next one is due in '.User::ASSESSMENT_INTERVAL_DAYS.' days.');
     }
 
     /** Guard so this controller can never touch a non-employee user. */
