@@ -149,7 +149,8 @@ class EmployeeController extends Controller
             $employee->password = Hash::make($validated['password']);
         }
 
-        $employee->is_active = $request->boolean('is_active');
+        $employee->is_active   = $request->boolean('is_active');
+        $employee->accrues_pto = $request->boolean('accrues_pto');
         $employee->save();
 
         // Log the exact state so we can see which branch the welcome-email logic takes.
@@ -231,6 +232,45 @@ class EmployeeController extends Controller
         ])->save();
 
         return back()->with('message', 'Quarterly assessment recorded for '.$employee->name.'. Next one is due in '.User::ASSESSMENT_INTERVAL_DAYS.' days.');
+    }
+
+    /**
+     * Record a PTO ledger entry for an employee (opening balance, accrual,
+     * usage, or manual adjustment). The running balance is derived from these
+     * entries, so every change is auditable.
+     */
+    public function ptoStore(Request $request, User $employee)
+    {
+        $this->ensureIsEmployee($employee);
+
+        $validated = $request->validate([
+            'type'           => ['required', \Illuminate\Validation\Rule::in(array_keys(\App\Models\PtoLedgerEntry::TYPES))],
+            'hours'          => ['required', 'numeric', 'min:0.01', 'max:9999'],
+            'direction'      => ['nullable', 'in:add,subtract'],
+            'effective_date' => ['required', 'date'],
+            'note'           => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $hours = (float) $validated['hours'];
+
+        // Convert to a signed value: usage always subtracts; adjustment honours
+        // the chosen direction; opening/accrual add.
+        $signed = match ($validated['type']) {
+            'usage'      => -abs($hours),
+            'adjustment' => ($validated['direction'] ?? 'add') === 'subtract' ? -abs($hours) : abs($hours),
+            default      => abs($hours),
+        };
+
+        \App\Models\PtoLedgerEntry::create([
+            'user_id'        => $employee->id,
+            'type'           => $validated['type'],
+            'hours'          => $signed,
+            'effective_date' => $validated['effective_date'],
+            'note'           => $validated['note'] ?? null,
+            'created_by'     => auth()->id(),
+        ]);
+
+        return back()->with('message', 'PTO entry recorded. New balance: '.number_format($employee->ptoBalance(), 2).' hrs.');
     }
 
     /** Guard so this controller can never touch a non-employee user. */

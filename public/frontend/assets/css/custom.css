@@ -946,3 +946,23 @@
     .reviews-summary { flex-direction: column; align-items: flex-start; }
     .reviews-summary__num { font-size: 34px; }
 }
+
+/* ============================================================
+   My PTO card (employee dashboard)
+   ============================================================ */
+.emp-pto { margin-bottom: 24px; }
+.emp-pto__note { font-size: 12px; color: #9aa2b1; font-style: italic; }
+.emp-pto__top { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-bottom: 16px; }
+.emp-pto__balance { display: flex; flex-direction: column; min-width: 160px; }
+.emp-pto__num { font-size: 40px; font-weight: 800; color: #0d6efd; line-height: 1; }
+.emp-pto__unit { font-size: 13px; color: #8a94a3; margin-top: 4px; }
+.emp-pto__meta { display: flex; flex-wrap: wrap; gap: 20px; }
+.emp-pto__meta > div { display: flex; flex-direction: column; }
+.emp-pto__meta span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; color: #9aa2b1; }
+.emp-pto__meta strong { font-size: 14px; color: #1a2230; margin-top: 3px; }
+.emp-pto__table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.emp-pto__table thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: #9aa2b1; text-align: left; padding: 8px 10px; border-bottom: 1px solid #eef0f4; }
+.emp-pto__table tbody td { padding: 10px; border-bottom: 1px solid #f3f5f8; font-size: 13.5px; color: #44505f; }
+.emp-pto__table .is-neg { color: #dc3545; font-weight: 700; }
+.emp-pto__table .is-pos { color: #1a7f43; font-weight: 700; }
+.emp-pto__empty { color: #9aa2b1; font-size: 14px; margin: 6px 0 0; }

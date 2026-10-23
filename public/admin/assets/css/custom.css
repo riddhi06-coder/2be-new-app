@@ -1118,3 +1118,9 @@ tr.dt-group-row td i { opacity: 0.85; }
 .septic-records-edit-page .app-toast { min-width: 280px; border: 0; box-shadow: 0 8px 20px rgba(16,24,40,0.18); }
 .septic-records-edit-page .app-toast .toast-body i { font-size: 1.05rem; }
 
+
+/* ---- PTO summary (employee edit) ---- */
+.pto-summary { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+.pto-stat { flex: 1; min-width: 130px; background: #f7f9fb; border: 1px solid #eef0f4; border-radius: 10px; padding: 12px 14px; }
+.pto-stat__n { font-size: 20px; font-weight: 800; color: #1f2937; line-height: 1; }
+.pto-stat__l { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; color: #9aa5b1; margin-top: 5px; }

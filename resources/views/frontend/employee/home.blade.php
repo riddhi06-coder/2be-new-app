@@ -118,6 +118,47 @@
                             </div>
                         </div>
 
+                        @if($ptoEligible)
+                        <!-- My PTO -->
+                        <div class="emp-panel emp-pto">
+                            <div class="emp-panel__head">
+                                <h3><i class="fa fa-calendar-o"></i> My Paid Time Off (PTO)</h3>
+                                <span class="emp-pto__note">For reference — your paystub is the official record</span>
+                            </div>
+                            <div class="emp-panel__body">
+                                <div class="emp-pto__top">
+                                    <div class="emp-pto__balance">
+                                        <span class="emp-pto__num">{{ number_format($ptoBalance, 2) }}</span>
+                                        <span class="emp-pto__unit">hours available</span>
+                                    </div>
+                                    @if($ptoTier)
+                                        <div class="emp-pto__meta">
+                                            <div><span>Tier</span><strong>{{ $ptoTier['label'] }}</strong></div>
+                                            <div><span>Accrual / pay period</span><strong>{{ number_format($ptoTier['per_pay_period'], 2) }} hrs</strong></div>
+                                            <div><span>Maximum (cap)</span><strong>{{ number_format($ptoCap, 0) }} hrs</strong></div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @if($ptoEntries->isNotEmpty())
+                                    <table class="emp-pto__table">
+                                        <thead><tr><th>Date</th><th>Type</th><th class="text-end">Hours</th></tr></thead>
+                                        <tbody>
+                                            @foreach($ptoEntries as $e)
+                                                <tr>
+                                                    <td>{{ $e->effective_date->format('M j, Y') }}</td>
+                                                    <td>{{ $e->type_label }}</td>
+                                                    <td class="text-end {{ $e->hours < 0 ? 'is-neg' : 'is-pos' }}">{{ $e->hours > 0 ? '+' : '' }}{{ number_format($e->hours, 2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <p class="emp-pto__empty">No PTO activity recorded yet.</p>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="row g-4 emp-panels">
                             <!-- My recent reports -->
                             <div class="col-xl-7">

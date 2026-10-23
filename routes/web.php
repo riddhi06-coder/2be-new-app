@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth:web', \App\Http\Middleware\PreventBackHisto
     Route::get('employees/{employee}/edit', [EmployeeController::class, 'edit'])->middleware('permission:employees.edit')->name('admin.employees.edit');
     Route::put('employees/{employee}',      [EmployeeController::class, 'update'])->middleware('permission:employees.edit')->name('admin.employees.update');
     Route::post('employees/{employee}/complete-assessment', [EmployeeController::class, 'completeAssessment'])->middleware('permission:employees.edit')->name('admin.employees.complete-assessment');
+    Route::post('employees/{employee}/pto', [EmployeeController::class, 'ptoStore'])->middleware('permission:employees.edit')->name('admin.employees.pto.store');
     Route::delete('employees/{employee}',   [EmployeeController::class, 'destroy'])->middleware('permission:employees.delete')->name('admin.employees.destroy');
 
 

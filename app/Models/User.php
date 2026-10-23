@@ -30,6 +30,7 @@ class User extends Authenticatable
         'is_active',
         'welcome_email_sent_at',
         'start_date',
+        'accrues_pto',
         'last_assessment_at',
         'assessment_due_notified_at',
         'deleted_by',
@@ -59,6 +60,7 @@ class User extends Authenticatable
             'email_verified_at'          => 'datetime',
             'password'                   => 'hashed',
             'is_active'                  => 'boolean',
+            'accrues_pto'                => 'boolean',
             'welcome_email_sent_at'      => 'datetime',
             'start_date'                 => 'date',
             'last_assessment_at'         => 'date',
@@ -129,6 +131,61 @@ class User extends Authenticatable
         $due = $this->nextAssessmentDueDate();
 
         return $due !== null && $due->startOfDay()->lte(now()->startOfDay());
+    }
+
+    /* ===================== PTO (Paid Time Off) ===================== */
+
+    /** PTO ledger entries (opening / accrual / usage / adjustment), newest first. */
+    public function ptoLedgerEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PtoLedgerEntry::class)->orderByDesc('effective_date')->orderByDesc('id');
+    }
+
+    /** Completed years of service since the hire (start) date; null if unset. */
+    public function ptoYearsOfService(): ?int
+    {
+        return $this->start_date ? $this->start_date->diffInYears(now()) : null;
+    }
+
+    /**
+     * The accrual tier that currently applies to this employee (array from
+     * config/pto.php), or null if there's no start date.
+     */
+    public function ptoTier(): ?array
+    {
+        $years = $this->ptoYearsOfService();
+        if ($years === null) {
+            return null;
+        }
+
+        $higherAtBoundary = config('pto.higher_tier_at_boundary', true);
+        $match = null;
+
+        foreach (config('pto.tiers', []) as $tier) {
+            $qualifies = $higherAtBoundary
+                ? $years >= $tier['min_years']
+                : $years > $tier['min_years'] || $tier['min_years'] === 0;
+
+            if ($qualifies) {
+                $match = $tier;
+            }
+        }
+
+        return $match;
+    }
+
+    /** Maximum balance (1.5x annual) for the current tier, or null. */
+    public function ptoCap(): ?float
+    {
+        $tier = $this->ptoTier();
+
+        return $tier ? (float) $tier['cap'] : null;
+    }
+
+    /** Current PTO balance = signed sum of all ledger entries. */
+    public function ptoBalance(): float
+    {
+        return (float) $this->ptoLedgerEntries()->sum('hours');
     }
 
     public function hasRole(string $slug): bool
