@@ -966,3 +966,8 @@
 .emp-pto__table .is-neg { color: #dc3545; font-weight: 700; }
 .emp-pto__table .is-pos { color: #1a7f43; font-weight: 700; }
 .emp-pto__empty { color: #9aa2b1; font-size: 14px; margin: 6px 0 0; }
+
+/* My PTO — status message (not eligible / not assigned) */
+.emp-pto__status { display: flex; align-items: center; gap: 12px; padding: 18px 20px; background: #f7f9fb; border: 1px dashed #d8dee6; border-radius: 12px; }
+.emp-pto__status i { font-size: 22px; color: #9aa2b1; flex-shrink: 0; }
+.emp-pto__status p { margin: 0; font-size: 14px; color: #5a6576; line-height: 1.5; }

@@ -19,10 +19,10 @@ return new class extends Migration
             Schema::create('pto_ledger_entries', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-                // opening | accrual | usage | adjustment
+                // allotment | carryover | usage | adjustment
                 $table->string('type')->default('adjustment');
-                // signed hours: + credits (opening/accrual/positive adjustment), - debits (usage)
-                $table->decimal('hours', 7, 2);
+                // signed DAYS: + credits (allotment/carryover/positive adjustment), - debits (usage)
+                $table->decimal('days', 7, 2);
                 $table->date('effective_date');
                 $table->string('note')->nullable();
                 $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

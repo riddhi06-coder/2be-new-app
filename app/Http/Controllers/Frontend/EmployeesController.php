@@ -177,12 +177,13 @@ class EmployeesController extends Controller
                 'review' => (clone $base)->where('status', 'under-review')->count(),
                 'closed' => (clone $base)->where('status', 'closed')->count(),
             ],
-            // PTO snapshot (informational; payroll/paystub remains authoritative).
-            'ptoEligible' => $user->accrues_pto && $user->start_date !== null,
-            'ptoBalance'  => $user->ptoBalance(),
-            'ptoTier'     => $user->ptoTier(),
-            'ptoCap'      => $user->ptoCap(),
-            'ptoEntries'  => $user->ptoLedgerEntries()->limit(6)->get(),
+            // PTO snapshot in DAYS (informational; payroll remains authoritative).
+            'ptoEligible'  => (bool) $user->accrues_pto,
+            'ptoYear'      => now()->year,
+            'ptoAllotted'  => $user->ptoAllotted(),
+            'ptoUsed'      => $user->ptoUsed(),
+            'ptoRemaining' => $user->ptoRemaining(),
+            'ptoEntries'   => $user->ptoLedgerEntries()->whereYear('effective_date', now()->year)->get(),
         ]);
     }
 

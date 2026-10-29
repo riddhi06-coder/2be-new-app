@@ -180,44 +180,36 @@
                     </div>
                 </div>
 
-                {{-- Paid Time Off (PTO) --}}
+                {{-- Paid Time Off (PTO) — tracked in DAYS --}}
+                @php $fmtDays = fn ($d) => rtrim(rtrim(number_format((float) $d, 2), '0'), '.'); $ptoYear = now()->year; @endphp
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="mb-3"><i class="fa fa-calendar-o me-2"></i>Paid Time Off (PTO)</h5>
+                        <h5 class="mb-1"><i class="fa fa-calendar-o me-2"></i>Paid Time Off (PTO)</h5>
+                        <p class="text-muted small mb-3">Showing {{ $ptoYear }}. For the crew’s reference — your payroll remains the official record.</p>
 
-                        @if(! $employee->start_date)
-                            <p class="text-muted mb-0">Set a <strong>Start Date</strong> above and save to enable PTO tracking (the accrual tier is based on years of service).</p>
-                        @elseif(! $employee->accrues_pto)
-                            <p class="text-muted mb-0">This employee is marked <strong>not eligible</strong> for PTO. Turn on “Accrues PTO” above and save to track a balance.</p>
+                        @if(! $employee->accrues_pto)
+                            <p class="text-muted mb-0">This employee is marked <strong>not eligible</strong> for PTO. Turn on “Accrues PTO” above and save to track their days.</p>
                         @else
                             @php
-                                $tier    = $employee->ptoTier();
-                                $balance = $employee->ptoBalance();
-                                $cap     = $employee->ptoCap();
+                                $allotted  = $employee->ptoAllotted($ptoYear);
+                                $used      = $employee->ptoUsed($ptoYear);
+                                $remaining = $employee->ptoRemaining($ptoYear);
                             @endphp
                             <div class="pto-summary">
                                 <div class="pto-stat">
-                                    <div class="pto-stat__n">{{ number_format($balance, 2) }}</div>
-                                    <div class="pto-stat__l">Current balance (hrs)</div>
+                                    <div class="pto-stat__n">{{ $fmtDays($allotted) }}</div>
+                                    <div class="pto-stat__l">Allotted (days)</div>
                                 </div>
                                 <div class="pto-stat">
-                                    <div class="pto-stat__n">{{ $tier ? number_format($tier['per_pay_period'], 2) : '—' }}</div>
-                                    <div class="pto-stat__l">Accrual / pay period</div>
+                                    <div class="pto-stat__n">{{ $fmtDays($used) }}</div>
+                                    <div class="pto-stat__l">Used (days)</div>
                                 </div>
                                 <div class="pto-stat">
-                                    <div class="pto-stat__n">{{ $cap ? number_format($cap, 0) : '—' }}</div>
-                                    <div class="pto-stat__l">Max / cap (hrs)</div>
-                                </div>
-                                <div class="pto-stat">
-                                    <div class="pto-stat__n">{{ $employee->ptoYearsOfService() }}</div>
-                                    <div class="pto-stat__l">Years of service</div>
+                                    <div class="pto-stat__n {{ $remaining < 0 ? 'text-danger' : '' }}">{{ $fmtDays($remaining) }}</div>
+                                    <div class="pto-stat__l">Remaining (days)</div>
                                 </div>
                             </div>
-                            <p class="text-muted small mb-3">
-                                Tier: <strong>{{ $tier['label'] ?? '—' }}</strong>
-                                &middot; Annual accrual {{ $tier['annual'] ?? '—' }} hrs
-                                @if($cap && $balance >= $cap)<span class="text-danger ms-2"><i class="fa fa-exclamation-triangle"></i> At cap — accrual pauses until PTO is used.</span>@endif
-                            </p>
+                            <p class="text-muted small mb-3"><i class="fa fa-info-circle"></i> Up to <strong>5 days</strong> may carry over to next year (add it as a “Carried over” entry in the new year).</p>
 
                             @if(auth()->user()->hasPermission('employees.edit'))
                                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="collapse" data-bs-target="#ptoEntryForm">
@@ -243,18 +235,18 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-2">
-                                                <label class="form-label mb-1">Hours</label>
-                                                <input type="number" step="0.01" min="0.01" name="hours" class="form-control form-control-sm" placeholder="e.g. 8" required>
+                                                <label class="form-label mb-1">Days</label>
+                                                <input type="number" step="0.25" min="0.25" name="days" class="form-control form-control-sm" placeholder="e.g. 1 or 0.5" required>
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="form-label mb-1">Effective date</label>
+                                                <label class="form-label mb-1">Date</label>
                                                 <input type="date" name="effective_date" class="form-control form-control-sm" value="{{ now()->toDateString() }}" required>
                                             </div>
                                             <div class="col-md-2">
                                                 <button type="submit" class="btn btn-success btn-sm w-100">Save</button>
                                             </div>
                                             <div class="col-12">
-                                                <input type="text" name="note" class="form-control form-control-sm mt-2" placeholder="Note (optional) — e.g. seeded from paystub, vacation 10/20–10/21">
+                                                <input type="text" name="note" class="form-control form-control-sm mt-2" placeholder="Note (optional) — e.g. 2026 allotment, vacation, sick day">
                                             </div>
                                         </div>
                                     </form>
@@ -265,15 +257,15 @@
                                 <div class="table-responsive">
                                     <table class="table table-sm table-hover align-middle mb-0">
                                         <thead>
-                                            <tr><th>Date</th><th>Type</th><th class="text-end">Hours</th><th>Note</th><th>By</th></tr>
+                                            <tr><th>Date</th><th>Type</th><th class="text-end">Days</th><th>Note</th><th>By</th></tr>
                                         </thead>
                                         <tbody>
                                             @foreach($employee->ptoLedgerEntries as $e)
                                                 <tr>
                                                     <td>{{ $e->effective_date->format('M j, Y') }}</td>
                                                     <td><span class="badge bg-light text-dark">{{ $e->type_label }}</span></td>
-                                                    <td class="text-end fw-semibold {{ $e->hours < 0 ? 'text-danger' : 'text-success' }}">
-                                                        {{ $e->hours > 0 ? '+' : '' }}{{ number_format($e->hours, 2) }}
+                                                    <td class="text-end fw-semibold {{ $e->days < 0 ? 'text-danger' : 'text-success' }}">
+                                                        {{ $e->days > 0 ? '+' : '' }}{{ $fmtDays($e->days) }}
                                                     </td>
                                                     <td class="text-muted">{{ $e->note ?: '—' }}</td>
                                                     <td class="text-muted">{{ optional($e->creator)->name ?? '—' }}</td>
@@ -283,7 +275,7 @@
                                     </table>
                                 </div>
                             @else
-                                <p class="text-muted mb-0">No PTO entries yet. Use <strong>Add PTO entry</strong> → <em>Opening balance</em> to seed the current balance from their paystub.</p>
+                                <p class="text-muted mb-0">No PTO entries yet. Use <strong>Add PTO entry</strong> → <em>Annual allotment</em> to set this year’s days (e.g. 27, 16, or 11), then log <em>PTO used</em> as they take time off.</p>
                             @endif
                         @endif
                     </div>

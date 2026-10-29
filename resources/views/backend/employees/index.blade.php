@@ -24,6 +24,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        @php $fmtDays = fn ($d) => rtrim(rtrim(number_format((float) $d, 2), '0'), '.'); $ptoYear = now()->year; @endphp
                         <div class="table-responsive">
                             <table id="basic-1" class="display table table-hover">
                                 <thead>
@@ -32,6 +33,7 @@
                                         <th>Email</th>
                                         <th>Status</th>
                                         <th>Quarterly Assessment</th>
+                                        <th>PTO {{ $ptoYear }}</th>
                                         <th class="text-end" style="min-width:170px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -64,6 +66,20 @@
                                                     @endif
                                                 @endif
                                             </td>
+                                            <td>
+                                                @if(! $emp->accrues_pto)
+                                                    <span class="text-muted">Not eligible</span>
+                                                @else
+                                                    @php $rem = $emp->ptoRemaining($ptoYear); $all = $emp->ptoAllotted($ptoYear); @endphp
+                                                    @if($all == 0 && $rem == 0)
+                                                        <span class="text-muted">Not set</span>
+                                                    @else
+                                                        <span class="fw-semibold {{ $rem < 0 ? 'text-danger' : '' }}">{{ $fmtDays($rem) }}</span>
+                                                        <span class="text-muted">/ {{ $fmtDays($all) }} days</span>
+                                                        <div class="small text-muted">{{ $fmtDays($emp->ptoUsed($ptoYear)) }} used</div>
+                                                    @endif
+                                                @endif
+                                            </td>
                                             <td class="text-end">
                                                 <div class="d-flex gap-1 justify-content-end">
                                                     @if(auth()->user()->hasPermission('employees.edit'))
@@ -79,7 +95,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="5" class="text-center text-muted py-4">No employees yet. Click &ldquo;New Employee&rdquo; to add one.</td></tr>
+                                        <tr><td colspan="6" class="text-center text-muted py-4">No employees yet. Click &ldquo;New Employee&rdquo; to add one.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

@@ -133,59 +133,36 @@ class User extends Authenticatable
         return $due !== null && $due->startOfDay()->lte(now()->startOfDay());
     }
 
-    /* ===================== PTO (Paid Time Off) ===================== */
+    /* ===================== PTO (Paid Time Off) — DAYS ===================== */
 
-    /** PTO ledger entries (opening / accrual / usage / adjustment), newest first. */
+    /** PTO ledger entries (allotment / carryover / usage / adjustment), newest first. */
     public function ptoLedgerEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PtoLedgerEntry::class)->orderByDesc('effective_date')->orderByDesc('id');
     }
 
-    /** Completed years of service since the hire (start) date; null if unset. */
-    public function ptoYearsOfService(): ?int
+    /** Ledger entries for a given year (defaults to the current calendar year). */
+    public function ptoEntriesForYear(?int $year = null)
     {
-        return $this->start_date ? $this->start_date->diffInYears(now()) : null;
+        return $this->ptoLedgerEntries()->whereYear('effective_date', $year ?? now()->year);
     }
 
-    /**
-     * The accrual tier that currently applies to this employee (array from
-     * config/pto.php), or null if there's no start date.
-     */
-    public function ptoTier(): ?array
+    /** Days given for the year (allotment + carryover + positive adjustments). */
+    public function ptoAllotted(?int $year = null): float
     {
-        $years = $this->ptoYearsOfService();
-        if ($years === null) {
-            return null;
-        }
-
-        $higherAtBoundary = config('pto.higher_tier_at_boundary', true);
-        $match = null;
-
-        foreach (config('pto.tiers', []) as $tier) {
-            $qualifies = $higherAtBoundary
-                ? $years >= $tier['min_years']
-                : $years > $tier['min_years'] || $tier['min_years'] === 0;
-
-            if ($qualifies) {
-                $match = $tier;
-            }
-        }
-
-        return $match;
+        return (float) $this->ptoEntriesForYear($year)->where('days', '>', 0)->sum('days');
     }
 
-    /** Maximum balance (1.5x annual) for the current tier, or null. */
-    public function ptoCap(): ?float
+    /** Days used (taken off) in the year — returned as a positive number. */
+    public function ptoUsed(?int $year = null): float
     {
-        $tier = $this->ptoTier();
-
-        return $tier ? (float) $tier['cap'] : null;
+        return (float) abs($this->ptoEntriesForYear($year)->where('days', '<', 0)->sum('days'));
     }
 
-    /** Current PTO balance = signed sum of all ledger entries. */
-    public function ptoBalance(): float
+    /** Days remaining for the year = signed sum of the year's entries. */
+    public function ptoRemaining(?int $year = null): float
     {
-        return (float) $this->ptoLedgerEntries()->sum('hours');
+        return (float) $this->ptoEntriesForYear($year)->sum('days');
     }
 
     public function hasRole(string $slug): bool

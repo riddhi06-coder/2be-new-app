@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * One line in an employee's PTO history: an opening balance, an accrual credit,
- * a usage debit, or a manual adjustment. The current balance is the signed sum
- * of all entries, so every change is auditable.
+ * One line in an employee's PTO history (tracked in DAYS):
+ *   - allotment : the PTO given for the year (+)
+ *   - carryover : days carried from the previous year, max 5 (+)
+ *   - usage     : a day (or part-day) taken off, with its date (-)
+ *   - adjustment: a manual correction (+/-)
+ *
+ * The remaining balance for a year is the signed sum of that year's entries,
+ * so every change is auditable. Payroll remains the official record — this is
+ * a simple, admin-maintained view so the crew can see what they have left.
  */
 class PtoLedgerEntry extends Model
 {
     public const TYPES = [
-        'opening'    => 'Opening balance',
-        'accrual'    => 'Accrual',
+        'allotment'  => 'Annual allotment',
+        'carryover'  => 'Carried over',
         'usage'      => 'PTO used',
         'adjustment' => 'Adjustment',
     ];
@@ -22,14 +28,14 @@ class PtoLedgerEntry extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'hours',
+        'days',
         'effective_date',
         'note',
         'created_by',
     ];
 
     protected $casts = [
-        'hours'          => 'decimal:2',
+        'days'           => 'decimal:2',
         'effective_date' => 'date',
     ];
 
