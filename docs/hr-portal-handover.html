@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+    @page { margin: 120px 50px 70px 50px; }
+    * { box-sizing: border-box; }
+    body { font-family: "DejaVu Sans", sans-serif; font-size: 10.5px; line-height: 1.5; color: #1f2933; }
+
+    #page-header { position: fixed; top: -90px; left: 0; right: 0; height: 60px; border-bottom: 2px solid #0d6efd; color: #52606d; font-size: 9px; }
+    #page-header .brand { font-size: 13px; font-weight: bold; color: #0b3d91; }
+    #page-footer { position: fixed; bottom: -45px; left: 0; right: 0; height: 30px; border-top: 1px solid #cbd2d9; color: #7b8794; font-size: 8.5px; padding-top: 5px; }
+    #page-footer .pnum:after { content: counter(page) " / " counter(pages); }
+
+    .cover { text-align: center; padding-top: 140px; page-break-after: always; }
+    .cover .eyebrow { letter-spacing: 3px; color: #0d6efd; font-size: 12px; text-transform: uppercase; }
+    .cover h1 { font-size: 38px; color: #0b3d91; margin: 18px 0 6px; }
+    .cover h2 { font-size: 17px; color: #52606d; font-weight: normal; margin: 0 0 36px; }
+    .cover .badge { display: inline-block; margin-top: 26px; padding: 6px 16px; border: 1px solid #0d6efd; color: #0d6efd; border-radius: 20px; font-size: 10px; }
+    .cover .meta { margin-top: 54px; font-size: 11px; color: #52606d; }
+    .cover .meta table { margin: 0 auto; border-collapse: collapse; }
+    .cover .meta td { padding: 4px 14px; text-align: left; }
+    .cover .meta td.k { color: #9aa5b1; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
+
+    h2.section { font-size: 18px; color: #0b3d91; border-bottom: 2px solid #0d6efd; padding-bottom: 4px; margin: 24px 0 12px; page-break-after: avoid; }
+    h3 { font-size: 13px; color: #11489c; margin: 16px 0 5px; page-break-after: avoid; }
+    h4 { font-size: 11px; color: #334e68; margin: 11px 0 4px; page-break-after: avoid; }
+    p { margin: 6px 0; }
+    ul, ol { margin: 6px 0; padding-left: 20px; }
+    li { margin: 3px 0; }
+    code { font-family: "DejaVu Sans Mono", monospace; font-size: 9px; background: #eef2f7; padding: 1px 4px; border-radius: 3px; color: #0b3d91; }
+
+    table.data { width: 100%; border-collapse: collapse; margin: 9px 0; font-size: 9.3px; }
+    table.data th { background: #0b3d91; color: #fff; text-align: left; padding: 6px 8px; }
+    table.data td { border: 1px solid #d2dae5; padding: 5px 8px; vertical-align: top; }
+    table.data tr:nth-child(even) td { background: #f5f8fc; }
+
+    .flow { background: #f6f9fc; border: 1px solid #dbe6f3; border-left: 4px solid #0d6efd; border-radius: 0 5px 5px 0; padding: 9px 12px; margin: 9px 0; font-size: 9.6px; }
+    .flow .lbl { font-weight: bold; color: #0b3d91; text-transform: uppercase; font-size: 8.5px; letter-spacing: 1px; }
+    .flow .step { color: #0d6efd; font-weight: bold; }
+
+    .callout { border-left: 4px solid; padding: 8px 12px; margin: 9px 0; font-size: 9.6px; border-radius: 0 4px 4px 0; }
+    .callout.info { background: #eaf3ff; border-color: #0d6efd; }
+    .callout.new { background: #e9f8ef; border-color: #16a34a; }
+    .callout.warn { background: #fff8e6; border-color: #f0ad4e; }
+    .callout .lbl { font-weight: bold; text-transform: uppercase; font-size: 8.5px; letter-spacing: 1px; }
+
+    .pill { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 8px; font-weight: bold; color: #fff; }
+    .pill.get { background: #198754; } .pill.post { background: #0d6efd; } .pill.put { background: #fd7e14; } .pill.del { background: #dc3545; }
+    .tag-new { display:inline-block; background:#16a34a; color:#fff; font-size:8px; font-weight:bold; padding:1px 6px; border-radius:3px; vertical-align:middle; margin-left:6px; }
+    .lead { font-size: 11px; color: #52606d; }
+    .toc ol { list-style: none; padding-left: 0; counter-reset: toc; }
+    .toc > ol > li { counter-increment: toc; padding: 5px 0; border-bottom: 1px dotted #cbd2d9; font-size: 11px; }
+    .toc > ol > li:before { content: counter(toc) ".  "; color: #0d6efd; font-weight: bold; }
+    .small { font-size: 9px; color: #7b8794; }
+    hr.soft { border: none; border-top: 1px solid #e4e9f0; margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<div id="page-header"><span class="brand">2B Environmental</span> &nbsp;—&nbsp; HR Portal — Handover &amp; Flows</div>
+<div id="page-footer">Confidential · Internal HR &amp; Engineering Documentation <span style="float:right;">Page <span class="pnum"></span></span></div>
+
+<!-- COVER -->
+<div class="cover">
+    <div class="eyebrow">Module Handover</div>
+    <h1>HR Portal</h1>
+    <h2>Flows, Features &amp; Technical Reference — 2B Environmental</h2>
+    <div class="badge">Employees · Documents · Announcements · Calendar · Incidents · Assessments · PTO · Reviews</div>
+    <div class="meta">
+        <table>
+            <tr><td class="k">Document</td><td>HR Portal Handover (flows &amp; explanation)</td></tr>
+            <tr><td class="k">Prepared</td><td>16 October 2026</td></tr>
+            <tr><td class="k">Audience</td><td>HR admins &amp; incoming engineers</td></tr>
+            <tr><td class="k">Scope</td><td>The entire HR Portal — admin back office + employee portal</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- TOC -->
+<div class="toc" style="page-break-after: always;">
+    <h2 class="section" style="border:none;">Contents</h2>
+    <ol>
+        <li>HR Portal Overview</li>
+        <li>Roles &amp; Permissions</li>
+        <li>Employee Authentication (Portal Login)</li>
+        <li>Employees (HR Management &amp; Onboarding)</li>
+        <li>Quarterly Assessment <span class="small">(new)</span></li>
+        <li>Paid Time Off — PTO <span class="small">(new)</span></li>
+        <li>Document Management &amp; E-Signature</li>
+        <li>Announcements</li>
+        <li>Community Calendar</li>
+        <li>Incident Reports</li>
+        <li>Company Google Reviews <span class="small">(new)</span></li>
+        <li>Notifications (Bell &amp; Email)</li>
+        <li>Activity Log (Audit Trail)</li>
+        <li>Scheduled Jobs</li>
+        <li>Data Model &amp; File Storage</li>
+        <li>Deployment Notes</li>
+    </ol>
+</div>
+
+<!-- 1 OVERVIEW -->
+<h2 class="section">1. HR Portal Overview</h2>
+<p class="lead">The HR Portal is the people-management side of the 2B Environmental platform. It has two faces that share one <code>users</code> table and one login system:</p>
+<table class="data">
+    <tr><th style="width:22%">Side</th><th>Who uses it</th><th>What they do</th></tr>
+    <tr><td><strong>Admin back office</strong> (the "HR Portal" cards on the dashboard)</td><td>Office staff / managers (any non-employee role)</td><td>Manage employee accounts, documents, announcements, the team calendar, incident reports, quarterly assessments, PTO, and Google reviews.</td></tr>
+    <tr><td><strong>Employee Portal</strong> (public site, employee login)</td><td>Field crew / employees (role = <code>employee</code>)</td><td>Log in to see their documents (read &amp; sign), announcements, calendar, reviews, their PTO balance, submit incident reports, manage their profile.</td></tr>
+</table>
+<p>An "employee" is simply a <code>User</code> whose role slug is <code>employee</code>. The same email/password works only on the correct side — the system blocks an employee from the admin login and vice-versa.</p>
+<div class="callout new"><span class="lbl">New in this release</span><br>
+Three HR modules were added: <strong>Quarterly Assessment</strong> (§5), <strong>PTO tracking</strong> (§6), and <strong>Company Google Reviews</strong> (§11). They are marked <span class="tag-new">NEW</span> throughout.</div>
+
+<!-- 2 PERMISSIONS -->
+<h2 class="section">2. Roles &amp; Permissions</h2>
+<p>Every admin HR screen is protected by a granular permission (slug = <code>module.action</code>). A role either holds a permission or it doesn't; the <code>superadmin</code> role holds everything. The HR Portal dashboard cards only appear for modules the logged-in user can <code>view</code>.</p>
+<table class="data">
+    <tr><th>Module</th><th>Permissions used</th></tr>
+    <tr><td>Employees</td><td><code>employees.view / create / edit / delete</code> &nbsp;(assessment &amp; PTO actions use <code>employees.edit</code>)</td></tr>
+    <tr><td>Documents &amp; folders</td><td><code>documents.*</code>, <code>document-categories.*</code></td></tr>
+    <tr><td>Announcements</td><td><code>announcements.*</code></td></tr>
+    <tr><td>Incident Reports</td><td><code>incident-reports.*</code></td></tr>
+    <tr><td>Community Calendar</td><td><code>calendar.*</code></td></tr>
+</table>
+<p class="small">Roles &amp; permissions themselves are managed under User Management (Roles / Users / Permissions) — outside the HR Portal but controlling access to it.</p>
+
+<!-- 3 EMPLOYEE AUTH -->
+<h2 class="section">3. Employee Authentication (Portal Login)</h2>
+<p>Employees log in on the public site, not the admin panel. Authentication uses Laravel's standard session guard; the role slug keeps the two worlds separate.</p>
+<div class="flow"><span class="lbl">Login flow</span><br>
+<span class="step">1.</span> Employee opens the portal and clicks <strong>Employee Login</strong> → <span class="step">2.</span> enters email + password → <span class="step">3.</span> system verifies they hold the <code>employee</code> role and are active (else logged back out with a message) → <span class="step">4.</span> session starts and a password-hash fingerprint is stored → <span class="step">5.</span> redirected to their Dashboard.</div>
+<ul>
+    <li><strong>Forced re-login on password change:</strong> the <code>EmployeeAuth</code> middleware compares the stored fingerprint to the current password hash on every request — if an admin (or the employee) changes the password elsewhere, other sessions are logged out automatically.</li>
+    <li><strong>Forgot password:</strong> a proper tokenised reset — employee requests a link, receives an email, sets a new password. The reset link points to the employee-portal reset page (not the admin one).</li>
+    <li><strong>Key routes:</strong> <code>frontend.employee_login</code>, <code>…_authenticate</code>, <code>…_forgot_password</code>, <code>…_send_reset_link</code>, <code>…_reset_password</code>, <code>…_logout</code>.</li>
+</ul>
+
+<!-- 4 EMPLOYEES -->
+<h2 class="section">4. Employees (HR Management &amp; Onboarding)</h2>
+<p class="lead">Where admins create and manage the people who can access the Employee Portal. Each employee is a <code>User</code> with the <code>employee</code> role assigned automatically.</p>
+<h3>4.1 Admin flow — create &amp; onboard</h3>
+<div class="flow"><span class="lbl">Onboarding flow</span><br>
+<span class="step">1.</span> Admin → <strong>Employees → New Employee</strong> → enters name, email, start date, eligibility, and a password → <span class="step">2.</span> account is created with the employee role → <span class="step">3.</span> a <strong>welcome email with the login credentials</strong> is sent automatically → <span class="step">4.</span> the "welcome sent" date is stamped so it's never sent twice.</div>
+<ul>
+    <li><strong>Mail safety:</strong> if the welcome email fails to send, the account is still created and flagged "welcome pending." On the next edit, if a new password is entered, the welcome email is retried (passwords are hashed and can't be re-read, so a fresh password is required to resend credentials).</li>
+    <li><strong>Edit</strong> lets admins update name/email/status, set a new password, toggle <strong>PTO eligibility</strong>, set the <strong>start date</strong>, record <strong>quarterly assessments</strong>, and manage <strong>PTO</strong> (see §5–§6). It also lists the employee's signed documents.</li>
+    <li><strong>Delete</strong> is a soft delete (recoverable).</li>
+    <li><strong>List view</strong> shows each person's status, quarterly-assessment status, and PTO remaining at a glance.</li>
+</ul>
+<table class="data">
+    <tr><th>Action</th><th>Route name</th></tr>
+    <tr><td>List / Create / Store</td><td><code>admin.employees.index / create / store</code></td></tr>
+    <tr><td>Edit / Update / Delete</td><td><code>admin.employees.edit / update / destroy</code></td></tr>
+    <tr><td>Record assessment / PTO entry</td><td><code>admin.employees.complete-assessment</code>, <code>admin.employees.pto.store</code></td></tr>
+</table>
+
+<!-- 5 QUARTERLY ASSESSMENT -->
+<h2 class="section">5. Quarterly Assessment <span class="tag-new">NEW</span></h2>
+<p class="lead">Tracks when each employee is due for their 90-day review and reminds admins automatically.</p>
+<h3>5.1 How it works</h3>
+<ul>
+    <li>The admin sets the employee's <strong>Start Date</strong> (hire date).</li>
+    <li>The system counts <strong>90 days</strong> from the start date (or from the last completed assessment) to compute the <strong>next-due date</strong>.</li>
+    <li>It recurs: every completed assessment schedules the next one 90 days later.</li>
+</ul>
+<div class="flow"><span class="lbl">Assessment flow</span><br>
+<span class="step">1.</span> Admin sets Start Date → <span class="step">2.</span> at 90 days the employee becomes <strong>Due</strong> → <span class="step">3.</span> a daily job notifies all admins (dashboard bell + email) → <span class="step">4.</span> admin opens the employee, clicks <strong>Mark Completed</strong> (optional notes) → <span class="step">5.</span> it's logged in the history and the next due date resets to +90 days.</div>
+<ul>
+    <li><strong>Where to see it:</strong> a "Due / On track / Completed" status column on the Employees list, and a full status + history card on each employee's edit page.</li>
+    <li><strong>Reminders:</strong> the <code>assessments:check-due</code> command runs daily (9 AM Honolulu); it notifies <strong>once per cycle</strong> (no daily spam) and re-arms when an assessment is completed. Admins get both a dashboard bell notification and an email (branded template).</li>
+</ul>
+
+<!-- 6 PTO -->
+<h2 class="section">6. Paid Time Off — PTO <span class="tag-new">NEW</span></h2>
+<p class="lead">A simple, admin-maintained PTO tracker <strong>in days</strong>. The app shows each employee their allotment, days used (with dates), and remaining — counting down from the full year's amount so balances never look alarmingly negative.</p>
+<div class="callout info"><span class="lbl">Important — source of truth</span><br>
+Payroll remains the official record and still calculates accrual. This module is a <strong>clear visibility tool</strong> for the crew; it does <strong>not</strong> calculate accrual, run payroll, or compute termination payouts.</div>
+<h3>6.1 How it works</h3>
+<div class="flow"><span class="lbl">PTO flow</span><br>
+<span class="step">1.</span> Admin marks the employee <strong>PTO-eligible</strong> → <span class="step">2.</span> adds an <strong>Annual allotment</strong> entry (e.g. 27 / 16 / 11 days) at the start of the year → <span class="step">3.</span> as the employee takes time off, admin logs a <strong>PTO used</strong> entry (date + days, half-days allowed) → <span class="step">4.</span> the app shows <strong>Allotted / Used / Remaining</strong> → <span class="step">5.</span> at year-end, up to <strong>5 days</strong> can be carried over (entered as a "Carried over" entry in the new year).</div>
+<table class="data">
+    <tr><th>Entry type</th><th>Effect</th><th>Example</th></tr>
+    <tr><td>Annual allotment</td><td>adds the year's days (+)</td><td>+27 days on Jan 1</td></tr>
+    <tr><td>Carried over</td><td>adds prior-year days, max 5 (+)</td><td>+3 days carried from last year</td></tr>
+    <tr><td>PTO used</td><td>subtracts a day/part-day, dated (−)</td><td>−1 day (vacation), −0.5 (half day)</td></tr>
+    <tr><td>Adjustment</td><td>manual correction (+/−)</td><td>±X with a note</td></tr>
+</table>
+<ul>
+    <li><strong>Admin view:</strong> on the employee edit page — an <em>Allotted / Used / Remaining</em> summary, an "Add PTO entry" form, and a full dated history. The Employees list also shows each person's remaining days.</li>
+    <li><strong>Employee view:</strong> a "My Paid Time Off" card on their dashboard showing remaining / allotted / used plus the dates they've taken — read-only, with a note that the paystub is the official record. If nothing is set yet, it shows a friendly "not assigned yet" / "not enrolled" status.</li>
+    <li><strong>Everything is admin-entered</strong> (no employee request workflow in this version); the balance is the signed sum of all entries, so every change is auditable.</li>
+</ul>
+
+<!-- 7 DOCUMENTS -->
+<h2 class="section">7. Document Management &amp; E-Signature</h2>
+<p class="lead">Admins upload documents into folders and either publish them company-wide or assign them to specific employees. Some documents require a mandatory "read &amp; sign," which produces a signed certificate.</p>
+<h3>7.1 Admin flow</h3>
+<ul>
+    <li>Create <strong>folders</strong> (categories), then upload <strong>documents</strong> into them.</li>
+    <li>A document is either <strong>public</strong> (everyone) or <strong>personal</strong> (assigned to chosen employees).</li>
+    <li>A personal PDF can be marked <strong>"requires acknowledgment"</strong> with a due date — the employee must read &amp; sign it.</li>
+    <li>Compliance screens: a <strong>Sign-offs dashboard</strong> (who still needs to sign) and a per-document <strong>Acknowledgments</strong> view (signed vs pending), with downloadable certificates.</li>
+</ul>
+<h3>7.2 Employee read-and-sign flow</h3>
+<div class="flow"><span class="lbl">Read &amp; sign flow</span><br>
+<span class="step">1.</span> Employee sees the document under "Action Required" → <span class="step">2.</span> opens the <strong>read &amp; sign</strong> screen → <span class="step">3.</span> types their name &amp; ticks agree → <span class="step">4.</span> the system generates a <strong>Certificate of Acknowledgment PDF</strong> (name, IP, timestamp), records the signature, notifies admins, and unlocks the original file for download.</div>
+<div class="callout info"><span class="lbl">How "signing" works</span><br>
+The typed name is the signature. The system renders a separate <strong>certificate PDF</strong> (preferring headless Chrome for crisp output, falling back to the built-in PDF engine). The original file stays locked until the employee has signed. Read-and-sign is limited to <strong>personal PDF</strong> documents.</div>
+
+<!-- 8 ANNOUNCEMENTS -->
+<h2 class="section">8. Announcements</h2>
+<ul>
+    <li>Admins post company news with an optional image and publish date. Each announcement has a unique URL slug.</li>
+    <li><strong>Employee side:</strong> announcements are viewable by everyone (even logged-out) on the portal; the 3 latest also appear on the employee dashboard.</li>
+    <li><strong>Routes:</strong> admin <code>admin.announcements.*</code>; public <code>frontend.employee_announcements</code> / <code>…_announcement</code>.</li>
+</ul>
+
+<!-- 9 CALENDAR -->
+<h2 class="section">9. Community Calendar</h2>
+<ul>
+    <li>Admins add events (title, dates, all-day or timed, category, location, optional flyer attachment). Categories are colour-coded (Holiday, Meeting, Training, PTO, Other).</li>
+    <li>The calendar is rendered by FullCalendar, fed by a JSON events endpoint; all-day vs timed events are handled correctly, with soft category colours.</li>
+    <li><strong>Employee side:</strong> a read-only calendar of upcoming events on the portal.</li>
+    <li><strong>Routes:</strong> admin <code>admin.community-calendar.*</code> (incl. <code>…events</code>); public <code>frontend.employee_calendar</code> / <code>…_events</code>.</li>
+</ul>
+
+<!-- 10 INCIDENT -->
+<h2 class="section">10. Incident Reports</h2>
+<p class="lead">Workplace-incident reporting, filed by employees from the portal or by managers on their behalf.</p>
+<h3>10.1 Flows</h3>
+<div class="flow"><span class="lbl">Employee-filed</span><br>
+<span class="step">1.</span> Employee → <strong>Report an Incident</strong> → fills date, time, location, category, description, and attaches up to 6 photos + 4 videos → <span class="step">2.</span> gets a reference number (<code>IR-YEAR-####</code>) and a thank-you page → <span class="step">3.</span> all admins are notified.</div>
+<div class="flow"><span class="lbl">Admin review</span><br>
+<span class="step">1.</span> Admin opens the report → <span class="step">2.</span> reviews details/media → <span class="step">3.</span> changes status (<strong>Open → Under Review → Closed</strong>), adds review notes → <span class="step">4.</span> the reporter/involved employee is notified of the status change.</div>
+<ul>
+    <li><strong>Permissions &amp; scope:</strong> managers (holders of <code>incident-reports.edit</code>) see and manage all reports; a regular employee sees only their own.</li>
+    <li><strong>Extras:</strong> list filters + year dropdown, CSV export, per-photo delete. Media (photos and videos) are stored together and kept on disk even if a report is soft-deleted.</li>
+</ul>
+
+<!-- 11 REVIEWS -->
+<h2 class="section">11. Company Google Reviews <span class="tag-new">NEW</span></h2>
+<p class="lead">Shows the company's Google Business Profile reviews inside the Employee Portal so the crew can see what customers are saying.</p>
+<div class="flow"><span class="lbl">Data flow</span><br>
+<span class="step">1.</span> A daily job pulls reviews from Google → <span class="step">2.</span> stores them locally → <span class="step">3.</span> the portal's <strong>Reviews</strong> page shows the overall rating, each review (name, stars, date, comment), and any owner replies.</div>
+<div class="callout warn"><span class="lbl">Status — go-live pending</span><br>
+The page and the whole sync pipeline are built and <strong>currently show sample reviews</strong>. Going live needs the client to grant Google Business Profile access and Google to approve API access; then 5 credentials are added to the config and the daily sync replaces the samples with real reviews — <strong>no code change required</strong>.</div>
+<p><strong>Routes:</strong> employee page <code>frontend.employee_reviews</code> (<code>/company-reviews</code>). Commands: <code>reviews:sync</code> (daily), <code>reviews:seed-sample</code> (loads previews).</p>
+
+<!-- 12 NOTIFICATIONS -->
+<h2 class="section">12. Notifications (Bell &amp; Email)</h2>
+<p>Both the admin header and the employee header have a <strong>notification bell</strong> with unread counts and live pop-up toasts (polled every few seconds). The same system sends emails where relevant.</p>
+<table class="data">
+    <tr><th>When</th><th>Who is notified</th><th>Channel</th></tr>
+    <tr><td>Employee submits an incident report</td><td>All admins</td><td>Bell</td></tr>
+    <tr><td>Manager files/updates an incident for an employee</td><td>The affected employee</td><td>Bell</td></tr>
+    <tr><td>Employee signs a document</td><td>All admins</td><td>Bell</td></tr>
+    <tr><td>Document shared/assigned to an employee</td><td>That employee</td><td>Bell</td></tr>
+    <tr><td>Employee becomes due for a quarterly assessment <span class="tag-new">NEW</span></td><td>All admins</td><td>Bell + Email</td></tr>
+</table>
+
+<!-- 13 ACTIVITY LOG -->
+<h2 class="section">13. Activity Log (Audit Trail)</h2>
+<ul>
+    <li>Create / update / delete / restore actions on key HR records (employees, documents, announcements, incident reports, calendar events, roles, permissions) are recorded automatically with the acting user, time, and what changed.</li>
+    <li>Login / logout and document-signing events are also logged.</li>
+    <li>The admin Activity Log is split into <strong>HR</strong> and <strong>Forms</strong> views, each with module/user/date filters.</li>
+    <li class="small">Note: operations run from the command line (migrations, scheduled jobs) are intentionally not logged.</li>
+</ul>
+
+<!-- 14 SCHEDULED JOBS -->
+<h2 class="section">14. Scheduled Jobs</h2>
+<table class="data">
+    <tr><th>Command</th><th>When</th><th>What it does</th></tr>
+    <tr><td><code>assessments:check-due</code> <span class="tag-new">NEW</span></td><td>Daily, 9 AM Honolulu</td><td>Notifies admins (bell + email) of employees due for a quarterly assessment.</td></tr>
+    <tr><td><code>reviews:sync</code> <span class="tag-new">NEW</span></td><td>Daily, 6 AM Honolulu</td><td>Pulls Google reviews (no-op until credentials are configured).</td></tr>
+    <tr><td><code>email:monthly-report-reminder</code></td><td>Last day of month, 9 AM</td><td>(Operations) monthly pumping-report reminder.</td></tr>
+</table>
+<div class="callout warn"><span class="lbl">Requires server cron</span><br>
+These run only if the server has the Laravel scheduler active: <code>* * * * * php artisan schedule:run</code>. Without it, the assessment and review jobs will not fire.</div>
+
+<!-- 15 DATA MODEL -->
+<h2 class="section">15. Data Model &amp; File Storage</h2>
+<table class="data">
+    <tr><th>Table</th><th>Holds</th></tr>
+    <tr><td><code>users</code></td><td>Staff + employees. HR fields include <code>start_date</code>, <code>accrues_pto</code>, <code>last_assessment_at</code>, <code>welcome_email_sent_at</code>.</td></tr>
+    <tr><td><code>quarterly_assessments</code> <span class="tag-new">NEW</span></td><td>Each completed 90-day assessment (date, who recorded it, notes).</td></tr>
+    <tr><td><code>pto_ledger_entries</code> <span class="tag-new">NEW</span></td><td>PTO history in days (allotment / carryover / usage / adjustment).</td></tr>
+    <tr><td><code>document_categories</code> / <code>documents</code> / <code>document_user</code> / <code>document_acknowledgments</code></td><td>Folders, files, per-employee assignment, signature certificates.</td></tr>
+    <tr><td><code>announcements</code></td><td>Company announcements.</td></tr>
+    <tr><td><code>calendar_events</code></td><td>Team calendar events.</td></tr>
+    <tr><td><code>incident_reports</code> / <code>incident_report_photos</code></td><td>Incident reports + their photos/videos.</td></tr>
+    <tr><td><code>google_reviews</code> <span class="tag-new">NEW</span></td><td>Synced Google reviews.</td></tr>
+    <tr><td><code>admin_notifications</code></td><td>In-app notifications (admin + employee).</td></tr>
+    <tr><td><code>activity_logs</code></td><td>Audit trail.</td></tr>
+</table>
+<p><strong>File storage:</strong> uploaded files (documents, signed certificates, avatars, incident photos/videos, announcement images, calendar flyers) live under <code>public/uploads/…</code>. Soft-deleting a record keeps its files unless the screen explicitly removes them.</p>
+
+<!-- 16 DEPLOYMENT -->
+<h2 class="section">16. Deployment Notes</h2>
+<ol>
+    <li><strong>Database:</strong> the new HR tables/columns (quarterly assessments, PTO, Google reviews, plus the new <code>users</code> columns) must be applied. On this project a plain <code>artisan migrate</code> is out of sync, so apply them via <code>migrate --path=…</code> per migration or the supplied raw SQL.</li>
+    <li><strong>Server cron</strong> must run <code>schedule:run</code> every minute for the assessment/review jobs.</li>
+    <li><strong>Google Reviews:</strong> fill the 5 credential values once the client grants access &amp; Google approves; until then the portal shows sample reviews (load with <code>reviews:seed-sample</code>).</li>
+    <li><strong>PTO:</strong> create the crew's employee accounts, then enter each one's annual allotment to start tracking.</li>
+    <li><strong>Mail:</strong> SMTP must be configured for welcome emails, document/assessment notifications, and password resets.</li>
+</ol>
+
+<hr class="soft">
+<p class="small">End of HR Portal handover. This document describes behaviour and flows; exact field-level logic lives in the respective controllers, models, and Blade views (Employees, Documents, Announcements, Incident Reports, Calendar, plus the new Quarterly-Assessment, PTO, and Google-Reviews code).</p>
+
+</body>
+</html>
