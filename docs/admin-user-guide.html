@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+    @page { margin: 115px 48px 66px 48px; }
+    * { box-sizing: border-box; }
+    body { font-family: "DejaVu Sans", sans-serif; font-size: 10.6px; line-height: 1.5; color: #1f2933; }
+
+    #page-header { position: fixed; top: -86px; left: 0; right: 0; height: 58px; border-bottom: 2px solid #0d6efd; color: #52606d; font-size: 9px; }
+    #page-header .brand { font-size: 13px; font-weight: bold; color: #0b3d91; }
+    #page-footer { position: fixed; bottom: -46px; left: 0; right: 0; height: 30px; border-top: 1px solid #cbd2d9; color: #7b8794; font-size: 8.5px; padding-top: 5px; }
+    #page-footer .pnum:after { content: counter(page) " / " counter(pages); }
+
+    .cover { text-align: center; padding-top: 150px; page-break-after: always; }
+    .cover .eyebrow { letter-spacing: 3px; color: #0d6efd; font-size: 12px; text-transform: uppercase; }
+    .cover h1 { font-size: 38px; color: #0b3d91; margin: 18px 0 6px; }
+    .cover h2 { font-size: 17px; color: #52606d; font-weight: normal; margin: 0 0 36px; }
+    .cover .badge { display: inline-block; margin-top: 20px; padding: 6px 16px; border: 1px solid #0d6efd; color: #0d6efd; border-radius: 20px; font-size: 10px; }
+    .cover .meta { margin-top: 48px; font-size: 11px; color: #52606d; }
+    .cover .meta table { margin: 0 auto; border-collapse: collapse; }
+    .cover .meta td { padding: 4px 14px; text-align: left; }
+    .cover .meta td.k { color: #9aa5b1; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
+
+    h2.part { font-size: 13px; color: #0d6efd; text-transform: uppercase; letter-spacing: 2px; margin: 26px 0 6px; border-bottom: 2px solid #0d6efd; padding-bottom: 3px; page-break-after: avoid; }
+
+    .module { page-break-inside: avoid; margin: 16px 0 6px; }
+    .module h3 { font-size: 16px; color: #0b3d91; margin: 0 0 8px; padding: 8px 12px; background: #eef4ff; border-left: 4px solid #0d6efd; border-radius: 0 6px 6px 0; page-break-after: avoid; }
+    .module h3 .num { color: #0d6efd; }
+
+    .row { margin: 8px 0; }
+    .lbl { display: inline-block; font-weight: bold; color: #0b3d91; font-size: 9px; text-transform: uppercase; letter-spacing: .6px; }
+    .where { background: #f6f8fb; border: 1px solid #e3e9f0; border-radius: 5px; padding: 5px 10px; font-size: 9.6px; margin: 6px 0; }
+    .where b { color: #0b3d91; }
+
+    ol.steps { margin: 6px 0 6px 0; padding-left: 20px; }
+    ol.steps li { margin: 4px 0; }
+    ul.tips { margin: 6px 0; padding-left: 18px; }
+    ul.tips li { margin: 3px 0; }
+    p { margin: 6px 0; }
+
+    .change { background: #f3fbf5; border-left: 3px solid #1a7f43; padding: 7px 11px; border-radius: 0 5px 5px 0; margin: 8px 0; font-size: 9.9px; }
+    .change .lbl { color: #1a7f43; }
+    .note { background: #fff8e6; border-left: 3px solid #f0ad4e; padding: 7px 11px; border-radius: 0 5px 5px 0; margin: 8px 0; font-size: 9.9px; }
+    .note .lbl { color: #b9770e; }
+
+    code { font-family: "DejaVu Sans Mono", monospace; font-size: 9px; background: #eef2f7; padding: 1px 4px; border-radius: 3px; color: #0b3d91; }
+    .lead { font-size: 11px; color: #52606d; }
+
+    .toc { page-break-after: always; }
+    .toc h2 { font-size: 22px; color: #0b3d91; margin-bottom: 14px; }
+    .toc .pt { font-size: 10px; color: #0d6efd; text-transform: uppercase; letter-spacing: 1.5px; margin: 14px 0 4px; font-weight: bold; }
+    .toc ul { list-style: none; padding-left: 0; margin: 0; }
+    .toc li { padding: 3px 0; border-bottom: 1px dotted #d3dce6; font-size: 10.5px; }
+    .small { font-size: 9px; color: #7b8794; }
+</style>
+</head>
+<body>
+
+<div id="page-header"><span class="brand">2B Environmental</span> &nbsp;—&nbsp; Admin User Guide (How Each Module Works)</div>
+<div id="page-footer">A plain-English guide for day-to-day use &nbsp;|&nbsp; <span style="float:right;">Page <span class="pnum"></span></span></div>
+
+<!-- COVER -->
+<div class="cover">
+    <div class="eyebrow">User Guide</div>
+    <h1>2B Environmental</h1>
+    <h2>How Each Module Works — a Plain-English Guide</h2>
+    <div class="badge">For office staff &amp; managers · No technical knowledge needed</div>
+    <div class="meta">
+        <table>
+            <tr><td class="k">Document</td><td>Admin User Guide &amp; Process Flows</td></tr>
+            <tr><td class="k">Audience</td><td>Owners, managers, office staff</td></tr>
+            <tr><td class="k">Covers</td><td>Every module: what it does, how to use it, how to change it</td></tr>
+            <tr><td class="k">Prepared</td><td>October 2026</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+    <h2>What's inside</h2>
+    <p class="lead">Each module is explained the same way: <b>What it's for → Where to find it → How to use it (step by step) → How to make changes → Tips.</b></p>
+    <div class="pt">Getting started</div>
+    <ul>
+        <li>Logging in &amp; the Dashboard</li>
+        <li>Finding your way around</li>
+    </ul>
+    <div class="pt">Part A — Operations (field records)</div>
+    <ul>
+        <li>1. Waste Disposal (Disposal Details)</li>
+        <li>2. Cesspool Records</li>
+        <li>3. Septic Records</li>
+    </ul>
+    <div class="pt">Part B — HR Portal</div>
+    <ul>
+        <li>4. Employees</li>
+        <li>5. Quarterly Assessments (90-day check-ins)</li>
+        <li>6. PTO (Paid Time Off)</li>
+        <li>7. Documents (folders &amp; read-and-sign)</li>
+        <li>8. Announcements</li>
+        <li>9. Community Calendar</li>
+        <li>10. Incident Reports</li>
+        <li>11. Google Reviews</li>
+    </ul>
+    <div class="pt">Part C — Administration</div>
+    <ul>
+        <li>12. User Management (Roles, Users, Permissions)</li>
+        <li>13. Email Settings</li>
+        <li>14. Activity Log</li>
+        <li>15. Notifications</li>
+    </ul>
+</div>
+
+<!-- GETTING STARTED -->
+<h2 class="part">Getting Started</h2>
+
+<div class="module">
+    <h3>Logging in &amp; the Dashboard</h3>
+    <p class="lead">The admin area is where your office staff manage everything. Employees have their own separate portal (covered where relevant).</p>
+    <ol class="steps">
+        <li>Open the admin web address and enter your <b>email</b> and <b>password</b>.</li>
+        <li>You land on the <b>Dashboard</b> — a quick overview split into two groups of cards:
+            <ul class="tips">
+                <li><b>Operations</b> — Cesspool, Septic, and Wastewater totals.</li>
+                <li><b>HR Portal</b> — Employees, Documents, Announcements, Incident Reports, Community Calendar (each shows a quick count).</li>
+            </ul>
+        </li>
+        <li>Click any card to jump straight into that module. Below the cards, <b>Quick Actions</b> let you log a disposal or generate the monthly report.</li>
+    </ol>
+    <div class="note"><span class="lbl">Good to know</span><br>What you see depends on your <b>permissions</b>. If a menu item or card is missing, your role may not have access — an owner can grant it under User Management (module 12).</div>
+</div>
+
+<div class="module">
+    <h3>Finding your way around</h3>
+    <ul class="tips">
+        <li>The <b>left sidebar</b> is your main menu. The <b>bell icon</b> (top-right) shows notifications; the <b>profile menu</b> has logout.</li>
+        <li>Most list screens have a <b>search box</b>, <b>filters</b> (date range, status), and action buttons (Edit, Delete, Export).</li>
+        <li>Green "success" messages appear briefly at the top-right after you save something.</li>
+    </ul>
+</div>
+
+<!-- PART A — OPERATIONS -->
+<h2 class="part">Part A — Operations (Field Records)</h2>
+
+<div class="module">
+    <h3><span class="num">1.</span> Waste Disposal (Disposal Details)</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Keeps a record of every waste pickup &amp; haul, and produces the official County of Hawai'i monthly report.</div>
+    <div class="where"><b>Where:</b> Sidebar → <b>Disposal Details</b>. New records are created by the public intake form (drivers fill it in the field); the office reviews them here.</div>
+    <div class="row"><span class="lbl">How it works</span></div>
+    <ol class="steps">
+        <li>A driver/field user fills the public <b>Log Waste Disposal</b> form — date, generator, waste type, address, volume, discharge site, vehicle, etc.</li>
+        <li>The record appears automatically in the <b>Disposal Details</b> list (and admins get a bell notification).</li>
+        <li>Use the <b>date / year filters</b> to narrow the list.</li>
+        <li>To export: tick the rows you want and click <b>Export PDF</b> (one record = one PDF; several = a zip), or <b>Export CSV</b> for a spreadsheet.</li>
+        <li>For the County report: click <b>Generate Monthly Report</b> (also on the Dashboard), pick the month/year, fill the permit/registration/signature fields, and download the official PDF.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Records come from the field form, so the office mainly reviews and exports. You can <b>delete</b> a record (it's kept recoverable, not erased). To change what the field form asks, that's a developer change to the public form.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">2.</span> Cesspool Records</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Stores cesspool inspection reports submitted from the field, with photos, video and the inspector's signature.</div>
+    <div class="where"><b>Where:</b> Sidebar → <b>Cesspool Records</b>.</div>
+    <div class="row"><span class="lbl">How it works</span></div>
+    <ol class="steps">
+        <li>An inspector fills the public <b>Cesspool</b> form in the field. They can <b>save a draft</b> (kept for 1 hour) and finish later.</li>
+        <li>Submitted reports show in the list; filter by <b>date</b> or <b>draft/submitted</b> status.</li>
+        <li>Click <b>Edit</b> to review a report, add or replace the <b>photo/video/signature</b>, and correct details.</li>
+        <li>Click <b>PDF</b> to download the inspection report, or <b>Send Report</b> to email the PDF to one or more recipients.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Open a record → <b>Edit</b> → change fields or swap media → Save. Deleting a record keeps it recoverable; the uploaded files stay on the server.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">3.</span> Septic Records</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Same as Cesspool Records, but for septic-tank inspections.</div>
+    <div class="where"><b>Where:</b> Sidebar → <b>Septic Records</b>.</div>
+    <p>It works exactly like Cesspool Records: field form (with draft save) → review/edit in the office → PDF download or email. The only difference is the septic email report goes to a <b>single</b> recipient (cesspool allows several).</p>
+</div>
+
+<!-- PART B — HR PORTAL -->
+<h2 class="part">Part B — HR Portal</h2>
+
+<div class="module">
+    <h3><span class="num">4.</span> Employees</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Creates and manages the login accounts your crew use for the <b>Employee Portal</b> (documents, announcements, incident reports, their PTO, etc.).</div>
+    <div class="where"><b>Where:</b> Sidebar → HR Portal → <b>Employees</b>.</div>
+    <div class="row"><span class="lbl">How to add an employee</span></div>
+    <ol class="steps">
+        <li>Click <b>+ New Employee</b>.</li>
+        <li>Enter their <b>name, email</b>, and a <b>password</b>, and set the account <b>Active</b>.</li>
+        <li>Save. The system automatically <b>emails them a welcome message with their login details</b>.</li>
+    </ol>
+    <div class="row"><span class="lbl">How to edit an employee</span></div>
+    <ol class="steps">
+        <li>Click <b>Edit</b> on their row. Here you can update name, email, active status, <b>Start Date</b>, <b>Accrues PTO</b> (eligibility), and reset their password.</li>
+        <li>The edit page also shows their <b>Quarterly Assessment</b> status, their <b>PTO</b> balance &amp; history, and any <b>documents they've signed</b>.</li>
+    </ol>
+    <div class="note"><span class="lbl">Welcome email</span><br>If the welcome email didn't send (e.g. a mail hiccup), the edit page shows "Welcome email pending" — just set a new password and save to send it again. It's only ever sent once successfully.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">5.</span> Quarterly Assessments (90-day check-ins)</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Reminds you when each employee is due for their 90-day review, and keeps a record of completed assessments.</div>
+    <div class="where"><b>Where:</b> On each employee's <b>Edit</b> page, and the <b>PTO/Assessment columns</b> on the Employees list.</div>
+    <div class="row"><span class="lbl">How it works</span></div>
+    <ol class="steps">
+        <li>Set the employee's <b>Start Date</b> (their hire date) and save.</li>
+        <li>The system counts <b>90 days</b> and works out the next-due date automatically.</li>
+        <li>When someone becomes due, <b>all admins are notified</b> on the dashboard bell <b>and by email</b> (a daily check runs in the background).</li>
+        <li>After you do the review, open their edit page and click <b>Mark Completed</b> (add a note if you like). The next one is then scheduled 90 days later.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Change the <b>Start Date</b> to shift the schedule. The Employees list shows each person as <b>Due</b> or <b>On track</b> at a glance, with their last-completed date.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">6.</span> PTO (Paid Time Off)</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>A simple, days-based view of each employee's PTO for the year — so the crew can see what they have left. <b>Your payroll stays the official record;</b> this is just an easy reference that always counts down (no scary negative numbers).</div>
+    <div class="where"><b>Where:</b> On each employee's <b>Edit</b> page (full management); a quick <b>PTO column</b> on the Employees list; and the employee's own <b>Dashboard</b> in their portal.</div>
+    <div class="row"><span class="lbl">How to set it up for a person (once a year)</span></div>
+    <ol class="steps">
+        <li>Open the employee's <b>Edit</b> page and make sure <b>Accrues PTO</b> is on.</li>
+        <li>In the PTO section, click <b>Add PTO entry</b> → choose <b>Annual allotment</b> → enter their days for the year (e.g. 27, 16, or 11) → Save.</li>
+        <li>If they carried days from last year, add another entry → <b>Carried over</b> (up to 5 days).</li>
+    </ol>
+    <div class="row"><span class="lbl">How to log time off</span></div>
+    <ol class="steps">
+        <li>Click <b>Add PTO entry</b> → choose <b>PTO used</b>.</li>
+        <li>Enter the number of <b>days</b> (use 0.5 for a half day) and the <b>date</b> they took off, then Save.</li>
+        <li>The <b>Remaining</b> number updates instantly, and the employee sees it on their own dashboard with the dates listed.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Use <b>Adjustment</b> (with + or −) to correct a balance. Every entry is listed with its date and who entered it, so nothing is hidden. Up to <b>5 days</b> may carry to next year — you add that as a "Carried over" entry in January.</div>
+    <div class="note"><span class="lbl">Not eligible?</span><br>Turn off <b>Accrues PTO</b> for anyone who doesn't get PTO (temporary/part-time). Their portal simply shows "not currently enrolled in PTO."</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">7.</span> Documents (folders &amp; read-and-sign)</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Shares company documents with staff — either openly, or assigned to specific people, with an optional <b>mandatory "read &amp; sign"</b> that records a signed certificate.</div>
+    <div class="where"><b>Where:</b> Sidebar → HR Portal → <b>Documents</b> (and <b>Document Categories</b> for the folders).</div>
+    <div class="row"><span class="lbl">How to share a document</span></div>
+    <ol class="steps">
+        <li>First make a <b>folder</b> (Document Categories → add, e.g. "Policies", "Safety").</li>
+        <li>Go to <b>Documents</b> → add a document, give it a title, pick the folder, and upload the file.</li>
+        <li>Choose who sees it: <b>Public</b> (everyone) or assign it to <b>specific employees</b>.</li>
+        <li>(Optional) For a PDF assigned to people, tick <b>require read &amp; sign</b> and set a due date.</li>
+    </ol>
+    <div class="row"><span class="lbl">What the employee does</span></div>
+    <ol class="steps">
+        <li>In their portal's <b>Document Library</b>, they open the document. If it needs signing, they must <b>read it and type their name to sign</b> before they can download it.</li>
+        <li>Signing creates a dated <b>certificate</b> (with their name, time, and IP) that you can download.</li>
+    </ol>
+    <div class="change"><span class="lbl">To track &amp; change</span><br>The <b>Signed Documents</b> / acknowledgments view shows who has signed and who's still pending. Replace a file by editing the document; a folder can't be deleted while it still has documents in it.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">8.</span> Announcements</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Posts company news/updates that employees see in their portal.</div>
+    <div class="where"><b>Where:</b> Sidebar → HR Portal → <b>Announcements</b>.</div>
+    <ol class="steps">
+        <li>Click add, give it a <b>title</b> and <b>message</b>, optionally an <b>image</b>, set it <b>Active</b>, and a publish date.</li>
+        <li>Save — it immediately appears on the employee portal (the 3 latest also show on their dashboard).</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Edit to update the text/image, or turn <b>Active</b> off to hide it without deleting. Deleting removes it from the portal.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">9.</span> Community Calendar</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>A shared calendar of company events (holidays, meetings, training, PTO, etc.) employees can view.</div>
+    <div class="where"><b>Where:</b> Sidebar → HR Portal → <b>Community Calendar</b>.</div>
+    <ol class="steps">
+        <li>Click a day or "add event", enter a <b>title</b>, <b>date(s)</b>, pick a <b>category</b> (each has its own colour), add a location, and optionally attach a flyer.</li>
+        <li>Save — it shows on the calendar for staff and on the employees' portal calendar.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Click an event to edit or delete it. Categories/colours are fixed (Holiday, Meeting, Training, PTO, Other).</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">10.</span> Incident Reports</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Records workplace incidents — filed by employees from their portal, or by a manager on their behalf — and tracks each through to closed.</div>
+    <div class="where"><b>Where:</b> Sidebar → HR Portal → <b>Incident Reports</b>.</div>
+    <div class="row"><span class="lbl">How it works</span></div>
+    <ol class="steps">
+        <li>An employee submits a report from their portal (date, location, category, description, and up to 6 photos + 4 videos). Managers are notified.</li>
+        <li>Each report gets a reference number automatically (e.g. <code>IR-2026-0008</code>).</li>
+        <li>Managers open it, review, set the <b>status</b> (Open → Under Review → Closed), and add review notes. The affected employee is notified of status changes.</li>
+        <li>Use the filters + <b>Export CSV</b> for reporting.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Only managers (with the right permission) can edit/close reports. Deleting keeps the record recoverable and keeps the photos.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">11.</span> Google Reviews</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Shows your company's Google reviews inside the employee portal, so the crew can see what customers are saying.</div>
+    <div class="where"><b>Where:</b> Employee portal → <b>Reviews</b> page (rating summary + review cards).</div>
+    <div class="row"><span class="lbl">Status</span></div>
+    <p>The page is built and currently shows <b>sample reviews</b> so you can see the layout. It switches to your <b>real, live Google reviews</b> once your Google Business Profile is connected (this needs you to grant access and Google to approve it — a one-time setup).</p>
+    <div class="note"><span class="lbl">To go live</span><br>Add our team as a <b>Manager</b> on your Google Business listing and allow the one-time setup. After that, reviews update automatically every day — nothing for you to maintain.</div>
+</div>
+
+<!-- PART C — ADMINISTRATION -->
+<h2 class="part">Part C — Administration</h2>
+
+<div class="module">
+    <h3><span class="num">12.</span> User Management (Roles, Users, Permissions)</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Controls <b>who can log into the admin area</b> and <b>what they're allowed to do</b>. (This is for office/staff accounts — employees are managed separately under Employees.)</div>
+    <div class="where"><b>Where:</b> Sidebar → User Management → <b>Roles</b>, <b>Users</b>, <b>Permissions</b>.</div>
+    <div class="row"><span class="lbl">The three pieces</span></div>
+    <ul class="tips">
+        <li><b>Roles</b> — job types like "Manager" or "Office Staff". Create a role, mark it active.</li>
+        <li><b>Permissions</b> — a grid where you tick, <b>per role</b>, exactly what that role can see and do (view/create/edit/delete for each module).</li>
+        <li><b>Users</b> — the actual staff logins. Create a user, set a password, and assign them a <b>role</b>.</li>
+    </ul>
+    <div class="row"><span class="lbl">How to give someone access</span></div>
+    <ol class="steps">
+        <li>Make sure a suitable <b>Role</b> exists (e.g. "Manager").</li>
+        <li>In <b>Permissions</b>, open that role and tick what it may do, then save.</li>
+        <li>In <b>Users</b>, create the person's login and assign them that role.</li>
+    </ol>
+    <div class="note"><span class="lbl">Safety rules built in</span><br>The <b>Superadmin</b> role always has full access and is protected (can't be deleted or locked out). You can't delete your own account or the last superadmin. A deactivated user (or role) immediately loses access.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">13.</span> Email Settings</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Sets which email addresses receive the <b>monthly report reminder</b> (the nudge to generate the County disposal report).</div>
+    <div class="where"><b>Where:</b> Sidebar → <b>Email Setting</b>.</div>
+    <ol class="steps">
+        <li>Add/edit the recipient addresses (a default plus up to three more).</li>
+        <li>On the last day of each month (9 AM Hawai'i time), the system emails those addresses a reminder automatically.</li>
+    </ol>
+    <div class="change"><span class="lbl">To make changes</span><br>Edit the record to change the recipients. (For the reminder to actually send, the server's scheduled task must be running — your developer/host sets that up once.)</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">14.</span> Activity Log</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>An automatic record of who did what — created, edited, deleted — across the system. Great for accountability and tracing a change.</div>
+    <div class="where"><b>Where:</b> Sidebar → <b>Activity Log</b> (split into <b>Forms</b> and <b>HR</b> views).</div>
+    <ol class="steps">
+        <li>Open the log and use the filters (module, action, person, text, date range) to find what you're looking for.</li>
+        <li>Click a row for the details of that change.</li>
+    </ol>
+    <div class="note"><span class="lbl">Good to know</span><br>The log is written automatically — there's nothing to maintain. It records the person, time, and what changed.</div>
+</div>
+
+<div class="module">
+    <h3><span class="num">15.</span> Notifications</h3>
+    <div class="row"><span class="lbl">What it's for</span><br>Keeps you informed in real time — new field submissions, incident reports, document sign-offs, and assessment-due reminders.</div>
+    <div class="where"><b>Where:</b> The <b>bell icon</b> (top-right of every page) and the full <b>Notifications</b> page.</div>
+    <ol class="steps">
+        <li>A red number on the bell shows unread notifications; a pop-up also appears when something new arrives.</li>
+        <li>Click a notification to jump straight to the item, or use <b>Mark all read</b>.</li>
+    </ol>
+    <div class="note"><span class="lbl">Good to know</span><br>Notifications are generated automatically by the system — no setup needed. Employees have their own bell in their portal too.</div>
+</div>
+
+<hr style="border:none;border-top:1px solid #e4e9f0;margin:20px 0;">
+<p class="small">This guide describes how the modules work for everyday use. For wording, extra fields, or behaviour changes, your developer can update the relevant module — share this guide so everyone references the same process. Employee-facing screens (portal) mirror the admin data described here.</p>
+
+</body>
+</html>
